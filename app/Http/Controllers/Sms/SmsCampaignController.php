@@ -74,11 +74,15 @@ class SmsCampaignController extends Controller
 
         if (in_array('all_parishioners', $criteria)) {
             $parishioners = Parishioner::where('is_active', true)
-                ->whereNotNull('contact_number')
+                ->where(function($query) {
+                    $query->whereNotNull('phone')
+                          ->orWhereNotNull('contact_number');
+                })
                 ->get();
             
             foreach ($parishioners as $parishioner) {
-                $phone = $this->formatPhone($parishioner->contact_number);
+                $phoneNumber = $parishioner->phone ?? $parishioner->contact_number ?? null;
+                $phone = $this->formatPhone($phoneNumber);
                 if ($phone && !in_array($phone, $phoneNumbers)) {
                     $recipients[] = [
                         'id' => $parishioner->id,
@@ -93,11 +97,15 @@ class SmsCampaignController extends Controller
         if (in_array('wanafunzi', $criteria)) {
             $parishioners = Parishioner::where('type', 'wanafunzi')
                 ->where('is_active', true)
-                ->whereNotNull('contact_number')
+                ->where(function($query) {
+                    $query->whereNotNull('phone')
+                          ->orWhereNotNull('contact_number');
+                })
                 ->get();
             
             foreach ($parishioners as $parishioner) {
-                $phone = $this->formatPhone($parishioner->contact_number);
+                $phoneNumber = $parishioner->phone ?? $parishioner->contact_number ?? null;
+                $phone = $this->formatPhone($phoneNumber);
                 if ($phone && !in_array($phone, $phoneNumbers)) {
                     $recipients[] = [
                         'id' => $parishioner->id,
@@ -112,11 +120,15 @@ class SmsCampaignController extends Controller
         if (in_array('wafanyakazi', $criteria)) {
             $parishioners = Parishioner::where('type', 'wafanyakazi')
                 ->where('is_active', true)
-                ->whereNotNull('contact_number')
+                ->where(function($query) {
+                    $query->whereNotNull('phone')
+                          ->orWhereNotNull('contact_number');
+                })
                 ->get();
             
             foreach ($parishioners as $parishioner) {
-                $phone = $this->formatPhone($parishioner->contact_number);
+                $phoneNumber = $parishioner->phone ?? $parishioner->contact_number ?? null;
+                $phone = $this->formatPhone($phoneNumber);
                 if ($phone && !in_array($phone, $phoneNumbers)) {
                     $recipients[] = [
                         'id' => $parishioner->id,
@@ -134,15 +146,18 @@ class SmsCampaignController extends Controller
                 ->get();
             
             foreach ($leaders as $leader) {
-                if ($leader->parishioner && $leader->parishioner->contact_number) {
-                    $phone = $this->formatPhone($leader->parishioner->contact_number);
-                    if ($phone && !in_array($phone, $phoneNumbers)) {
-                        $recipients[] = [
-                            'id' => $leader->parishioner->id,
-                            'phone' => $phone,
-                            'name' => $leader->parishioner->first_name . ' ' . $leader->parishioner->last_name
-                        ];
-                        $phoneNumbers[] = $phone;
+                if ($leader->parishioner) {
+                    $phoneNumber = $leader->parishioner->phone ?? $leader->parishioner->contact_number ?? null;
+                    if ($phoneNumber) {
+                        $phone = $this->formatPhone($phoneNumber);
+                        if ($phone && !in_array($phone, $phoneNumbers)) {
+                            $recipients[] = [
+                                'id' => $leader->parishioner->id,
+                                'phone' => $phone,
+                                'name' => $leader->parishioner->first_name . ' ' . $leader->parishioner->last_name
+                            ];
+                            $phoneNumbers[] = $phone;
+                        }
                     }
                 }
             }

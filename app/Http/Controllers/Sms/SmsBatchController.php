@@ -10,7 +10,7 @@ class SmsBatchController extends Controller
 {
     public function index()
     {
-        $batches = SmsBatch::with(['campaign', 'creator'])
+        $batches = SmsBatch::with('campaign')
             ->latest()
             ->paginate(20);
         

@@ -26,6 +26,6 @@ class ApostolicGroup extends Model
 
     public function parishioners(): BelongsToMany
     {
-        return $this->belongsToMany(Parishioner::class)->withPivot('joined_date', 'is_active')->withTimestamps();
+        return $this->belongsToMany(Parishioner::class, 'parishioner_apostolic_group')->withPivot('joined_date', 'is_active')->withTimestamps();
     }
 }

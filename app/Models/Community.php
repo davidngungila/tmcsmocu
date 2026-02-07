@@ -26,6 +26,6 @@ class Community extends Model
 
     public function parishioners(): BelongsToMany
     {
-        return $this->belongsToMany(Parishioner::class)->withPivot('joined_date', 'is_active')->withTimestamps();
+        return $this->belongsToMany(Parishioner::class, 'parishioner_community')->withPivot('joined_date', 'is_active')->withTimestamps();
     }
 }

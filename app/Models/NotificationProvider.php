@@ -13,6 +13,7 @@ class NotificationProvider extends Model
         'is_active',
         'sms_username',
         'sms_password',
+        'sms_token',
         'sms_from',
         'sms_url',
         'mail_host',

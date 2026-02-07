@@ -98,11 +98,24 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('sms')->name('sms.')->group(function () {
         Route::get('/create', [SmsCampaignController::class, 'create'])->name('create');
         Route::post('/store', [SmsCampaignController::class, 'store'])->name('store');
+        
+        // Templates
         Route::get('/templates', [SmsTemplateController::class, 'index'])->name('templates.index');
+        Route::get('/templates/create', [SmsTemplateController::class, 'create'])->name('templates.create');
+        Route::post('/templates', [SmsTemplateController::class, 'store'])->name('templates.store');
+        Route::get('/templates/{id}/edit', [SmsTemplateController::class, 'edit'])->name('templates.edit');
+        Route::put('/templates/{id}', [SmsTemplateController::class, 'update'])->name('templates.update');
+        Route::delete('/templates/{id}', [SmsTemplateController::class, 'destroy'])->name('templates.destroy');
+        
+        // Approval
         Route::get('/approval', [SmsApprovalController::class, 'index'])->name('approval.index');
         Route::post('/approval/{id}/approve', [SmsApprovalController::class, 'approve'])->name('approval.approve');
         Route::post('/approval/{id}/reject', [SmsApprovalController::class, 'reject'])->name('approval.reject');
+        
+        // Batches
         Route::get('/batches', [SmsBatchController::class, 'index'])->name('batches.index');
+        
+        // Reports
         Route::get('/reports', [SmsReportController::class, 'index'])->name('reports.index');
     });
     
@@ -113,11 +126,16 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('settings')->name('settings.')->group(function () {
         Route::resource('users', UserController::class);
         Route::get('/permissions', [PermissionController::class, 'index'])->name('permissions.index');
+        Route::put('/permissions/{id}', [PermissionController::class, 'updatePermissions'])->name('permissions.update');
         Route::get('/general', [GeneralSettingsController::class, 'index'])->name('general');
+        Route::post('/general', [GeneralSettingsController::class, 'store'])->name('general.store');
         Route::get('/account', [GeneralSettingsController::class, 'account'])->name('account');
         Route::get('/security', [GeneralSettingsController::class, 'security'])->name('security');
         Route::resource('notification-providers', \App\Http\Controllers\Settings\NotificationProviderController::class);
         Route::post('/notification-providers/{id}/set-primary', [\App\Http\Controllers\Settings\NotificationProviderController::class, 'setPrimary'])->name('notification-providers.set-primary');
+        Route::post('/notification-providers/{id}/test-email', [\App\Http\Controllers\Settings\NotificationProviderController::class, 'testEmail'])->name('notification-providers.test-email');
+        Route::post('/notification-providers/{id}/test-sms', [\App\Http\Controllers\Settings\NotificationProviderController::class, 'testSms'])->name('notification-providers.test-sms');
+        Route::get('/notification-providers/{id}/balance', [\App\Http\Controllers\Settings\NotificationProviderController::class, 'checkBalance'])->name('notification-providers.balance');
     });
     
     // Profile Routes

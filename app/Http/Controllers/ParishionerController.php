@@ -11,11 +11,54 @@ class ParishionerController extends Controller
     {
         $type = $request->get('type', 'wanafunzi');
         
-        $parishioners = Parishioner::where('type', $type)
-            ->latest()
-            ->paginate(20);
+        // Statistics
+        $totalParishioners = Parishioner::where('type', $type)->count();
+        $activeParishioners = Parishioner::where('type', $type)->where('is_active', true)->count();
+        $maleParishioners = Parishioner::where('type', $type)->where('gender', 'male')->count();
+        $femaleParishioners = Parishioner::where('type', $type)->where('gender', 'female')->count();
         
-        return view('parishioners.index', compact('parishioners', 'type'));
+        // Monthly registrations
+        $monthlyRegistrations = Parishioner::where('type', $type)
+            ->whereMonth('registration_date', now()->month)
+            ->whereYear('registration_date', now()->year)
+            ->count();
+        
+        // Query with filters
+        $query = Parishioner::where('type', $type);
+        
+        // Search filter
+        if ($request->filled('search')) {
+            $search = $request->get('search');
+            $query->where(function($q) use ($search) {
+                $q->where('first_name', 'like', "%{$search}%")
+                  ->orWhere('last_name', 'like', "%{$search}%")
+                  ->orWhere('phone', 'like', "%{$search}%")
+                  ->orWhere('contact_number', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+        
+        // Gender filter
+        if ($request->filled('gender')) {
+            $query->where('gender', $request->get('gender'));
+        }
+        
+        // Status filter
+        if ($request->filled('status')) {
+            $query->where('is_active', $request->get('status') === 'active');
+        }
+        
+        $parishioners = $query->latest('registration_date')->paginate(20)->withQueryString();
+        
+        return view('parishioners.index', compact(
+            'parishioners', 
+            'type',
+            'totalParishioners',
+            'activeParishioners',
+            'maleParishioners',
+            'femaleParishioners',
+            'monthlyRegistrations'
+        ));
     }
 
     public function create()
@@ -31,13 +74,20 @@ class ParishionerController extends Controller
             'last_name' => 'required|string|max:255',
             'middle_name' => 'nullable|string|max:255',
             'phone' => 'nullable|string|max:20',
+            'contact_number' => 'nullable|string|max:20',
             'email' => 'nullable|email|max:255',
             'date_of_birth' => 'nullable|date',
             'gender' => 'nullable|in:male,female',
             'address' => 'nullable|string',
             'occupation' => 'nullable|string|max:255',
+            'registration_date' => 'nullable|date',
             'notes' => 'nullable|string',
         ]);
+        
+        // Set contact_number from phone if provided
+        if (isset($validated['phone']) && !isset($validated['contact_number'])) {
+            $validated['contact_number'] = $validated['phone'];
+        }
 
         Parishioner::create($validated);
 
@@ -47,8 +97,41 @@ class ParishionerController extends Controller
 
     public function show($id)
     {
-        $parishioner = Parishioner::with(['communities', 'apostolicGroups'])->findOrFail($id);
-        return view('parishioners.show', compact('parishioner'));
+        $parishioner = Parishioner::with(['communities', 'apostolicGroups', 'events', 'eventAttendances', 'leaderPositions'])->findOrFail($id);
+        
+        // Get statistics
+        $communitiesCount = $parishioner->communities()->wherePivot('is_active', true)->count();
+        $groupsCount = $parishioner->apostolicGroups()->wherePivot('is_active', true)->count();
+        $eventsAttended = $parishioner->eventAttendances()->where('attended', true)->count();
+        $isLeader = $parishioner->leaderPositions()->where('is_active', true)->exists();
+        $totalEvents = $parishioner->events()->count();
+        
+        // Get recent activities
+        $recentEvents = $parishioner->events()->latest('start_date')->limit(5)->get();
+        $recentCommunities = $parishioner->communities()->wherePivot('is_active', true)->latest('parishioner_community.joined_date')->limit(5)->get();
+        $recentGroups = $parishioner->apostolicGroups()->wherePivot('is_active', true)->latest('parishioner_apostolic_group.joined_date')->limit(5)->get();
+        
+        // Get active communities and groups
+        $activeCommunities = $parishioner->communities()->wherePivot('is_active', true)->get();
+        $activeGroups = $parishioner->apostolicGroups()->wherePivot('is_active', true)->get();
+        
+        // Get leader positions
+        $leaderPositions = $parishioner->leaderPositions()->where('is_active', true)->with('parishioner')->get();
+        
+        return view('parishioners.show', compact(
+            'parishioner',
+            'communitiesCount',
+            'groupsCount',
+            'eventsAttended',
+            'isLeader',
+            'totalEvents',
+            'recentEvents',
+            'recentCommunities',
+            'recentGroups',
+            'activeCommunities',
+            'activeGroups',
+            'leaderPositions'
+        ));
     }
 
     public function edit($id)
@@ -67,6 +150,7 @@ class ParishionerController extends Controller
             'last_name' => 'required|string|max:255',
             'middle_name' => 'nullable|string|max:255',
             'phone' => 'nullable|string|max:20',
+            'contact_number' => 'nullable|string|max:20',
             'email' => 'nullable|email|max:255',
             'date_of_birth' => 'nullable|date',
             'gender' => 'nullable|in:male,female',
@@ -75,6 +159,11 @@ class ParishionerController extends Controller
             'is_active' => 'boolean',
             'notes' => 'nullable|string',
         ]);
+        
+        // Set contact_number from phone if provided
+        if (isset($validated['phone']) && !isset($validated['contact_number'])) {
+            $validated['contact_number'] = $validated['phone'];
+        }
 
         $parishioner->update($validated);
 

@@ -32,12 +32,27 @@ class Parishioner extends Model
 
     public function communities(): BelongsToMany
     {
-        return $this->belongsToMany(Community::class)->withPivot('joined_date', 'is_active')->withTimestamps();
+        return $this->belongsToMany(Community::class, 'parishioner_community')->withPivot('joined_date', 'is_active')->withTimestamps();
     }
 
     public function apostolicGroups(): BelongsToMany
     {
-        return $this->belongsToMany(ApostolicGroup::class)->withPivot('joined_date', 'is_active')->withTimestamps();
+        return $this->belongsToMany(ApostolicGroup::class, 'parishioner_apostolic_group')->withPivot('joined_date', 'is_active')->withTimestamps();
+    }
+
+    public function events(): BelongsToMany
+    {
+        return $this->belongsToMany(Event::class, 'event_attendances')->withPivot('attended', 'checked_in_at', 'notes')->withTimestamps();
+    }
+
+    public function eventAttendances()
+    {
+        return $this->hasMany(EventAttendance::class);
+    }
+
+    public function leaderPositions()
+    {
+        return $this->hasMany(Leader::class);
     }
 
     public function getFullNameAttribute()

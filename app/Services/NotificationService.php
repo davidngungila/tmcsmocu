@@ -35,7 +35,8 @@ class NotificationService
                 $this->smsUsername = SystemSetting::getValue('sms_username') ?: env('SMS_USERNAME', 'emcatechn');
                 $this->smsPassword = SystemSetting::getValue('sms_password') ?: env('SMS_PASSWORD', 'Emca@#12');
                 $this->smsFrom = SystemSetting::getValue('sms_from') ?: env('SMS_FROM', 'OfisiLink');
-                $this->smsUrl = SystemSetting::getValue('sms_url') ?: env('SMS_URL', 'https://messaging-service.co.tz/link/sms/v1/text/single');
+                // Hardcoded to Messaging Service API V2
+                $this->smsUrl = SystemSetting::getValue('sms_url') ?: env('SMS_URL', 'https://messaging-service.co.tz/api/sms/v2/text/single');
             }
         } catch (\Exception $e) {
             // Table might not exist yet, use fallback
@@ -43,7 +44,8 @@ class NotificationService
             $this->smsUsername = SystemSetting::getValue('sms_username') ?: env('SMS_USERNAME', 'emcatechn');
             $this->smsPassword = SystemSetting::getValue('sms_password') ?: env('SMS_PASSWORD', 'Emca@#12');
             $this->smsFrom = SystemSetting::getValue('sms_from') ?: env('SMS_FROM', 'OfisiLink');
-            $this->smsUrl = SystemSetting::getValue('sms_url') ?: env('SMS_URL', 'https://messaging-service.co.tz/link/sms/v1/text/single');
+            // Hardcoded to Messaging Service API V2
+            $this->smsUrl = SystemSetting::getValue('sms_url') ?: env('SMS_URL', 'https://messaging-service.co.tz/api/sms/v2/text/single');
         }
     }
 
@@ -59,13 +61,22 @@ class NotificationService
             if ($provider) {
                 $smsUsername = $provider->sms_username;
                 $smsPassword = $provider->sms_password;
+                $smsToken = $provider->sms_token; // Bearer Token (preferred)
                 $smsFrom = $provider->sms_from;
-                $smsUrl = $provider->sms_url;
+                // Hardcoded to Messaging Service API V2
+                $smsUrl = $provider->sms_url ?: 'https://messaging-service.co.tz/api/sms/v2/text/single';
             } else {
                 $smsUsername = $this->smsUsername;
                 $smsPassword = $this->smsPassword;
+                $smsToken = null;
                 $smsFrom = $this->smsFrom;
+                // Hardcoded to Messaging Service API V2
                 $smsUrl = $this->smsUrl;
+            }
+            
+            // Ensure URL is V2 API (hardcoded)
+            if (strpos($smsUrl, '/api/sms/v2') === false) {
+                $smsUrl = 'https://messaging-service.co.tz/api/sms/v2/text/single';
             }
 
             // Validate phone number format
@@ -96,78 +107,53 @@ class NotificationService
                 'provider' => $provider ? $provider->name : 'default'
             ]);
 
-            // Check if URL contains '/api/sms/v1' - use POST with JSON
-            $usePostMethod = strpos($smsUrl, '/api/sms/v1') !== false || strpos($smsUrl, '/api/') !== false;
-            
+            // Messaging Service API V2 - Always use POST with JSON
             $curl = curl_init();
             
-            if ($usePostMethod) {
-                // Use POST method with JSON body and Basic Auth
-                $auth = base64_encode($smsUsername . ':' . $smsPassword);
-                
-                $body = json_encode([
-                    'from' => $smsFrom,
-                    'to' => $phoneNumber,
-                    'text' => $message,
-                    'reference' => 'mis_' . time()
-                ]);
-                
-                Log::debug('SMS API Request (POST)', [
-                    'url' => $smsUrl,
-                    'method' => 'POST',
-                    'from' => $smsFrom,
-                    'to' => $phoneNumber,
-                    'provider' => $provider ? $provider->name : 'default'
-                ]);
-                
-                curl_setopt_array($curl, array(
-                    CURLOPT_URL => $smsUrl,
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_POST => true,
-                    CURLOPT_POSTFIELDS => $body,
-                    CURLOPT_HTTPHEADER => [
-                        'Authorization: Basic ' . $auth,
-                        'Content-Type: application/json',
-                        'Accept: application/json'
-                    ],
-                    CURLOPT_SSL_VERIFYPEER => false,
-                    CURLOPT_SSL_VERIFYHOST => 0,
-                    CURLOPT_TIMEOUT => 30,
-                    CURLOPT_USERAGENT => 'MIS-SMS-Client/1.0'
-                ));
+            // Prepare request body for V2 API
+            $body = json_encode([
+                'from' => $smsFrom,
+                'to' => $phoneNumber,
+                'text' => $message,
+                'reference' => 'tmcssmart_' . time() . '_' . uniqid()
+            ]);
+            
+            // Determine authentication method (Bearer Token preferred, fallback to Basic Auth)
+            $authHeader = '';
+            if (!empty($smsToken)) {
+                // Use Bearer Token authentication (recommended)
+                $authHeader = 'Bearer ' . $smsToken;
+            } elseif (!empty($smsUsername) && !empty($smsPassword)) {
+                // Use Basic Authentication (username:password base64 encoded)
+                $authHeader = 'Basic ' . base64_encode($smsUsername . ':' . $smsPassword);
             } else {
-                // Use GET method with URL parameters (legacy support)
-                $text = urlencode($message);
-                $password = urlencode($smsPassword);
-                
-                $url = $smsUrl . 
-                       '?username=' . urlencode($smsUsername) . 
-                       '&password=' . $password . 
-                       '&from=' . urlencode($smsFrom) . 
-                       '&to=' . $phoneNumber . 
-                       '&text=' . $text;
-                
-                Log::debug('SMS API Request (GET)', [
-                    'url' => $url,
-                    'method' => 'GET',
-                    'from' => $smsFrom,
-                    'to' => $phoneNumber,
-                    'provider' => $provider ? $provider->name : 'default'
-                ]);
-
-                curl_setopt_array($curl, array(
-                    CURLOPT_URL => $url,
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_ENCODING => '',
-                    CURLOPT_MAXREDIRS => 10,
-                    CURLOPT_TIMEOUT => 30,
-                    CURLOPT_FOLLOWLOCATION => true,
-                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                    CURLOPT_CUSTOMREQUEST => 'GET',
-                    CURLOPT_SSL_VERIFYPEER => false,
-                    CURLOPT_USERAGENT => 'MIS-SMS-Client/1.0'
-                ));
+                throw new \Exception('SMS authentication credentials missing. Provide either Bearer Token or Username/Password.');
             }
+            
+            Log::debug('SMS API V2 Request', [
+                'url' => $smsUrl,
+                'method' => 'POST',
+                'from' => $smsFrom,
+                'to' => $phoneNumber,
+                'auth_type' => !empty($smsToken) ? 'Bearer Token' : 'Basic Auth',
+                'provider' => $provider ? $provider->name : 'default'
+            ]);
+            
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => $smsUrl,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_POST => true,
+                CURLOPT_POSTFIELDS => $body,
+                CURLOPT_HTTPHEADER => [
+                    'Authorization: ' . $authHeader,
+                    'Content-Type: application/json',
+                    'Accept: application/json'
+                ],
+                CURLOPT_SSL_VERIFYPEER => false,
+                CURLOPT_SSL_VERIFYHOST => 0,
+                CURLOPT_TIMEOUT => 30,
+                CURLOPT_USERAGENT => 'TmcsSmart-SMS-Client/2.0'
+            ));
 
             $response = curl_exec($curl);
             $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
@@ -194,45 +180,58 @@ class NotificationService
             } else {
                 curl_close($curl);
                 
-                // Check if SMS was sent successfully based on response
+                // Check if SMS was sent successfully based on V2 API response
                 if ($httpCode == 200) {
-                    // Check response content for success indicators
-                    $responseLower = strtolower($response ?? '');
                     $responseData = json_decode($response, true);
                     
-                    if (strpos($responseLower, 'success') !== false || 
-                        strpos($responseLower, '200') !== false ||
-                        strpos($responseLower, 'accepted') !== false ||
-                        strpos($responseLower, 'sent') !== false ||
-                        ($responseData !== null && isset($responseData['success']) && $responseData['success']) ||
-                        ($responseData !== null && !isset($responseData['error']))) {
-                        
-                        Log::info('SMS sent successfully', [
-                            'phone' => $phoneNumber,
-                            'response' => $response,
-                            'provider' => $provider ? $provider->name : 'default'
-                        ]);
-                        
-                        return true;
-                    } else {
-                        $errorMsg = 'SMS API returned 200 but response indicates failure';
-                        if ($responseData && isset($responseData['error'])) {
-                            $errorMsg .= ': ' . $responseData['error'];
-                        } elseif ($responseData && isset($responseData['message'])) {
-                            $errorMsg .= ': ' . $responseData['message'];
+                    // V2 API success indicators
+                    // Response may contain messageId or status indicating success
+                    if ($responseData !== null) {
+                        // Check for messageId (indicates message was accepted)
+                        if (isset($responseData['messageId']) || 
+                            (isset($responseData['status']) && 
+                             (isset($responseData['status']['id']) && in_array($responseData['status']['id'], [51, 52, 88])))) {
+                            
+                            Log::info('SMS sent successfully (V2 API)', [
+                                'phone' => $phoneNumber,
+                                'messageId' => $responseData['messageId'] ?? null,
+                                'status' => $responseData['status'] ?? null,
+                                'provider' => $provider ? $provider->name : 'default'
+                            ]);
+                            
+                            return true;
+                        } elseif (isset($responseData['error']) || 
+                                  (isset($responseData['status']) && 
+                                   isset($responseData['status']['groupId']) && 
+                                   $responseData['status']['groupId'] == 22)) {
+                            // Failed status (groupId 22 = FAILED)
+                            $errorMsg = 'SMS failed: ' . ($responseData['error'] ?? ($responseData['status']['name'] ?? 'Unknown error'));
+                            Log::warning('SMS API V2 returned failure status', [
+                                'phone' => $phoneNumber,
+                                'response' => $response,
+                                'provider' => $provider ? $provider->name : 'default'
+                            ]);
+                            throw new \Exception($errorMsg);
                         }
-                        
-                        Log::warning('SMS API returned 200 but content indicates failure', [
-                            'phone' => $phoneNumber,
-                            'response' => $response,
-                            'provider' => $provider ? $provider->name : 'default'
-                        ]);
-                        throw new \Exception($errorMsg);
                     }
+                    
+                    // If we get here, assume success for 200 response
+                    Log::info('SMS sent successfully (V2 API - 200 OK)', [
+                        'phone' => $phoneNumber,
+                        'response' => $response,
+                        'provider' => $provider ? $provider->name : 'default'
+                    ]);
+                    
+                    return true;
                 } else {
                     $errorMsg = "SMS failed with HTTP code {$httpCode}";
                     if ($response) {
-                        $errorMsg .= ': ' . substr($response, 0, 200);
+                        $responseData = json_decode($response, true);
+                        if ($responseData && isset($responseData['error'])) {
+                            $errorMsg .= ': ' . $responseData['error'];
+                        } else {
+                            $errorMsg .= ': ' . substr($response, 0, 200);
+                        }
                     }
                     
                     Log::error('SMS failed with HTTP code', [

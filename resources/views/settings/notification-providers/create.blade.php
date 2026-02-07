@@ -36,13 +36,19 @@
                 <h3 class="text-lg font-bold text-gray-800 mb-4">SMS Settings</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <label for="sms_username" class="block text-base font-bold text-gray-700 mb-2">Username</label>
-                        <input type="text" id="sms_username" name="sms_username" value="{{ old('sms_username') }}" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-base">
+                        <label for="sms_token" class="block text-base font-bold text-gray-700 mb-2">Bearer Token (Recommended)</label>
+                        <input type="password" id="sms_token" name="sms_token" value="{{ old('sms_token') }}" placeholder="Bearer Token from API Keys" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-base">
+                        <p class="text-xs text-gray-500 mt-1">Get from Customer Info -> Customization -> API Keys</p>
                     </div>
                     
                     <div>
-                        <label for="sms_password" class="block text-base font-bold text-gray-700 mb-2">Password</label>
-                        <input type="password" id="sms_password" name="sms_password" value="{{ old('sms_password') }}" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-base">
+                        <label for="sms_username" class="block text-base font-bold text-gray-700 mb-2">Username (for Basic Auth)</label>
+                        <input type="text" id="sms_username" name="sms_username" value="{{ old('sms_username') }}" placeholder="Only if not using Bearer Token" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-base">
+                    </div>
+                    
+                    <div>
+                        <label for="sms_password" class="block text-base font-bold text-gray-700 mb-2">Password (for Basic Auth)</label>
+                        <input type="password" id="sms_password" name="sms_password" value="{{ old('sms_password') }}" placeholder="Only if not using Bearer Token" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-base">
                     </div>
                     
                     <div>
@@ -50,9 +56,10 @@
                         <input type="text" id="sms_from" name="sms_from" value="{{ old('sms_from') }}" placeholder="e.g., OfisiLink" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-base">
                     </div>
                     
-                    <div>
+                    <div class="md:col-span-2">
                         <label for="sms_url" class="block text-base font-bold text-gray-700 mb-2">API URL</label>
-                        <input type="url" id="sms_url" name="sms_url" value="{{ old('sms_url') }}" placeholder="https://messaging-service.co.tz/link/sms/v1/text/single" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-base">
+                        <input type="url" id="sms_url" name="sms_url" value="{{ old('sms_url', 'https://messaging-service.co.tz/api/sms/v2/text/single') }}" placeholder="https://messaging-service.co.tz/api/sms/v2/text/single" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-base">
+                        <p class="text-xs text-gray-500 mt-1">Messaging Service API V2 (hardcoded)</p>
                     </div>
                 </div>
             </div>

@@ -5,13 +5,43 @@ namespace App\Http\Controllers;
 use App\Models\Community;
 use App\Models\Parishioner;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CommunityController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $communities = Community::with('leader')->latest()->paginate(20);
-        return view('communities.index', compact('communities'));
+        // Statistics
+        $totalCommunities = Community::count();
+        $activeCommunities = Community::where('is_active', true)->count();
+        $totalMembers = \DB::table('parishioner_community')
+            ->where('is_active', true)
+            ->count();
+        $communitiesWithLeaders = Community::whereNotNull('leader_id')->count();
+        
+        // Query with filters
+        $query = Community::with(['leader', 'parishioners']);
+        
+        // Search filter
+        if ($request->filled('search')) {
+            $search = $request->get('search');
+            $query->where('name', 'like', "%{$search}%");
+        }
+        
+        // Status filter
+        if ($request->filled('status')) {
+            $query->where('is_active', $request->get('status') === 'active');
+        }
+        
+        $communities = $query->latest()->paginate(20)->withQueryString();
+        
+        return view('communities.index', compact(
+            'communities',
+            'totalCommunities',
+            'activeCommunities',
+            'totalMembers',
+            'communitiesWithLeaders'
+        ));
     }
 
     public function create()

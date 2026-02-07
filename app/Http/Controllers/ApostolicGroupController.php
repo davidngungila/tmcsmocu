@@ -5,13 +5,43 @@ namespace App\Http\Controllers;
 use App\Models\ApostolicGroup;
 use App\Models\Parishioner;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ApostolicGroupController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $groups = ApostolicGroup::with('leader')->latest()->paginate(20);
-        return view('apostolic-groups.index', compact('groups'));
+        // Statistics
+        $totalGroups = ApostolicGroup::count();
+        $activeGroups = ApostolicGroup::where('is_active', true)->count();
+        $totalMembers = \DB::table('parishioner_apostolic_group')
+            ->where('is_active', true)
+            ->count();
+        $groupsWithLeaders = ApostolicGroup::whereNotNull('leader_id')->count();
+        
+        // Query with filters
+        $query = ApostolicGroup::with(['leader', 'parishioners']);
+        
+        // Search filter
+        if ($request->filled('search')) {
+            $search = $request->get('search');
+            $query->where('name', 'like', "%{$search}%");
+        }
+        
+        // Status filter
+        if ($request->filled('status')) {
+            $query->where('is_active', $request->get('status') === 'active');
+        }
+        
+        $groups = $query->latest()->paginate(20)->withQueryString();
+        
+        return view('apostolic-groups.index', compact(
+            'groups',
+            'totalGroups',
+            'activeGroups',
+            'totalMembers',
+            'groupsWithLeaders'
+        ));
     }
 
     public function create()

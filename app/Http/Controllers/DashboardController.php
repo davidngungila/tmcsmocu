@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\FinanceTransaction;
+use App\Models\FinancialYear;
 use App\Models\Parishioner;
 use App\Models\Event;
 use App\Models\Community;
@@ -18,55 +19,71 @@ class DashboardController extends Controller
 {
     public function index()
     {
+        $activeYear = FinancialYear::getActive();
+        
+        // Base query for transactions
+        $incomeQuery = FinanceTransaction::where('type', 'income');
+        $expenseQuery = FinanceTransaction::where('type', 'expense');
+        
+        // Filter by active financial year if exists
+        if ($activeYear) {
+            $incomeQuery->where('financial_year_id', $activeYear->id);
+            $expenseQuery->where('financial_year_id', $activeYear->id);
+        }
+        
         // Calculate totals
-        $totalIncome = FinanceTransaction::where('type', 'income')->sum('amount') ?? 0;
-        $totalExpenses = FinanceTransaction::where('type', 'expense')->sum('amount') ?? 0;
+        $totalIncome = $incomeQuery->sum('amount') ?? 0;
+        $totalExpenses = $expenseQuery->sum('amount') ?? 0;
         $balance = $totalIncome - $totalExpenses;
         $totalParishioners = Parishioner::count();
         
         // Monthly statistics
-        $monthlyIncome = FinanceTransaction::where('type', 'income')
+        $monthlyIncome = (clone $incomeQuery)
             ->whereMonth('transaction_date', now()->month)
             ->whereYear('transaction_date', now()->year)
             ->sum('amount') ?? 0;
         
-        $monthlyExpenses = FinanceTransaction::where('type', 'expense')
+        $monthlyExpenses = (clone $expenseQuery)
             ->whereMonth('transaction_date', now()->month)
             ->whereYear('transaction_date', now()->year)
             ->sum('amount') ?? 0;
         
         // Weekly statistics
-        $weeklyIncome = FinanceTransaction::where('type', 'income')
+        $weeklyIncome = (clone $incomeQuery)
             ->whereBetween('transaction_date', [now()->startOfWeek(), now()->endOfWeek()])
             ->sum('amount') ?? 0;
         
-        $weeklyExpenses = FinanceTransaction::where('type', 'expense')
+        $weeklyExpenses = (clone $expenseQuery)
             ->whereBetween('transaction_date', [now()->startOfWeek(), now()->endOfWeek()])
             ->sum('amount') ?? 0;
         
         // Today's statistics
-        $todayIncome = FinanceTransaction::where('type', 'income')
+        $todayIncome = (clone $incomeQuery)
             ->whereDate('transaction_date', today())
             ->sum('amount') ?? 0;
         
-        $todayExpenses = FinanceTransaction::where('type', 'expense')
+        $todayExpenses = (clone $expenseQuery)
             ->whereDate('transaction_date', today())
             ->sum('amount') ?? 0;
         
         // Income by category
-        $incomeByCategory = FinanceTransaction::where('type', 'income')
+        $incomeByCategory = (clone $incomeQuery)
             ->select('category', DB::raw('SUM(amount) as total'))
             ->groupBy('category')
             ->get();
         
         // Expenses by category
-        $expensesByCategory = FinanceTransaction::where('type', 'expense')
+        $expensesByCategory = (clone $expenseQuery)
             ->select('category', DB::raw('SUM(amount) as total'))
             ->groupBy('category')
             ->get();
         
         // Recent transactions
-        $recentTransactions = FinanceTransaction::with('creator')
+        $recentQuery = FinanceTransaction::query();
+        if ($activeYear) {
+            $recentQuery->where('financial_year_id', $activeYear->id);
+        }
+        $recentTransactions = $recentQuery->with('creator')
             ->latest()
             ->limit(10)
             ->get();
@@ -94,11 +111,14 @@ class DashboardController extends Controller
         $incomeTrend = [];
         for ($i = 6; $i >= 0; $i--) {
             $date = now()->subDays($i);
+            $trendQuery = FinanceTransaction::where('type', 'income')
+                ->whereDate('transaction_date', $date);
+            if ($activeYear) {
+                $trendQuery->where('financial_year_id', $activeYear->id);
+            }
             $incomeTrend[] = [
                 'date' => $date->format('M d'),
-                'amount' => FinanceTransaction::where('type', 'income')
-                    ->whereDate('transaction_date', $date)
-                    ->sum('amount') ?? 0
+                'amount' => $trendQuery->sum('amount') ?? 0
             ];
         }
         
@@ -106,15 +126,19 @@ class DashboardController extends Controller
         $expensesTrend = [];
         for ($i = 6; $i >= 0; $i--) {
             $date = now()->subDays($i);
+            $trendQuery = FinanceTransaction::where('type', 'expense')
+                ->whereDate('transaction_date', $date);
+            if ($activeYear) {
+                $trendQuery->where('financial_year_id', $activeYear->id);
+            }
             $expensesTrend[] = [
                 'date' => $date->format('M d'),
-                'amount' => FinanceTransaction::where('type', 'expense')
-                    ->whereDate('transaction_date', $date)
-                    ->sum('amount') ?? 0
+                'amount' => $trendQuery->sum('amount') ?? 0
             ];
         }
         
         return view('dashboard', compact(
+            'activeYear',
             'totalIncome',
             'totalExpenses',
             'balance',

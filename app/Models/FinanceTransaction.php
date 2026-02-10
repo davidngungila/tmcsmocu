@@ -14,6 +14,8 @@ class FinanceTransaction extends Model
         'description',
         'amount',
         'transaction_date',
+        'financial_year_id',
+        'parishioner_id',
         'created_by',
         'reference_number',
         'notes',
@@ -27,5 +29,15 @@ class FinanceTransaction extends Model
     public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function financialYear(): BelongsTo
+    {
+        return $this->belongsTo(FinancialYear::class);
+    }
+
+    public function parishioner(): BelongsTo
+    {
+        return $this->belongsTo(Parishioner::class);
     }
 }

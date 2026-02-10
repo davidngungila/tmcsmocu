@@ -4,21 +4,29 @@ namespace App\Http\Controllers\Finance;
 
 use App\Http\Controllers\Controller;
 use App\Models\FinanceTransaction;
+use App\Models\FinancialYear;
 use Illuminate\Http\Request;
 
 class ExpenseController extends Controller
 {
     public function index()
     {
-        $expenses = FinanceTransaction::where('type', 'expense')
-            ->with('creator')
+        $activeYear = FinancialYear::getActive();
+        $query = FinanceTransaction::where('type', 'expense');
+        
+        // Filter by active financial year if exists
+        if ($activeYear) {
+            $query->where('financial_year_id', $activeYear->id);
+        }
+        
+        $expenses = $query->with('creator')
             ->latest()
             ->paginate(20);
         
         // Get all expenses for statistics (not paginated)
-        $allExpenses = FinanceTransaction::where('type', 'expense')->get();
+        $allExpenses = $query->get();
         
-        return view('finance.expenses.index', compact('expenses', 'allExpenses'));
+        return view('finance.expenses.index', compact('expenses', 'allExpenses', 'activeYear'));
     }
 
     public function create()
@@ -40,6 +48,12 @@ class ExpenseController extends Controller
 
         $validated['type'] = 'expense';
         $validated['created_by'] = auth()->id();
+        
+        // Assign to active financial year if exists
+        $activeYear = FinancialYear::getActive();
+        if ($activeYear) {
+            $validated['financial_year_id'] = $activeYear->id;
+        }
 
         FinanceTransaction::create($validated);
 

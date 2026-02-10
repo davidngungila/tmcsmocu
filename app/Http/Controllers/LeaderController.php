@@ -38,7 +38,11 @@ class LeaderController extends Controller
 
     public function show($id)
     {
-        $leader = Leader::with('parishioner')->findOrFail($id);
+        $leader = Leader::with([
+            'parishioner.communities',
+            'parishioner.apostolicGroups',
+            'parishioner.eventAttendances.event'
+        ])->findOrFail($id);
         return view('leaders.show', compact('leader'));
     }
 

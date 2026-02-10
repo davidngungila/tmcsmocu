@@ -55,6 +55,46 @@ class Parishioner extends Model
         return $this->hasMany(Leader::class);
     }
 
+    public function financialYears(): BelongsToMany
+    {
+        return $this->belongsToMany(FinancialYear::class, 'parishioner_financial_years')
+            ->withPivot('status', 'joined_date', 'graduated_date', 'notes')
+            ->withTimestamps();
+    }
+
+    /**
+     * Get status for current financial year
+     */
+    public function getCurrentYearStatus()
+    {
+        $activeYear = FinancialYear::getActive();
+        if (!$activeYear) {
+            return null;
+        }
+        
+        return $this->financialYears()
+            ->where('financial_years.id', $activeYear->id)
+            ->first()?->pivot;
+    }
+
+    /**
+     * Check if parishioner is new in current financial year
+     */
+    public function isNewInCurrentYear(): bool
+    {
+        $status = $this->getCurrentYearStatus();
+        return $status && $status->status === 'new';
+    }
+
+    /**
+     * Check if parishioner graduated in current financial year
+     */
+    public function isGraduatedInCurrentYear(): bool
+    {
+        $status = $this->getCurrentYearStatus();
+        return $status && $status->status === 'graduated';
+    }
+
     public function getFullNameAttribute()
     {
         return trim("{$this->first_name} {$this->middle_name} {$this->last_name}");

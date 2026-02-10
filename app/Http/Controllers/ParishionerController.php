@@ -97,7 +97,14 @@ class ParishionerController extends Controller
 
     public function show($id)
     {
-        $parishioner = Parishioner::with(['communities', 'apostolicGroups', 'events', 'eventAttendances', 'leaderPositions'])->findOrFail($id);
+        $parishioner = Parishioner::with([
+            'communities', 
+            'apostolicGroups', 
+            'events', 
+            'eventAttendances.event',
+            'leaderPositions',
+            'financialYears'
+        ])->findOrFail($id);
         
         // Get statistics
         $communitiesCount = $parishioner->communities()->wherePivot('is_active', true)->count();
@@ -106,8 +113,18 @@ class ParishionerController extends Controller
         $isLeader = $parishioner->leaderPositions()->where('is_active', true)->exists();
         $totalEvents = $parishioner->events()->count();
         
+        // Get financial contributions
+        $contributions = \App\Models\FinanceTransaction::where('parishioner_id', $parishioner->id)
+            ->where('type', 'income')
+            ->latest()
+            ->take(10)
+            ->get();
+        $totalContributions = \App\Models\FinanceTransaction::where('parishioner_id', $parishioner->id)
+            ->where('type', 'income')
+            ->sum('amount');
+        
         // Get recent activities
-        $recentEvents = $parishioner->events()->latest('start_date')->limit(5)->get();
+        $recentEvents = $parishioner->eventAttendances()->with('event')->latest('checked_in_at')->limit(5)->get();
         $recentCommunities = $parishioner->communities()->wherePivot('is_active', true)->latest('parishioner_community.joined_date')->limit(5)->get();
         $recentGroups = $parishioner->apostolicGroups()->wherePivot('is_active', true)->latest('parishioner_apostolic_group.joined_date')->limit(5)->get();
         
@@ -116,7 +133,10 @@ class ParishionerController extends Controller
         $activeGroups = $parishioner->apostolicGroups()->wherePivot('is_active', true)->get();
         
         // Get leader positions
-        $leaderPositions = $parishioner->leaderPositions()->where('is_active', true)->with('parishioner')->get();
+        $leaderPositions = $parishioner->leaderPositions()->where('is_active', true)->get();
+        
+        // Get current financial year status
+        $currentYearStatus = $parishioner->getCurrentYearStatus();
         
         return view('parishioners.show', compact(
             'parishioner',
@@ -130,7 +150,10 @@ class ParishionerController extends Controller
             'recentGroups',
             'activeCommunities',
             'activeGroups',
-            'leaderPositions'
+            'leaderPositions',
+            'contributions',
+            'totalContributions',
+            'currentYearStatus'
         ));
     }
 

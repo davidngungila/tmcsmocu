@@ -14,11 +14,21 @@ return new class extends Migration
         Schema::create('event_attendances', function (Blueprint $table) {
             $table->id();
             $table->foreignId('event_id')->constrained('events')->onDelete('cascade');
-            $table->foreignId('parishioner_id')->constrained('parishioners')->onDelete('cascade');
+            $table->foreignId('parishioner_id')->nullable()->constrained('parishioners')->onDelete('cascade');
+            $table->foreignId('registration_id')->nullable()->constrained('event_registrations')->onDelete('set null');
+            
+            // For non-parishioner attendance
+            $table->string('name')->nullable();
+            $table->string('phone')->nullable();
+            
             $table->boolean('attended')->default(false);
             $table->timestamp('checked_in_at')->nullable();
+            $table->timestamp('checked_out_at')->nullable();
+            $table->string('check_in_method')->nullable(); // qr_code, manual, online
             $table->text('notes')->nullable();
             $table->timestamps();
+            
+            $table->index(['event_id', 'attended']);
         });
     }
 

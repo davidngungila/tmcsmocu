@@ -8,11 +8,18 @@ use App\Http\Controllers\Finance\ExpenseController;
 use App\Http\Controllers\Finance\BalanceController;
 use App\Http\Controllers\Finance\ReportController;
 use App\Http\Controllers\Finance\SacramentController;
+use App\Http\Controllers\Finance\ZakaController;
+use App\Http\Controllers\Finance\SadakaController;
+use App\Http\Controllers\Finance\FunguLaKumiController;
+use App\Http\Controllers\Finance\ShukraniController;
+use App\Http\Controllers\Finance\MichangoMingineController;
 use App\Http\Controllers\AssetController;
 use App\Http\Controllers\ParishionerController;
 use App\Http\Controllers\CommunityController;
 use App\Http\Controllers\ApostolicGroupController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\Event\EventApprovalController;
+use App\Http\Controllers\Event\EventLiturgicalRoleController;
 use App\Http\Controllers\LeaderController;
 use App\Http\Controllers\Sms\SmsCampaignController;
 use App\Http\Controllers\Sms\SmsTemplateController;
@@ -23,6 +30,7 @@ use App\Http\Controllers\ReportController as GeneralReportController;
 use App\Http\Controllers\Settings\UserController;
 use App\Http\Controllers\Settings\PermissionController;
 use App\Http\Controllers\Settings\GeneralSettingsController;
+use App\Http\Controllers\Settings\FinancialYearController;
 
 // Authentication Routes
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -45,6 +53,42 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/income/{id}', [IncomeController::class, 'destroy'])->name('income.destroy');
         Route::get('/income/{id}/print', [IncomeController::class, 'print'])->name('income.print');
         Route::get('/income/{id}/pdf', [IncomeController::class, 'pdf'])->name('income.pdf');
+        
+        // Contribution-specific routes
+        Route::prefix('zaka')->name('zaka.')->group(function () {
+            Route::get('/', [ZakaController::class, 'index'])->name('index');
+            Route::get('/create', [ZakaController::class, 'create'])->name('create');
+            Route::post('/', [ZakaController::class, 'store'])->name('store');
+            Route::get('/{id}', [ZakaController::class, 'show'])->name('show');
+        });
+        
+        Route::prefix('sadaka')->name('sadaka.')->group(function () {
+            Route::get('/', [SadakaController::class, 'index'])->name('index');
+            Route::get('/create', [SadakaController::class, 'create'])->name('create');
+            Route::post('/', [SadakaController::class, 'store'])->name('store');
+            Route::get('/{id}', [SadakaController::class, 'show'])->name('show');
+        });
+        
+        Route::prefix('fungu-la-kumi')->name('fungu-la-kumi.')->group(function () {
+            Route::get('/', [FunguLaKumiController::class, 'index'])->name('index');
+            Route::get('/create', [FunguLaKumiController::class, 'create'])->name('create');
+            Route::post('/', [FunguLaKumiController::class, 'store'])->name('store');
+            Route::get('/{id}', [FunguLaKumiController::class, 'show'])->name('show');
+        });
+        
+        Route::prefix('shukrani')->name('shukrani.')->group(function () {
+            Route::get('/', [ShukraniController::class, 'index'])->name('index');
+            Route::get('/create', [ShukraniController::class, 'create'])->name('create');
+            Route::post('/', [ShukraniController::class, 'store'])->name('store');
+            Route::get('/{id}', [ShukraniController::class, 'show'])->name('show');
+        });
+        
+        Route::prefix('michango-mingine')->name('michango-mingine.')->group(function () {
+            Route::get('/', [MichangoMingineController::class, 'index'])->name('index');
+            Route::get('/create', [MichangoMingineController::class, 'create'])->name('create');
+            Route::post('/', [MichangoMingineController::class, 'store'])->name('store');
+            Route::get('/{id}', [MichangoMingineController::class, 'show'])->name('show');
+        });
         
         Route::get('/expenses', [ExpenseController::class, 'index'])->name('expenses.index');
         Route::get('/expenses/create', [ExpenseController::class, 'create'])->name('expenses.create');
@@ -89,7 +133,21 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('apostolic-groups', ApostolicGroupController::class);
     
     // Events Routes
+    Route::get('/events/calendar', [EventController::class, 'calendar'])->name('events.calendar');
+    Route::get('/events/{id}/qr-code', [EventController::class, 'qrCode'])->name('events.qr-code');
     Route::resource('events', EventController::class);
+    
+    // Event sub-features
+    Route::prefix('events/{eventId}')->name('events.')->group(function () {
+        Route::get('/approvals', [EventApprovalController::class, 'index'])->name('approvals');
+        Route::post('/approvals', [EventApprovalController::class, 'store'])->name('approvals.store');
+        Route::put('/approvals/{id}', [EventApprovalController::class, 'update'])->name('approvals.update');
+        
+        Route::get('/volunteers', [EventLiturgicalRoleController::class, 'index'])->name('volunteers.index');
+        Route::post('/volunteers', [EventLiturgicalRoleController::class, 'store'])->name('volunteers.store');
+        Route::put('/volunteers/{id}', [EventLiturgicalRoleController::class, 'update'])->name('volunteers.update');
+        Route::delete('/volunteers/{id}', [EventLiturgicalRoleController::class, 'destroy'])->name('volunteers.destroy');
+    });
     
     // Leaders Routes
     Route::resource('leaders', LeaderController::class);
@@ -136,6 +194,15 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/notification-providers/{id}/test-email', [\App\Http\Controllers\Settings\NotificationProviderController::class, 'testEmail'])->name('notification-providers.test-email');
         Route::post('/notification-providers/{id}/test-sms', [\App\Http\Controllers\Settings\NotificationProviderController::class, 'testSms'])->name('notification-providers.test-sms');
         Route::get('/notification-providers/{id}/balance', [\App\Http\Controllers\Settings\NotificationProviderController::class, 'checkBalance'])->name('notification-providers.balance');
+        
+        // Financial Years
+        Route::get('/financial-years', [FinancialYearController::class, 'index'])->name('financial-years.index');
+        Route::get('/financial-years/create', [FinancialYearController::class, 'create'])->name('financial-years.create');
+        Route::post('/financial-years', [FinancialYearController::class, 'store'])->name('financial-years.store');
+        Route::post('/financial-years/{id}/set-active', [FinancialYearController::class, 'setActive'])->name('financial-years.set-active');
+        Route::post('/financial-years/{id}/close', [FinancialYearController::class, 'close'])->name('financial-years.close');
+        Route::get('/financial-years/{id}/transition', [FinancialYearController::class, 'showTransition'])->name('financial-years.transition');
+        Route::post('/financial-years/{id}/transition', [FinancialYearController::class, 'transition'])->name('financial-years.transition.store');
     });
     
     // Profile Routes

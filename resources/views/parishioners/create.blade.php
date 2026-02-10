@@ -90,21 +90,30 @@
             
             <!-- Contact Information -->
             <div class="border-t border-gray-200 pt-6">
-                <h3 class="text-lg font-bold text-gray-800 mb-4">Contact Information</h3>
+                <h3 class="text-lg font-bold text-gray-800 mb-4">Contact Information (Important for Receiving Receipts and Messages)</h3>
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                    <p class="text-sm text-blue-800">
+                        <strong>Important:</strong> Please fill in phone number and email so the parishioner can receive receipts (softcopy) and thank you messages via SMS.
+                    </p>
+                </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-2">Phone Number</label>
-                        <input type="text" name="phone" value="{{ old('phone') }}"
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Phone Number * <span class="text-red-500">(Required)</span></label>
+                        <input type="text" name="phone" value="{{ old('phone') }}" required
+                            placeholder="e.g., 0712345678 or 255712345678"
                             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                        <p class="text-xs text-gray-500 mt-1">To receive thank you messages after contributions</p>
                         @error('phone')
                             <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
                     
                     <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-2">Email</label>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Email Address <span class="text-blue-500">(Recommended)</span></label>
                         <input type="email" name="email" value="{{ old('email') }}"
+                            placeholder="e.g., name@email.com"
                             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                        <p class="text-xs text-gray-500 mt-1">To receive softcopy receipts</p>
                         @error('email')
                             <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                         @enderror

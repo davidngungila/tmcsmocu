@@ -20,6 +20,11 @@ use App\Http\Controllers\ApostolicGroupController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\Event\EventApprovalController;
 use App\Http\Controllers\Event\EventLiturgicalRoleController;
+use App\Http\Controllers\Event\EventAttendanceController;
+use App\Http\Controllers\Event\EventRegistrationController;
+use App\Http\Controllers\Event\EventFinanceController;
+use App\Http\Controllers\Event\EventMediaController;
+use App\Http\Controllers\Event\EventReportController;
 use App\Http\Controllers\LeaderController;
 use App\Http\Controllers\Sms\SmsCampaignController;
 use App\Http\Controllers\Sms\SmsTemplateController;
@@ -102,8 +107,11 @@ Route::middleware(['auth'])->group(function () {
         
         Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
         Route::get('/reports/daily', [ReportController::class, 'daily'])->name('reports.daily');
+        Route::get('/reports/daily/pdf', [ReportController::class, 'dailyPdf'])->name('reports.daily.pdf');
         Route::get('/reports/monthly', [ReportController::class, 'monthly'])->name('reports.monthly');
+        Route::get('/reports/monthly/pdf', [ReportController::class, 'monthlyPdf'])->name('reports.monthly.pdf');
         Route::get('/reports/annual', [ReportController::class, 'annual'])->name('reports.annual');
+        Route::get('/reports/annual/pdf', [ReportController::class, 'annualPdf'])->name('reports.annual.pdf');
         
         Route::get('/sacraments', [SacramentController::class, 'index'])->name('sacraments.index');
         Route::get('/sacraments/create', [SacramentController::class, 'create'])->name('sacraments.create');
@@ -147,6 +155,24 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/volunteers', [EventLiturgicalRoleController::class, 'store'])->name('volunteers.store');
         Route::put('/volunteers/{id}', [EventLiturgicalRoleController::class, 'update'])->name('volunteers.update');
         Route::delete('/volunteers/{id}', [EventLiturgicalRoleController::class, 'destroy'])->name('volunteers.destroy');
+        
+        Route::get('/attendance', [EventAttendanceController::class, 'index'])->name('attendance.index');
+        Route::post('/attendance', [EventAttendanceController::class, 'store'])->name('attendance.store');
+        Route::put('/attendance/{id}', [EventAttendanceController::class, 'update'])->name('attendance.update');
+        
+        Route::get('/registrations', [EventRegistrationController::class, 'index'])->name('registrations.index');
+        Route::post('/registrations', [EventRegistrationController::class, 'store'])->name('registrations.store');
+        Route::put('/registrations/{id}', [EventRegistrationController::class, 'update'])->name('registrations.update');
+        
+        Route::get('/finances', [EventFinanceController::class, 'index'])->name('finances.index');
+        Route::post('/finances', [EventFinanceController::class, 'store'])->name('finances.store');
+        Route::put('/finances/{id}', [EventFinanceController::class, 'update'])->name('finances.update');
+        
+        Route::get('/media', [EventMediaController::class, 'index'])->name('media.index');
+        Route::post('/media', [EventMediaController::class, 'store'])->name('media.store');
+        Route::delete('/media/{id}', [EventMediaController::class, 'destroy'])->name('media.destroy');
+        
+        Route::get('/reports', [EventReportController::class, 'index'])->name('reports');
     });
     
     // Leaders Routes

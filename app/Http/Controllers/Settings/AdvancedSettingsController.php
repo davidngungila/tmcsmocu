@@ -90,6 +90,4 @@ class AdvancedSettingsController extends Controller
             ->with('error', 'Tatizo limetokea wakati wa kupakia logo.');
     }
 }
-    }
-}
 

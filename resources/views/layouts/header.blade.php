@@ -20,8 +20,8 @@
     
     <div class="flex items-center space-x-4">
         <!-- Notifications Dropdown -->
-        <div class="relative group">
-            <button class="relative p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
+        <div class="relative group" id="notifications-group">
+            <button onclick="toggleNotificationsMenu()" class="relative p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
                 </svg>
@@ -29,7 +29,7 @@
             </button>
             
             <!-- Notifications Dropdown Menu -->
-            <div class="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+            <div id="notifications-menu" class="absolute right-0 sm:right-0 mt-2 w-[calc(100vw-2rem)] sm:w-72 md:w-80 max-w-sm bg-white rounded-lg shadow-xl border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 max-h-[calc(100vh-5rem)] overflow-hidden flex flex-col">
                 <div class="p-4 border-b border-gray-200 bg-gray-50">
                     <div class="flex items-center justify-between">
                         <h3 class="text-base font-bold text-gray-800">Arifa</h3>
@@ -166,8 +166,22 @@
         menu.classList.toggle('scale-100');
     }
     
-    // Close profile menu when clicking outside
+    function toggleNotificationsMenu() {
+        const menu = document.getElementById('notifications-menu');
+        const isVisible = !menu.classList.contains('invisible');
+        
+        if (isVisible) {
+            menu.classList.add('opacity-0');
+            menu.classList.add('invisible');
+        } else {
+            menu.classList.remove('opacity-0');
+            menu.classList.remove('invisible');
+        }
+    }
+    
+    // Close menus when clicking outside
     document.addEventListener('click', function(event) {
+        // Profile menu
         const profileButton = event.target.closest('[onclick="toggleProfileMenu()"]');
         const profileMenu = document.getElementById('profile-menu');
         
@@ -178,30 +192,65 @@
             profileMenu.classList.remove('opacity-100');
             profileMenu.classList.remove('scale-100');
         }
+        
+        // Notifications menu
+        const notificationsButton = event.target.closest('[onclick="toggleNotificationsMenu()"]');
+        const notificationsGroup = document.getElementById('notifications-group');
+        const notificationsMenu = document.getElementById('notifications-menu');
+        
+        if (!notificationsButton && notificationsGroup && !notificationsGroup.contains(event.target)) {
+            notificationsMenu.classList.add('opacity-0');
+            notificationsMenu.classList.add('invisible');
+        }
     });
     
-    // Show profile menu on hover
+    // Show menus on hover (desktop only)
     document.addEventListener('DOMContentLoaded', function() {
+        // Profile menu hover
         const profileGroup = document.querySelector('.relative.group');
         const profileMenu = document.getElementById('profile-menu');
         
         if (profileGroup && profileMenu) {
             profileGroup.addEventListener('mouseenter', function() {
-                profileMenu.classList.remove('hidden');
-                profileMenu.classList.remove('opacity-0');
-                profileMenu.classList.remove('scale-95');
-                profileMenu.classList.add('opacity-100');
-                profileMenu.classList.add('scale-100');
+                if (window.innerWidth >= 768) { // Only on desktop
+                    profileMenu.classList.remove('hidden');
+                    profileMenu.classList.remove('opacity-0');
+                    profileMenu.classList.remove('scale-95');
+                    profileMenu.classList.add('opacity-100');
+                    profileMenu.classList.add('scale-100');
+                }
             });
             
             profileGroup.addEventListener('mouseleave', function() {
-                profileMenu.classList.add('opacity-0');
-                profileMenu.classList.add('scale-95');
-                setTimeout(() => {
-                    if (profileMenu.classList.contains('opacity-0')) {
-                        profileMenu.classList.add('hidden');
-                    }
-                }, 200);
+                if (window.innerWidth >= 768) { // Only on desktop
+                    profileMenu.classList.add('opacity-0');
+                    profileMenu.classList.add('scale-95');
+                    setTimeout(() => {
+                        if (profileMenu.classList.contains('opacity-0')) {
+                            profileMenu.classList.add('hidden');
+                        }
+                    }, 200);
+                }
+            });
+        }
+        
+        // Notifications menu hover
+        const notificationsGroup = document.getElementById('notifications-group');
+        const notificationsMenu = document.getElementById('notifications-menu');
+        
+        if (notificationsGroup && notificationsMenu) {
+            notificationsGroup.addEventListener('mouseenter', function() {
+                if (window.innerWidth >= 768) { // Only on desktop
+                    notificationsMenu.classList.remove('opacity-0');
+                    notificationsMenu.classList.remove('invisible');
+                }
+            });
+            
+            notificationsGroup.addEventListener('mouseleave', function() {
+                if (window.innerWidth >= 768) { // Only on desktop
+                    notificationsMenu.classList.add('opacity-0');
+                    notificationsMenu.classList.add('invisible');
+                }
             });
         }
     });

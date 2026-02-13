@@ -91,7 +91,7 @@ class MichangoMingineController extends Controller
         }
 
         return redirect()->route('finance.michango-mingine.index')
-            ->with('success', 'Contribution recorded successfully and thank you message sent to contributor.');
+            ->with('success', 'Mchango umeandikwa kwa mafanikio na ujumbe wa shukrani umetumwa kwa mtoaji.');
     }
 
     public function show($id)

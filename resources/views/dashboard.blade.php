@@ -5,14 +5,14 @@
     <!-- Page Header -->
     <div class="flex items-center justify-between">
         <div>
-            <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">Dashboard</h1>
-            <p class="text-gray-600 mt-1 text-sm sm:text-base">Welcome back, {{ Auth::user()->name }}!</p>
+            <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">Dashibodi</h1>
+            <p class="text-gray-600 mt-1 text-sm sm:text-base">Karibu tena, {{ Auth::user()->name }}!</p>
         </div>
         <div class="flex items-center space-x-2 text-xs sm:text-sm text-gray-500">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
             </svg>
-            <span>Home > Dashboard</span>
+            <span>Nyumbani > Dashibodi</span>
         </div>
     </div>
     
@@ -22,9 +22,9 @@
         <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-4 sm:p-6 border border-green-200 shadow-sm">
             <div class="flex items-center justify-between">
                 <div class="flex-1 min-w-0">
-                    <p class="text-xs sm:text-sm font-medium text-green-700 truncate">Total Income</p>
+                    <p class="text-xs sm:text-sm font-medium text-green-700 truncate">Mapato Jumla</p>
                     <p class="text-xl sm:text-2xl font-bold text-green-900 mt-2 truncate">TZS {{ number_format($totalIncome ?? 0, 2) }}</p>
-                    <p class="text-xs text-green-600 mt-1">This Month: TZS {{ number_format($monthlyIncome ?? 0, 2) }}</p>
+                    <p class="text-xs text-green-600 mt-1">Mwezi Huu: TZS {{ number_format($monthlyIncome ?? 0, 2) }}</p>
                 </div>
                 <div class="w-10 h-10 sm:w-12 sm:h-12 bg-green-500 rounded-lg flex items-center justify-center flex-shrink-0 ml-2">
                     <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -38,9 +38,9 @@
         <div class="bg-gradient-to-br from-red-50 to-red-100 rounded-xl p-4 sm:p-6 border border-red-200 shadow-sm">
             <div class="flex items-center justify-between">
                 <div class="flex-1 min-w-0">
-                    <p class="text-xs sm:text-sm font-medium text-red-700 truncate">Total Expenses</p>
+                    <p class="text-xs sm:text-sm font-medium text-red-700 truncate">Matumizi Jumla</p>
                     <p class="text-xl sm:text-2xl font-bold text-red-900 mt-2 truncate">TZS {{ number_format($totalExpenses ?? 0, 2) }}</p>
-                    <p class="text-xs text-red-600 mt-1">This Month: TZS {{ number_format($monthlyExpenses ?? 0, 2) }}</p>
+                    <p class="text-xs text-red-600 mt-1">Mwezi Huu: TZS {{ number_format($monthlyExpenses ?? 0, 2) }}</p>
                 </div>
                 <div class="w-10 h-10 sm:w-12 sm:h-12 bg-red-500 rounded-lg flex items-center justify-center flex-shrink-0 ml-2">
                     <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -54,9 +54,9 @@
         <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-4 sm:p-6 border border-purple-200 shadow-sm">
             <div class="flex items-center justify-between">
                 <div class="flex-1 min-w-0">
-                    <p class="text-xs sm:text-sm font-medium text-purple-700 truncate">Balance</p>
+                    <p class="text-xs sm:text-sm font-medium text-purple-700 truncate">Salio</p>
                     <p class="text-xl sm:text-2xl font-bold text-purple-900 mt-2 truncate">TZS {{ number_format($balance ?? 0, 2) }}</p>
-                    <p class="text-xs text-purple-600 mt-1">Today: TZS {{ number_format(($todayIncome ?? 0) - ($todayExpenses ?? 0), 2) }}</p>
+                    <p class="text-xs text-purple-600 mt-1">Leo: TZS {{ number_format(($todayIncome ?? 0) - ($todayExpenses ?? 0), 2) }}</p>
                 </div>
                 <div class="w-10 h-10 sm:w-12 sm:h-12 bg-purple-500 rounded-lg flex items-center justify-center flex-shrink-0 ml-2">
                     <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -70,9 +70,9 @@
         <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-4 sm:p-6 border border-blue-200 shadow-sm">
             <div class="flex items-center justify-between">
                 <div class="flex-1 min-w-0">
-                    <p class="text-xs sm:text-sm font-medium text-blue-700 truncate">Parishioners</p>
+                    <p class="text-xs sm:text-sm font-medium text-blue-700 truncate">Wanachama</p>
                     <p class="text-xl sm:text-2xl font-bold text-blue-900 mt-2 truncate">{{ number_format($totalParishioners ?? 0) }}</p>
-                    <p class="text-xs text-blue-600 mt-1">Students: {{ $studentParishioners ?? 0 }} | Workers: {{ $workerParishioners ?? 0 }}</p>
+                    <p class="text-xs text-blue-600 mt-1">Wanafunzi: {{ $studentParishioners ?? 0 }} | Wafanyakazi: {{ $workerParishioners ?? 0 }}</p>
                 </div>
                 <div class="w-10 h-10 sm:w-12 sm:h-12 bg-blue-500 rounded-lg flex items-center justify-center flex-shrink-0 ml-2">
                     <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -86,27 +86,27 @@
     <!-- Secondary Stats -->
     <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4">
         <div class="bg-white rounded-lg p-4 border border-gray-200 shadow-sm text-center">
-            <p class="text-xs text-gray-500 mb-1">Today Income</p>
+            <p class="text-xs text-gray-500 mb-1">Mapato ya Leo</p>
             <p class="text-lg font-bold text-green-600">TZS {{ number_format($todayIncome ?? 0, 2) }}</p>
         </div>
         <div class="bg-white rounded-lg p-4 border border-gray-200 shadow-sm text-center">
-            <p class="text-xs text-gray-500 mb-1">Today Expenses</p>
+            <p class="text-xs text-gray-500 mb-1">Matumizi ya Leo</p>
             <p class="text-lg font-bold text-red-600">TZS {{ number_format($todayExpenses ?? 0, 2) }}</p>
         </div>
         <div class="bg-white rounded-lg p-4 border border-gray-200 shadow-sm text-center">
-            <p class="text-xs text-gray-500 mb-1">This Week</p>
+            <p class="text-xs text-gray-500 mb-1">Wiki Hii</p>
             <p class="text-lg font-bold text-blue-600">TZS {{ number_format($weeklyIncome ?? 0, 2) }}</p>
         </div>
         <div class="bg-white rounded-lg p-4 border border-gray-200 shadow-sm text-center">
-            <p class="text-xs text-gray-500 mb-1">Events</p>
+            <p class="text-xs text-gray-500 mb-1">Matukio</p>
             <p class="text-lg font-bold text-gray-800">{{ $totalEvents ?? 0 }}</p>
         </div>
         <div class="bg-white rounded-lg p-4 border border-gray-200 shadow-sm text-center">
-            <p class="text-xs text-gray-500 mb-1">Communities</p>
+            <p class="text-xs text-gray-500 mb-1">Jumuiya</p>
             <p class="text-lg font-bold text-gray-800">{{ $totalCommunities ?? 0 }}</p>
         </div>
         <div class="bg-white rounded-lg p-4 border border-gray-200 shadow-sm text-center">
-            <p class="text-xs text-gray-500 mb-1">Leaders</p>
+            <p class="text-xs text-gray-500 mb-1">Viongozi</p>
             <p class="text-lg font-bold text-gray-800">{{ $totalLeaders ?? 0 }}</p>
         </div>
     </div>
@@ -115,7 +115,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <!-- Income by Category -->
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h2 class="text-lg font-semibold text-gray-800 mb-4">Income by Category</h2>
+            <h2 class="text-lg font-semibold text-gray-800 mb-4">Mapato kwa Aina</h2>
             <div class="space-y-3">
                 @forelse($incomeByCategory ?? [] as $category)
                 <div class="flex items-center justify-between">
@@ -126,14 +126,14 @@
                     <span class="text-sm font-bold text-gray-900">TZS {{ number_format($category->total, 2) }}</span>
                 </div>
                 @empty
-                <p class="text-sm text-gray-500 text-center py-4">No income data available</p>
+                <p class="text-sm text-gray-500 text-center py-4">Hakuna data za mapato</p>
                 @endforelse
             </div>
         </div>
         
         <!-- Expenses by Category -->
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h2 class="text-lg font-semibold text-gray-800 mb-4">Expenses by Category</h2>
+            <h2 class="text-lg font-semibold text-gray-800 mb-4">Matumizi kwa Aina</h2>
             <div class="space-y-3">
                 @forelse($expensesByCategory ?? [] as $category)
                 <div class="flex items-center justify-between">
@@ -144,7 +144,7 @@
                     <span class="text-sm font-bold text-gray-900">TZS {{ number_format($category->total, 2) }}</span>
                 </div>
                 @empty
-                <p class="text-sm text-gray-500 text-center py-4">No expense data available</p>
+                <p class="text-sm text-gray-500 text-center py-4">Hakuna data za matumizi</p>
                 @endforelse
             </div>
         </div>
@@ -155,8 +155,8 @@
         <!-- Recent Transactions -->
         <div class="bg-white rounded-xl shadow-sm border border-gray-200">
             <div class="p-6 border-b border-gray-200 flex items-center justify-between">
-                <h2 class="text-lg font-semibold text-gray-800">Recent Transactions</h2>
-                <a href="{{ route('finance.income.index') }}" class="text-sm text-purple-600 hover:text-purple-700 font-medium">View All</a>
+                <h2 class="text-lg font-semibold text-gray-800">Miamala ya Hivi Karibuni</h2>
+                <a href="{{ route('finance.income.index') }}" class="text-sm text-purple-600 hover:text-purple-700 font-medium">Angalia Zote</a>
             </div>
             <div class="p-6">
                 <div class="space-y-3">
@@ -183,7 +183,7 @@
                         <svg class="w-12 h-12 mx-auto mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                         </svg>
-                        <p class="text-sm">No recent transactions</p>
+                        <p class="text-sm">Hakuna miamala ya hivi karibuni</p>
                     </div>
                     @endforelse
                 </div>
@@ -193,8 +193,8 @@
         <!-- Upcoming Events -->
         <div class="bg-white rounded-xl shadow-sm border border-gray-200">
             <div class="p-6 border-b border-gray-200 flex items-center justify-between">
-                <h2 class="text-lg font-semibold text-gray-800">Upcoming Events</h2>
-                <a href="{{ route('events.index') }}" class="text-sm text-purple-600 hover:text-purple-700 font-medium">View All</a>
+                <h2 class="text-lg font-semibold text-gray-800">Matukio Yajayo</h2>
+                <a href="{{ route('events.index') }}" class="text-sm text-purple-600 hover:text-purple-700 font-medium">Angalia Zote</a>
             </div>
             <div class="p-6">
                 <div class="space-y-3">
@@ -220,7 +220,7 @@
                         <svg class="w-12 h-12 mx-auto mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                         </svg>
-                        <p class="text-sm">No upcoming events</p>
+                        <p class="text-sm">Hakuna matukio yajayo</p>
                     </div>
                     @endforelse
                 </div>
@@ -230,43 +230,43 @@
     
     <!-- Quick Actions -->
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-        <h2 class="text-lg font-semibold text-gray-800 mb-4">Quick Actions</h2>
+        <h2 class="text-lg font-semibold text-gray-800 mb-4">Vitendo vya Haraka</h2>
         <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4">
             <a href="{{ route('finance.income.create') }}" class="flex flex-col items-center justify-center p-4 border-2 border-gray-200 rounded-lg hover:bg-purple-50 hover:border-purple-300 transition-all duration-200 group">
                 <svg class="w-8 h-8 text-purple-600 mb-2 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                 </svg>
-                <span class="text-xs font-medium text-gray-700 text-center">Add Income</span>
+                <span class="text-xs font-medium text-gray-700 text-center">Ongeza Mapato</span>
             </a>
             <a href="{{ route('finance.expenses.create') }}" class="flex flex-col items-center justify-center p-4 border-2 border-gray-200 rounded-lg hover:bg-red-50 hover:border-red-300 transition-all duration-200 group">
                 <svg class="w-8 h-8 text-red-600 mb-2 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path>
                 </svg>
-                <span class="text-xs font-medium text-gray-700 text-center">Add Expense</span>
+                <span class="text-xs font-medium text-gray-700 text-center">Ongeza Matumizi</span>
             </a>
             <a href="{{ route('parishioners.create') }}" class="flex flex-col items-center justify-center p-4 border-2 border-gray-200 rounded-lg hover:bg-blue-50 hover:border-blue-300 transition-all duration-200 group">
                 <svg class="w-8 h-8 text-blue-600 mb-2 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
                 </svg>
-                <span class="text-xs font-medium text-gray-700 text-center">Register Parishioner</span>
+                <span class="text-xs font-medium text-gray-700 text-center">Sajili Mwanachama</span>
             </a>
             <a href="{{ route('events.create') }}" class="flex flex-col items-center justify-center p-4 border-2 border-gray-200 rounded-lg hover:bg-orange-50 hover:border-orange-300 transition-all duration-200 group">
                 <svg class="w-8 h-8 text-orange-600 mb-2 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                 </svg>
-                <span class="text-xs font-medium text-gray-700 text-center">Create Event</span>
+                <span class="text-xs font-medium text-gray-700 text-center">Unda Tukio</span>
             </a>
             <a href="{{ route('sms.create') }}" class="flex flex-col items-center justify-center p-4 border-2 border-gray-200 rounded-lg hover:bg-green-50 hover:border-green-300 transition-all duration-200 group">
                 <svg class="w-8 h-8 text-green-600 mb-2 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
                 </svg>
-                <span class="text-xs font-medium text-gray-700 text-center">Send SMS</span>
+                <span class="text-xs font-medium text-gray-700 text-center">Tuma SMS</span>
             </a>
             <a href="{{ route('finance.sacraments.create') }}" class="flex flex-col items-center justify-center p-4 border-2 border-gray-200 rounded-lg hover:bg-yellow-50 hover:border-yellow-300 transition-all duration-200 group">
                 <svg class="w-8 h-8 text-yellow-600 mb-2 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                 </svg>
-                <span class="text-xs font-medium text-gray-700 text-center">Record Sacrament</span>
+                <span class="text-xs font-medium text-gray-700 text-center">Andika Sakramenti</span>
             </a>
         </div>
     </div>

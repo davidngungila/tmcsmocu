@@ -58,7 +58,7 @@ class IncomeController extends Controller
         FinanceTransaction::create($validated);
 
         return redirect()->route('finance.income.index')
-            ->with('success', 'Income recorded successfully.');
+            ->with('success', 'Mapato yameandikwa kwa mafanikio.');
     }
 
     public function show($id)
@@ -90,7 +90,7 @@ class IncomeController extends Controller
         $income->update($validated);
 
         return redirect()->route('finance.income.index')
-            ->with('success', 'Income updated successfully.');
+            ->with('success', 'Mapato yameboreshwa kwa mafanikio.');
     }
 
     public function destroy($id)
@@ -99,7 +99,7 @@ class IncomeController extends Controller
         $income->delete();
 
         return redirect()->route('finance.income.index')
-            ->with('success', 'Income deleted successfully.');
+            ->with('success', 'Mapato yamefutwa kwa mafanikio.');
     }
 
     public function print($id)

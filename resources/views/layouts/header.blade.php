@@ -10,7 +10,7 @@
         <!-- Search -->
         <div class="hidden md:flex items-center">
             <div class="relative">
-                <input type="text" placeholder="Search (Ctrl+K)" class="pl-10 pr-4 py-2 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent w-64">
+                <input type="text" placeholder="Tafuta (Ctrl+K)" class="pl-10 pr-4 py-2 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent w-64">
                 <svg class="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                 </svg>
@@ -32,8 +32,8 @@
             <div class="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                 <div class="p-4 border-b border-gray-200 bg-gray-50">
                     <div class="flex items-center justify-between">
-                        <h3 class="text-base font-bold text-gray-800">Notifications</h3>
-                        <span class="text-xs text-gray-500 bg-white px-2 py-1 rounded-full">3 new</span>
+                        <h3 class="text-base font-bold text-gray-800">Arifa</h3>
+                        <span class="text-xs text-gray-500 bg-white px-2 py-1 rounded-full">3 mpya</span>
                     </div>
                 </div>
                 <div class="max-h-96 overflow-y-auto">
@@ -45,9 +45,9 @@
                                 </svg>
                             </div>
                             <div class="flex-1 min-w-0">
-                                <p class="text-sm font-medium text-gray-900">New income recorded</p>
-                                <p class="text-xs text-gray-500 mt-1">TZS 50,000 was added to income</p>
-                                <p class="text-xs text-gray-400 mt-1">2 minutes ago</p>
+                                <p class="text-sm font-medium text-gray-900">Mapato mapya yameandikwa</p>
+                                <p class="text-xs text-gray-500 mt-1">TZS 50,000 yameongezwa kwenye mapato</p>
+                                <p class="text-xs text-gray-400 mt-1">Dakika 2 zilizopita</p>
                             </div>
                         </div>
                     </div>
@@ -59,9 +59,9 @@
                                 </svg>
                             </div>
                             <div class="flex-1 min-w-0">
-                                <p class="text-sm font-medium text-gray-900">SMS approval pending</p>
-                                <p class="text-xs text-gray-500 mt-1">Campaign "Weekly Update" needs approval</p>
-                                <p class="text-xs text-gray-400 mt-1">15 minutes ago</p>
+                                <p class="text-sm font-medium text-gray-900">Idhini ya SMS inasubiri</p>
+                                <p class="text-xs text-gray-500 mt-1">Kampeni "Sasisho la Wiki" inahitaji idhini</p>
+                                <p class="text-xs text-gray-400 mt-1">Dakika 15 zilizopita</p>
                             </div>
                         </div>
                     </div>
@@ -73,9 +73,9 @@
                                 </svg>
                             </div>
                             <div class="flex-1 min-w-0">
-                                <p class="text-sm font-medium text-gray-900">New parishioner registered</p>
-                                <p class="text-xs text-gray-500 mt-1">John Doe has been registered</p>
-                                <p class="text-xs text-gray-400 mt-1">1 hour ago</p>
+                                <p class="text-sm font-medium text-gray-900">Mwanachama mpya amesajiliwa</p>
+                                <p class="text-xs text-gray-500 mt-1">John Doe amesajiliwa</p>
+                                <p class="text-xs text-gray-400 mt-1">Saa 1 iliyopita</p>
                             </div>
                         </div>
                     </div>
@@ -87,15 +87,15 @@
                                 </svg>
                             </div>
                             <div class="flex-1 min-w-0">
-                                <p class="text-sm font-medium text-gray-900">Event scheduled</p>
-                                <p class="text-xs text-gray-500 mt-1">Sunday Mass scheduled for tomorrow</p>
-                                <p class="text-xs text-gray-400 mt-1">2 hours ago</p>
+                                <p class="text-sm font-medium text-gray-900">Tukio limepangwa</p>
+                                <p class="text-xs text-gray-500 mt-1">Misa ya Jumapili imepangwa kesho</p>
+                                <p class="text-xs text-gray-400 mt-1">Masaa 2 yaliyopita</p>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="p-3 border-t border-gray-200 bg-gray-50 text-center">
-                    <a href="#" class="text-sm text-purple-600 hover:text-purple-700 font-medium">View all notifications</a>
+                    <a href="#" class="text-sm text-purple-600 hover:text-purple-700 font-medium">Angalia arifa zote</a>
                 </div>
             </div>
         </div>
@@ -126,19 +126,19 @@
                         <svg class="w-5 h-5 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                         </svg>
-                        My Profile
+                        Wasifu Wangu
                     </a>
                     <a href="{{ route('settings.account') }}" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 rounded-lg transition-colors border-l-2 border-transparent hover:border-purple-500">
                         <svg class="w-5 h-5 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.14c1.906-.94 2.1-3.547.194-4.454a2.5 2.5 0 00-3.388 0c-.906.907-1.712 3.514-.194 4.454a1.724 1.724 0 002.573 1.14zm-3.388 1.854a2.5 2.5 0 11-3.388 3.388 2.5 2.5 0 013.388-3.388z"></path>
                         </svg>
-                        Account Settings
+                        Mipangilio ya Akunti
                     </a>
                     <a href="{{ route('settings.security') }}" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 rounded-lg transition-colors border-l-2 border-transparent hover:border-purple-500">
                         <svg class="w-5 h-5 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
                         </svg>
-                        Security
+                        Usalama
                     </a>
                     <div class="border-t border-gray-200 my-2"></div>
                     <form method="POST" action="{{ route('logout') }}">
@@ -147,7 +147,7 @@
                             <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
                             </svg>
-                            Logout
+                            Toka
                         </button>
                     </form>
                 </div>

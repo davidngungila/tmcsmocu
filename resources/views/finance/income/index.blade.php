@@ -5,14 +5,14 @@
     <!-- Header Section -->
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-            <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">Mapato (Income)</h1>
-            <p class="text-gray-600 mt-1 text-sm sm:text-base">Manage all income transactions</p>
+            <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">Mapato</h1>
+            <p class="text-gray-600 mt-1 text-sm sm:text-base">Simamia miamala yote ya mapato</p>
         </div>
         <a href="{{ route('finance.income.create') }}" class="bg-purple-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-bold hover:bg-purple-700 transition-colors shadow-sm text-sm sm:text-base whitespace-nowrap">
             <svg class="w-4 h-4 sm:w-5 sm:h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
             </svg>
-            Add Income
+            Ongeza Mapato
         </a>
     </div>
     
@@ -21,7 +21,7 @@
         <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-4 sm:p-6 border border-green-200 shadow-sm">
             <div class="flex items-center justify-between">
                 <div class="flex-1 min-w-0">
-                    <p class="text-xs sm:text-sm font-medium text-green-700 truncate">Total Income</p>
+                    <p class="text-xs sm:text-sm font-medium text-green-700 truncate">Mapato Jumla</p>
                     <p class="text-xl sm:text-2xl font-bold text-green-900 mt-2 truncate">TZS {{ number_format($allIncomes->sum('amount'), 2) }}</p>
                 </div>
                 <div class="w-10 h-10 sm:w-12 sm:h-12 bg-green-500 rounded-lg flex items-center justify-center flex-shrink-0 ml-2">
@@ -35,7 +35,7 @@
         <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-4 sm:p-6 border border-blue-200 shadow-sm">
             <div class="flex items-center justify-between">
                 <div class="flex-1 min-w-0">
-                    <p class="text-xs sm:text-sm font-medium text-blue-700 truncate">This Month</p>
+                    <p class="text-xs sm:text-sm font-medium text-blue-700 truncate">Mwezi Huu</p>
                     <p class="text-xl sm:text-2xl font-bold text-blue-900 mt-2 truncate">TZS {{ number_format($allIncomes->where('transaction_date', '>=', now()->startOfMonth())->sum('amount'), 2) }}</p>
                 </div>
                 <div class="w-10 h-10 sm:w-12 sm:h-12 bg-blue-500 rounded-lg flex items-center justify-center flex-shrink-0 ml-2">
@@ -49,7 +49,7 @@
         <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-4 sm:p-6 border border-purple-200 shadow-sm">
             <div class="flex items-center justify-between">
                 <div class="flex-1 min-w-0">
-                    <p class="text-xs sm:text-sm font-medium text-purple-700 truncate">This Week</p>
+                    <p class="text-xs sm:text-sm font-medium text-purple-700 truncate">Wiki Hii</p>
                     <p class="text-xl sm:text-2xl font-bold text-purple-900 mt-2 truncate">TZS {{ number_format($allIncomes->where('transaction_date', '>=', now()->startOfWeek())->sum('amount'), 2) }}</p>
                 </div>
                 <div class="w-10 h-10 sm:w-12 sm:h-12 bg-purple-500 rounded-lg flex items-center justify-center flex-shrink-0 ml-2">
@@ -79,7 +79,7 @@
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
         <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
             <div class="flex-1 min-w-0">
-                <input type="text" placeholder="Search by title or description..." class="w-full px-4 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                <input type="text" placeholder="Tafuta kwa jina au maelezo..." class="w-full px-4 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
             </div>
             <select class="px-4 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent w-full sm:w-auto">
                 <option value="">All Categories</option>
@@ -90,7 +90,7 @@
             </select>
             <input type="date" class="px-4 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent w-full sm:w-auto">
             <button class="px-6 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium text-sm whitespace-nowrap">
-                Filter
+                Chuja
             </button>
         </div>
     </div>
@@ -101,11 +101,11 @@
             <table class="w-full min-w-[800px]">
                 <thead class="bg-gradient-to-r from-purple-50 to-purple-100 border-b border-gray-200">
                     <tr>
-                        <th class="px-4 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Date</th>
-                        <th class="px-4 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Category</th>
-                        <th class="px-4 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Title</th>
-                        <th class="px-4 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider hidden md:table-cell">Description</th>
-                        <th class="px-4 py-3 text-right text-xs font-bold text-gray-700 uppercase tracking-wider">Amount</th>
+                        <th class="px-4 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Tarehe</th>
+                        <th class="px-4 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Aina</th>
+                        <th class="px-4 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Jina</th>
+                        <th class="px-4 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider hidden md:table-cell">Maelezo</th>
+                        <th class="px-4 py-3 text-right text-xs font-bold text-gray-700 uppercase tracking-wider">Kiasi</th>
                         <th class="px-4 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider hidden lg:table-cell">Recorded By</th>
                         <th class="px-4 py-3 text-right text-xs font-bold text-gray-700 uppercase tracking-wider">Actions</th>
                     </tr>

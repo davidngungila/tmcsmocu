@@ -91,7 +91,7 @@ class ZakaController extends Controller
         }
 
         return redirect()->route('finance.zaka.index')
-            ->with('success', 'Tithe recorded successfully and thank you message sent to contributor.');
+            ->with('success', 'Zaka imeandikwa kwa mafanikio na ujumbe wa shukrani umetumwa kwa mtoaji.');
     }
 
     public function show($id)

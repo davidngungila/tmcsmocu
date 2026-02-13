@@ -41,7 +41,7 @@ class SacramentController extends Controller
         SacramentSale::create($validated);
 
         return redirect()->route('finance.sacraments.index')
-            ->with('success', 'Sacrament sale recorded successfully.');
+            ->with('success', 'Uuzaji wa sakramenti umeandikwa kwa mafanikio.');
     }
 
     public function show($id)
@@ -72,7 +72,7 @@ class SacramentController extends Controller
         $sacrament->update($validated);
 
         return redirect()->route('finance.sacraments.index')
-            ->with('success', 'Sacrament sale updated successfully.');
+            ->with('success', 'Uuzaji wa sakramenti umeboreshwa kwa mafanikio.');
     }
 
     public function destroy($id)
@@ -81,6 +81,6 @@ class SacramentController extends Controller
         $sacrament->delete();
 
         return redirect()->route('finance.sacraments.index')
-            ->with('success', 'Sacrament sale deleted successfully.');
+            ->with('success', 'Uuzaji wa sakramenti umefutwa kwa mafanikio.');
     }
 }

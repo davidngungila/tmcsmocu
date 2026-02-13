@@ -91,7 +91,7 @@ class ShukraniController extends Controller
         }
 
         return redirect()->route('finance.shukrani.index')
-            ->with('success', 'Thanksgiving recorded successfully and thank you message sent to contributor.');
+            ->with('success', 'Shukrani imeandikwa kwa mafanikio na ujumbe wa shukrani umetumwa kwa mtoaji.');
     }
 
     public function show($id)

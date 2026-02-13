@@ -91,7 +91,7 @@ class SadakaController extends Controller
         }
 
         return redirect()->route('finance.sadaka.index')
-            ->with('success', 'Offering recorded successfully and thank you message sent to contributor.');
+            ->with('success', 'Sadaka imeandikwa kwa mafanikio na ujumbe wa shukrani umetumwa kwa mtoaji.');
     }
 
     public function show($id)

@@ -58,7 +58,7 @@ class ExpenseController extends Controller
         FinanceTransaction::create($validated);
 
         return redirect()->route('finance.expenses.index')
-            ->with('success', 'Expense recorded successfully.');
+            ->with('success', 'Matumizi yameandikwa kwa mafanikio.');
     }
 
     public function show($id)
@@ -90,7 +90,7 @@ class ExpenseController extends Controller
         $expense->update($validated);
 
         return redirect()->route('finance.expenses.index')
-            ->with('success', 'Expense updated successfully.');
+            ->with('success', 'Matumizi yameboreshwa kwa mafanikio.');
     }
 
     public function destroy($id)
@@ -99,6 +99,6 @@ class ExpenseController extends Controller
         $expense->delete();
 
         return redirect()->route('finance.expenses.index')
-            ->with('success', 'Expense deleted successfully.');
+            ->with('success', 'Matumizi yamefutwa kwa mafanikio.');
     }
 }

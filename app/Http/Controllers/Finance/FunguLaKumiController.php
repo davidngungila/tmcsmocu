@@ -91,7 +91,7 @@ class FunguLaKumiController extends Controller
         }
 
         return redirect()->route('finance.fungu-la-kumi.index')
-            ->with('success', 'Tenth recorded successfully and thank you message sent to contributor.');
+            ->with('success', 'Fungu la Kumi limeandikwa kwa mafanikio na ujumbe wa shukrani umetumwa kwa mtoaji.');
     }
 
     public function show($id)

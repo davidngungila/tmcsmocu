@@ -2,16 +2,16 @@
 
 @section('content')
 <div class="max-w-4xl mx-auto">
-    <div class="mb-6">
-        <h1 class="text-3xl font-bold text-gray-800">Create SMS Campaign</h1>
-        <p class="text-gray-600 mt-1">Create and send bulk SMS to parishioners</p>
+    <div class="mb-4 sm:mb-6">
+        <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">Tengeneza Kampeni ya SMS</h1>
+        <p class="text-gray-600 mt-1 text-sm sm:text-base">Tengeneza na tuma SMS kwa wingi kwa waumini</p>
     </div>
     
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <form method="POST" action="{{ route('sms.store') }}" class="space-y-6">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6">
+        <form method="POST" action="{{ route('sms.store') }}" class="space-y-4 sm:space-y-6">
             @csrf
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                 <div>
                     <label for="title" class="block text-base font-bold text-gray-700 mb-2">Campaign Title *</label>
                     <input type="text" id="title" name="title" required value="{{ old('title') }}" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-base">
@@ -82,12 +82,12 @@
                 @enderror
             </div>
             
-            <div class="flex items-center justify-end space-x-4 pt-4">
-                <a href="{{ route('sms.approval.index') }}" class="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors text-base font-bold">
-                    Cancel
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-3 sm:space-x-4 pt-4">
+                <a href="{{ route('sms.approval.index') }}" class="px-4 sm:px-6 py-2 sm:py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors text-sm sm:text-base font-bold text-center">
+                    Ghairi
                 </a>
-                <button type="submit" class="px-6 py-3 bg-purple-600 text-white rounded-lg font-bold hover:bg-purple-700 transition-colors text-base">
-                    Submit for Approval
+                <button type="submit" class="px-4 sm:px-6 py-2 sm:py-3 bg-purple-600 text-white rounded-lg font-bold hover:bg-purple-700 transition-colors text-sm sm:text-base">
+                    Wasilisha kwa Uthibitishaji
                 </button>
             </div>
         </form>

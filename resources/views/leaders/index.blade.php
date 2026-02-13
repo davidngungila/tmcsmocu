@@ -20,34 +20,38 @@
             <table class="w-full min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
-                        <th class="px-4 py-4 text-left text-xs font-bold text-gray-500 uppercase">Name</th>
-                        <th class="px-4 py-4 text-left text-xs font-bold text-gray-500 uppercase">Position</th>
-                        <th class="px-4 py-4 text-left text-xs font-bold text-gray-500 uppercase">Start Date</th>
-                        <th class="px-4 py-4 text-left text-xs font-bold text-gray-500 uppercase">End Date</th>
-                        <th class="px-4 py-4 text-left text-xs font-bold text-gray-500 uppercase">Status</th>
-                        <th class="px-4 py-4 text-right text-xs font-bold text-gray-500 uppercase">Actions</th>
+                        <th class="px-3 sm:px-4 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Jina</th>
+                        <th class="px-3 sm:px-4 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Nafasi</th>
+                        <th class="px-3 sm:px-4 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider hidden md:table-cell">Tarehe ya Kuanza</th>
+                        <th class="px-3 sm:px-4 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider hidden lg:table-cell">Tarehe ya Mwisho</th>
+                        <th class="px-3 sm:px-4 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Hali</th>
+                        <th class="px-3 sm:px-4 py-4 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Vitendo</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse($leaders as $leader)
-                    <tr class="hover:bg-gray-50">
-                        <td class="px-4 py-4 text-sm font-bold text-gray-900">{{ $leader->parishioner->full_name ?? 'N/A' }}</td>
-                        <td class="px-4 py-4 text-sm text-gray-700">{{ $leader->position }}</td>
-                        <td class="px-4 py-4 text-sm text-gray-700">{{ $leader->start_date->format('M d, Y') }}</td>
-                        <td class="px-4 py-4 text-sm text-gray-700">{{ $leader->end_date ? $leader->end_date->format('M d, Y') : 'Ongoing' }}</td>
-                        <td class="px-4 py-4">
+                    <tr class="hover:bg-gray-50 transition-colors">
+                        <td class="px-3 sm:px-4 py-4">
+                            <div class="text-xs sm:text-sm font-bold text-gray-900">{{ $leader->parishioner->full_name ?? 'N/A' }}</div>
+                            <div class="text-xs text-gray-500 mt-1 md:hidden">{{ $leader->start_date->format('M d, Y') }}</div>
+                            <div class="text-xs text-gray-500 mt-1 lg:hidden">{{ $leader->end_date ? $leader->end_date->format('M d, Y') : 'Inaendelea' }}</div>
+                        </td>
+                        <td class="px-3 sm:px-4 py-4 text-xs sm:text-sm text-gray-700">{{ $leader->position }}</td>
+                        <td class="px-3 sm:px-4 py-4 text-xs sm:text-sm text-gray-700 hidden md:table-cell">{{ $leader->start_date->format('M d, Y') }}</td>
+                        <td class="px-3 sm:px-4 py-4 text-xs sm:text-sm text-gray-700 hidden lg:table-cell">{{ $leader->end_date ? $leader->end_date->format('M d, Y') : 'Inaendelea' }}</td>
+                        <td class="px-3 sm:px-4 py-4 whitespace-nowrap">
                             <span class="px-2 py-1 text-xs font-medium rounded-full {{ $leader->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                                {{ $leader->is_active ? 'Active' : 'Inactive' }}
+                                {{ $leader->is_active ? 'Inaendelea' : 'Haijaendelea' }}
                             </span>
                         </td>
-                        <td class="px-4 py-4 text-right text-sm font-medium">
+                        <td class="px-3 sm:px-4 py-4 text-right text-xs sm:text-sm font-medium">
                             <div class="flex items-center justify-end space-x-2">
-                                <a href="{{ route('leaders.show', $leader->id) }}" class="text-purple-600 hover:text-purple-900">View</a>
-                                <a href="{{ route('leaders.edit', $leader->id) }}" class="text-blue-600 hover:text-blue-900">Edit</a>
-                                <form action="{{ route('leaders.destroy', $leader->id) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure?')">
+                                <a href="{{ route('leaders.show', $leader->id) }}" class="text-purple-600 hover:text-purple-900 font-medium">Angalia</a>
+                                <a href="{{ route('leaders.edit', $leader->id) }}" class="text-blue-600 hover:text-blue-900 font-medium hidden sm:inline">Hariri</a>
+                                <form action="{{ route('leaders.destroy', $leader->id) }}" method="POST" class="inline" onsubmit="return confirm('Una uhakika?')">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="text-red-600 hover:text-red-900">Delete</button>
+                                    <button type="submit" class="text-red-600 hover:text-red-900 font-medium hidden sm:inline">Futa</button>
                                 </form>
                             </div>
                         </td>

@@ -31,37 +31,46 @@
             <table class="w-full min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
-                        <th class="px-4 py-4 text-left text-xs font-bold text-gray-500 uppercase">Title</th>
-                        <th class="px-4 py-4 text-left text-xs font-bold text-gray-500 uppercase">Category</th>
-                        <th class="px-4 py-4 text-left text-xs font-bold text-gray-500 uppercase">Date</th>
-                        <th class="px-4 py-4 text-left text-xs font-bold text-gray-500 uppercase">Location</th>
-                        <th class="px-4 py-4 text-left text-xs font-bold text-gray-500 uppercase">Registrations</th>
-                        <th class="px-4 py-4 text-left text-xs font-bold text-gray-500 uppercase">Status</th>
-                        <th class="px-4 py-4 text-right text-xs font-bold text-gray-500 uppercase">Actions</th>
+                        <th class="px-3 sm:px-4 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Jina</th>
+                        <th class="px-3 sm:px-4 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider hidden sm:table-cell">Aina</th>
+                        <th class="px-3 sm:px-4 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Tarehe</th>
+                        <th class="px-3 sm:px-4 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider hidden md:table-cell">Mahali</th>
+                        <th class="px-3 sm:px-4 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider hidden lg:table-cell">Usajili</th>
+                        <th class="px-3 sm:px-4 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Hali</th>
+                        <th class="px-3 sm:px-4 py-4 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Vitendo</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse($events as $event)
-                    <tr class="hover:bg-gray-50">
-                        <td class="px-4 py-4">
-                            <div class="text-sm font-bold text-gray-900">{{ $event->title }}</div>
+                    <tr class="hover:bg-gray-50 transition-colors">
+                        <td class="px-3 sm:px-4 py-4">
+                            <div class="text-xs sm:text-sm font-bold text-gray-900">{{ $event->title }}</div>
                             @if($event->theme)
                                 <div class="text-xs text-gray-500 mt-1">Theme: {{ $event->theme }}</div>
                             @endif
+                            <div class="text-xs text-gray-500 mt-1 sm:hidden">
+                                <span class="px-2 py-1 rounded-full bg-purple-100 text-purple-800">
+                                    {{ ucfirst(str_replace('_', ' ', $event->category ?? $event->type)) }}
+                                </span>
+                            </div>
+                            <div class="text-xs text-gray-500 mt-1 md:hidden">{{ $event->location ?? 'N/A' }}</div>
+                            <div class="text-xs text-gray-500 mt-1 lg:hidden">
+                                <span class="font-bold">{{ $event->registrations_count ?? 0 }}</span> waliosajiliwa
+                            </div>
                         </td>
-                        <td class="px-4 py-4">
+                        <td class="px-3 sm:px-4 py-4 whitespace-nowrap hidden sm:table-cell">
                             <span class="px-2 py-1 text-xs font-medium rounded-full bg-purple-100 text-purple-800">
                                 {{ ucfirst(str_replace('_', ' ', $event->category ?? $event->type)) }}
                             </span>
                         </td>
-                        <td class="px-4 py-4 text-sm text-gray-700">
+                        <td class="px-3 sm:px-4 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">
                             <div>{{ $event->start_date->format('M d, Y') }}</div>
                             <div class="text-xs text-gray-500">{{ $event->start_date->format('h:i A') }}</div>
                         </td>
-                        <td class="px-4 py-4 text-sm text-gray-700">{{ $event->location ?? 'N/A' }}</td>
-                        <td class="px-4 py-4 text-sm">
+                        <td class="px-3 sm:px-4 py-4 text-xs sm:text-sm text-gray-700 hidden md:table-cell">{{ $event->location ?? 'N/A' }}</td>
+                        <td class="px-3 sm:px-4 py-4 text-xs sm:text-sm hidden lg:table-cell">
                             <div class="text-gray-900 font-bold">{{ $event->registrations_count ?? 0 }}</div>
-                            <div class="text-xs text-gray-500">Registered</div>
+                            <div class="text-xs text-gray-500">Waliosajiliwa</div>
                         </td>
                         <td class="px-4 py-4">
                             @php

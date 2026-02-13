@@ -3,29 +3,29 @@
 @section('content')
 <div class="space-y-6">
     <!-- Header Section -->
-    <div class="flex items-center justify-between">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-            <h1 class="text-3xl font-bold text-gray-800">Matumizi (Expenses)</h1>
-            <p class="text-gray-600 mt-1">Manage all expense transactions</p>
+            <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">Matumizi</h1>
+            <p class="text-gray-600 mt-1 text-sm sm:text-base">Simamia miamala yote ya matumizi</p>
         </div>
-        <a href="{{ route('finance.expenses.create') }}" class="bg-red-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-red-700 transition-colors shadow-sm">
-            <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <a href="{{ route('finance.expenses.create') }}" class="bg-red-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-bold hover:bg-red-700 transition-colors shadow-sm text-sm sm:text-base whitespace-nowrap">
+            <svg class="w-4 h-4 sm:w-5 sm:h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
             </svg>
-            Add Expense
+            Ongeza Matumizi
         </a>
     </div>
     
     <!-- Statistics Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div class="bg-gradient-to-br from-red-50 to-red-100 rounded-xl p-6 border border-red-200 shadow-sm">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+        <div class="bg-gradient-to-br from-red-50 to-red-100 rounded-xl p-4 sm:p-6 border border-red-200 shadow-sm">
             <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-sm font-medium text-red-700">Total Expenses</p>
-                    <p class="text-2xl font-bold text-red-900 mt-2">TZS {{ number_format($allExpenses->sum('amount'), 2) }}</p>
+                <div class="flex-1 min-w-0">
+                    <p class="text-xs sm:text-sm font-medium text-red-700 truncate">Matumizi Jumla</p>
+                    <p class="text-xl sm:text-2xl font-bold text-red-900 mt-2 truncate">TZS {{ number_format($allExpenses->sum('amount'), 2) }}</p>
                 </div>
-                <div class="w-12 h-12 bg-red-500 rounded-lg flex items-center justify-center">
-                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="w-10 h-10 sm:w-12 sm:h-12 bg-red-500 rounded-lg flex items-center justify-center flex-shrink-0 ml-2">
+                    <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path>
                     </svg>
                 </div>
@@ -77,54 +77,60 @@
     
     <!-- Filters -->
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
-        <div class="flex flex-wrap items-center gap-4">
-            <div class="flex-1 min-w-[200px]">
-                <input type="text" placeholder="Search by title or description..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent">
+        <form method="GET" action="{{ route('finance.expenses.index') }}" class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
+            <div class="flex-1 min-w-0">
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Tafuta kwa jina au maelezo..." class="w-full px-4 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent">
             </div>
-            <input type="date" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent">
-            <button class="px-6 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium">
-                Filter
+            <input type="date" name="date" value="{{ request('date') }}" class="px-4 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent w-full sm:w-auto">
+            <button type="submit" class="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium text-sm whitespace-nowrap">
+                Tafuta
             </button>
-        </div>
+            @if(request()->hasAny(['search', 'date']))
+            <a href="{{ route('finance.expenses.index') }}" class="px-6 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium text-sm whitespace-nowrap">
+                Safisha
+            </a>
+            @endif
+        </form>
     </div>
     
     <!-- Expenses Table -->
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        <div class="overflow-x-auto">
-            <table class="w-full">
-                <thead class="bg-gradient-to-r from-red-50 to-red-100 border-b border-gray-200">
+        <div class="overflow-x-auto -mx-6 px-6">
+            <table class="w-full min-w-full divide-y divide-gray-200">
+                <thead class="bg-gradient-to-r from-red-50 to-red-100">
                     <tr>
-                        <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Date</th>
-                        <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Title</th>
-                        <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Description</th>
-                        <th class="px-6 py-4 text-right text-xs font-bold text-gray-700 uppercase tracking-wider">Amount</th>
-                        <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Recorded By</th>
-                        <th class="px-6 py-4 text-right text-xs font-bold text-gray-700 uppercase tracking-wider">Actions</th>
+                        <th class="px-3 sm:px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Tarehe</th>
+                        <th class="px-3 sm:px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Jina</th>
+                        <th class="px-3 sm:px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider hidden md:table-cell">Maelezo</th>
+                        <th class="px-3 sm:px-6 py-4 text-right text-xs font-bold text-gray-700 uppercase tracking-wider">Kiasi</th>
+                        <th class="px-3 sm:px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider hidden lg:table-cell">Imeandikwa na</th>
+                        <th class="px-3 sm:px-6 py-4 text-right text-xs font-bold text-gray-700 uppercase tracking-wider">Vitendo</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse($expenses as $expense)
                     <tr class="hover:bg-gray-50 transition-colors">
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm font-medium text-gray-900">{{ $expense->transaction_date->format('M d, Y') }}</div>
+                        <td class="px-3 sm:px-6 py-4 whitespace-nowrap">
+                            <div class="text-xs sm:text-sm font-medium text-gray-900">{{ $expense->transaction_date->format('M d, Y') }}</div>
                             <div class="text-xs text-gray-500">{{ $expense->transaction_date->format('h:i A') }}</div>
                         </td>
-                        <td class="px-6 py-4">
-                            <div class="text-sm font-bold text-gray-900">{{ $expense->title }}</div>
+                        <td class="px-3 sm:px-6 py-4">
+                            <div class="text-xs sm:text-sm font-bold text-gray-900">{{ $expense->title }}</div>
                             @if($expense->reference_number)
                             <div class="text-xs text-gray-500">Ref: {{ $expense->reference_number }}</div>
                             @endif
+                            <div class="text-xs text-gray-500 mt-1 md:hidden">{{ $expense->description ? \Illuminate\Support\Str::limit($expense->description, 30) : 'N/A' }}</div>
                         </td>
-                        <td class="px-6 py-4">
-                            <div class="text-sm text-gray-700 max-w-xs truncate">{{ $expense->description ?? 'N/A' }}</div>
+                        <td class="px-3 sm:px-6 py-4 hidden md:table-cell">
+                            <div class="text-xs sm:text-sm text-gray-700 max-w-xs truncate">{{ $expense->description ?? 'N/A' }}</div>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-right">
-                            <div class="text-base font-bold text-red-600">TZS {{ number_format($expense->amount, 2) }}</div>
+                        <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-right">
+                            <div class="text-sm sm:text-base font-bold text-red-600">TZS {{ number_format($expense->amount, 2) }}</div>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm text-gray-700">{{ $expense->creator->name ?? 'N/A' }}</div>
+                        <td class="px-3 sm:px-6 py-4 whitespace-nowrap hidden lg:table-cell">
+                            <div class="text-xs sm:text-sm text-gray-700">{{ $expense->creator->name ?? 'N/A' }}</div>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-right text-xs sm:text-sm font-medium">
                             <div class="flex items-center justify-end space-x-2">
                                 <a href="{{ route('finance.expenses.show', $expense->id) }}" class="text-purple-600 hover:text-purple-900 p-2 hover:bg-purple-50 rounded-lg transition-colors" title="View">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

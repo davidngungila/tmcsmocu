@@ -68,5 +68,28 @@ class AdvancedSettingsController extends Controller
         return redirect()->route('settings.advanced.index')
             ->with('success', 'Mipangilio ya hali ya juu imehifadhiwa kwa mafanikio.');
     }
+    
+    public function uploadLogo(Request $request)
+    {
+        $request->validate([
+            'logo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+        
+        if ($request->hasFile('logo')) {
+            $logo = $request->file('logo');
+            $logoName = 'logo.' . $logo->getClientOriginalExtension();
+            $logo->move(public_path(), $logoName);
+            
+            SystemSetting::setValue('logo_path', $logoName, 'string');
+            
+            return redirect()->route('settings.advanced.index')
+                ->with('success', 'Logo imebadilishwa kwa mafanikio.');
+        }
+        
+        return redirect()->route('settings.advanced.index')
+            ->with('error', 'Tatizo limetokea wakati wa kupakia logo.');
+    }
+}
+    }
 }
 

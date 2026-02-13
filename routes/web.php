@@ -251,6 +251,8 @@ Route::middleware(['auth'])->group(function () {
         
         // Advanced Settings
         Route::get('/advanced', [\App\Http\Controllers\Settings\AdvancedSettingsController::class, 'index'])->name('advanced.index');
+        Route::post('/advanced', [\App\Http\Controllers\Settings\AdvancedSettingsController::class, 'store'])->name('advanced.store');
+        Route::post('/advanced/logo', [\App\Http\Controllers\Settings\AdvancedSettingsController::class, 'uploadLogo'])->name('advanced.upload-logo');
     });
     
     // Profile Routes

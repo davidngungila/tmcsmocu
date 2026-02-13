@@ -234,6 +234,12 @@
                             </svg>
                             Ruhusa
                         </a>
+                        <a href="{{ route('settings.system.index') }}" class="flex items-center px-3 py-1.5 text-sm text-gray-600 rounded-md hover:bg-gray-50">
+                            <svg class="w-4 h-4 mr-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.14c1.906-.94 2.1-3.547.194-4.454a2.5 2.5 0 00-3.388 0c-.906.907-1.712 3.514-.194 4.454a1.724 1.724 0 002.573 1.14zm-3.388 1.854a2.5 2.5 0 11-3.388 3.388 2.5 2.5 0 013.388-3.388z"></path>
+                            </svg>
+                            Mfumo
+                        </a>
                         <a href="{{ route('settings.general') }}" class="flex items-center px-3 py-1.5 text-sm text-gray-600 rounded-md hover:bg-gray-50">
                             <svg class="w-4 h-4 mr-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.14c1.906-.94 2.1-3.547.194-4.454a2.5 2.5 0 00-3.388 0c-.906.907-1.712 3.514-.194 4.454a1.724 1.724 0 002.573 1.14zm-3.388 1.854a2.5 2.5 0 11-3.388 3.388 2.5 2.5 0 013.388-3.388z"></path>
@@ -245,6 +251,18 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
                             </svg>
                             Watoa Huduma
+                        </a>
+                        <a href="{{ route('settings.two-factor.index') }}" class="flex items-center px-3 py-1.5 text-sm text-gray-600 rounded-md hover:bg-gray-50">
+                            <svg class="w-4 h-4 mr-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                            </svg>
+                            2FA
+                        </a>
+                        <a href="{{ route('settings.advanced.index') }}" class="flex items-center px-3 py-1.5 text-sm text-gray-600 rounded-md hover:bg-gray-50">
+                            <svg class="w-4 h-4 mr-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                            </svg>
+                            Hali ya Juu
                         </a>
                     </div>
                 </div>

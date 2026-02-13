@@ -36,10 +36,12 @@ use App\Http\Controllers\Settings\UserController;
 use App\Http\Controllers\Settings\PermissionController;
 use App\Http\Controllers\Settings\GeneralSettingsController;
 use App\Http\Controllers\Settings\FinancialYearController;
+use App\Http\Controllers\Settings\SystemSettingsController;
 
 // Authentication Routes
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
+Route::post('/login/2fa/verify', [LoginController::class, 'verify2FA'])->name('login.2fa.verify');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 // Protected Routes
@@ -208,6 +210,11 @@ Route::middleware(['auth'])->group(function () {
     
     // Settings Routes
     Route::prefix('settings')->name('settings.')->group(function () {
+        // System Settings Dashboard
+        Route::get('/system', [SystemSettingsController::class, 'index'])->name('system.index');
+        Route::get('/system/health', [SystemSettingsController::class, 'health'])->name('system.health');
+        Route::post('/system/backup', [SystemSettingsController::class, 'backup'])->name('system.backup');
+        
         Route::resource('users', UserController::class);
         Route::get('/permissions', [PermissionController::class, 'index'])->name('permissions.index');
         Route::put('/permissions/{id}', [PermissionController::class, 'updatePermissions'])->name('permissions.update');
@@ -229,6 +236,21 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/financial-years/{id}/close', [FinancialYearController::class, 'close'])->name('financial-years.close');
         Route::get('/financial-years/{id}/transition', [FinancialYearController::class, 'showTransition'])->name('financial-years.transition');
         Route::post('/financial-years/{id}/transition', [FinancialYearController::class, 'transition'])->name('financial-years.transition.store');
+        
+        // SMS Settings (using notification providers)
+        Route::get('/sms', [\App\Http\Controllers\Settings\NotificationProviderController::class, 'smsIndex'])->name('sms.index');
+        
+        // Email Settings (using notification providers)
+        Route::get('/email', [\App\Http\Controllers\Settings\NotificationProviderController::class, 'emailIndex'])->name('email.index');
+        
+        // Two Factor Authentication
+        Route::get('/two-factor', [\App\Http\Controllers\Settings\TwoFactorController::class, 'index'])->name('two-factor.index');
+        Route::post('/two-factor/enable', [\App\Http\Controllers\Settings\TwoFactorController::class, 'enable'])->name('two-factor.enable');
+        Route::post('/two-factor/disable', [\App\Http\Controllers\Settings\TwoFactorController::class, 'disable'])->name('two-factor.disable');
+        Route::post('/two-factor/regenerate', [\App\Http\Controllers\Settings\TwoFactorController::class, 'regenerateRecoveryCodes'])->name('two-factor.regenerate');
+        
+        // Advanced Settings
+        Route::get('/advanced', [\App\Http\Controllers\Settings\AdvancedSettingsController::class, 'index'])->name('advanced.index');
     });
     
     // Profile Routes

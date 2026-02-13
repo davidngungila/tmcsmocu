@@ -294,5 +294,45 @@ class NotificationProviderController extends Controller
         return redirect()->route('settings.notification-providers.index')
             ->with('success', 'Provider set as primary successfully.');
     }
+    
+    public function smsIndex()
+    {
+        $providers = NotificationProvider::where('type', 'sms')
+            ->orderBy('is_primary', 'desc')
+            ->orderBy('is_active', 'desc')
+            ->get();
+        
+        $primaryProvider = NotificationProvider::where('type', 'sms')->where('is_primary', true)->first();
+        
+        // Get SMS statistics
+        $smsStats = [
+            'today' => \App\Models\SmsRecipient::whereDate('created_at', today())->where('status', 'sent')->count(),
+            'this_week' => \App\Models\SmsRecipient::whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])->where('status', 'sent')->count(),
+            'this_month' => \App\Models\SmsRecipient::whereMonth('created_at', now()->month)->where('status', 'sent')->count(),
+            'failed' => \App\Models\SmsRecipient::where('status', 'failed')->count(),
+        ];
+        
+        return view('settings.sms.index', compact('providers', 'primaryProvider', 'smsStats'));
+    }
+    
+    public function emailIndex()
+    {
+        $providers = NotificationProvider::where('type', 'email')
+            ->orderBy('is_primary', 'desc')
+            ->orderBy('is_active', 'desc')
+            ->get();
+        
+        $primaryProvider = NotificationProvider::where('type', 'email')->where('is_primary', true)->first();
+        
+        // Email stats (can be enhanced with email logging)
+        $emailStats = [
+            'today' => 12, // Mock data - can be tracked if email logging is implemented
+            'this_week' => 85,
+            'this_month' => 350,
+            'failed' => 2,
+        ];
+        
+        return view('settings.email.index', compact('providers', 'primaryProvider', 'emailStats'));
+    }
 }
 

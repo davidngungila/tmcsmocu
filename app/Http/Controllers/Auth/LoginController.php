@@ -56,9 +56,10 @@ class LoginController extends Controller
     public function verify2FA(Request $request)
     {
         $request->validate([
-            'code' => 'required|string|size:6',
+            'code' => 'nullable|string|max:20',
             'email' => 'required|email',
             'password' => 'required',
+            'skip_2fa' => 'nullable|boolean',
         ]);
         
         $email = $request->session()->get('2fa_email');
@@ -76,13 +77,37 @@ class LoginController extends Controller
             return redirect()->route('login')->with('error', 'Mtumiaji huyu haupatikani.');
         }
         
-        // Verify 2FA code (simple implementation - can be enhanced with Google Authenticator)
-        $isValid = $this->verify2FACode($user, $request->code);
+        // Allow bypass if skip_2fa is checked
+        if ($request->has('skip_2fa') && $request->skip_2fa) {
+            // Verify password again for security
+            if (!Auth::validate(['email' => $email, 'password' => $password])) {
+                return redirect()->route('login')->with('error', 'Nenosiri si sahihi.');
+            }
+            
+            // Clear 2FA session data
+            $request->session()->forget(['2fa_email', '2fa_password', '2fa_remember', '2fa_user_id']);
+            
+            // Login the user
+            Auth::login($user, $remember);
+            $request->session()->regenerate();
+            
+            return redirect()->intended(route('dashboard'))
+                ->with('warning', 'Umeingia bila 2FA. Tafadhali hakikisha simu yako iko karibu kwa usalama.');
+        }
         
-        if (!$isValid) {
+        // Verify 2FA code if provided
+        if ($request->filled('code')) {
+            $isValid = $this->verify2FACode($user, $request->code);
+            
+            if (!$isValid) {
+                return redirect()->route('login')
+                    ->with('2fa_required', true)
+                    ->with('error', 'Msimbo wa 2FA si sahihi. Tafadhali jaribu tena au tumia nambari za uokoaji.');
+            }
+        } else {
             return redirect()->route('login')
                 ->with('2fa_required', true)
-                ->with('error', 'Msimbo wa 2FA si sahihi. Tafadhali jaribu tena.');
+                ->with('error', 'Tafadhali ingiza msimbo wa 2FA au chagua kuvuka 2FA.');
         }
         
         // Clear 2FA session data
@@ -93,6 +118,39 @@ class LoginController extends Controller
         $request->session()->regenerate();
         
         return redirect()->intended(route('dashboard'));
+    }
+    
+    public function bypass2FA(Request $request)
+    {
+        $email = $request->session()->get('2fa_email');
+        $password = $request->session()->get('2fa_password');
+        $remember = $request->session()->get('2fa_remember', false);
+        $userId = $request->session()->get('2fa_user_id');
+        
+        if (!$email || !$password || !$userId) {
+            return redirect()->route('login')->with('error', 'Sesi imeisha. Tafadhali ingia tena.');
+        }
+        
+        $user = \App\Models\User::find($userId);
+        
+        if (!$user || $user->email !== $email) {
+            return redirect()->route('login')->with('error', 'Mtumiaji huyu haupatikani.');
+        }
+        
+        // Verify password again for security
+        if (!Auth::validate(['email' => $email, 'password' => $password])) {
+            return redirect()->route('login')->with('error', 'Nenosiri si sahihi.');
+        }
+        
+        // Clear 2FA session data
+        $request->session()->forget(['2fa_email', '2fa_password', '2fa_remember', '2fa_user_id']);
+        
+        // Login the user
+        Auth::login($user, $remember);
+        $request->session()->regenerate();
+        
+        return redirect()->intended(route('dashboard'))
+            ->with('warning', 'Umeingia bila 2FA. Tafadhali hakikisha simu yako iko karibu kwa usalama.');
     }
     
     private function verify2FACode($user, $code)
@@ -107,11 +165,11 @@ class LoginController extends Controller
         // For now, simple verification against stored secret
         $expectedCode = substr(md5($user->two_factor_secret . now()->format('Y-m-d-H-i')), 0, 6);
         
-        // Also check recovery codes
+        // Also check recovery codes (can be 8 characters)
         $recoveryCodes = json_decode($user->two_factor_recovery_codes ?? '[]', true);
-        if (in_array($code, $recoveryCodes)) {
+        if (in_array(strtoupper($code), array_map('strtoupper', $recoveryCodes))) {
             // Remove used recovery code
-            $recoveryCodes = array_diff($recoveryCodes, [$code]);
+            $recoveryCodes = array_diff($recoveryCodes, [strtoupper($code)]);
             $user->update(['two_factor_recovery_codes' => json_encode(array_values($recoveryCodes))]);
             return true;
         }

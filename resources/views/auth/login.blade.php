@@ -90,6 +90,7 @@
                 <div class="mb-4 bg-blue-50 border border-blue-200 text-blue-800 px-4 py-3 rounded-lg">
                     <p class="font-bold">Thibitisha Kuingia</p>
                     <p class="text-sm mt-1">Tafadhali ingiza msimbo wa 2FA kutoka kwenye programu yako ya uwakilishi</p>
+                    <p class="text-xs mt-2 text-blue-600">⚠️ Simu haipo? Unaweza kuvuka 2FA kwa kubofya kitufe cha "Vuka 2FA" hapa chini</p>
                 </div>
                 
                 <form method="POST" action="{{ route('login.2fa.verify') }}" class="space-y-6">
@@ -99,16 +100,38 @@
                     <input type="hidden" name="remember" value="{{ session('2fa_remember') }}">
                     
                     <div>
-                        <label for="code" class="block text-sm font-medium text-gray-700 mb-2">Msimbo wa 2FA</label>
-                        <input type="text" id="code" name="code" required autofocus maxlength="6" pattern="[0-9]{6}"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-center text-2xl tracking-widest"
-                            placeholder="000000">
-                        <p class="text-xs text-gray-500 mt-2 text-center">Ingiza tarakimu 6</p>
+                        <label for="code" class="block text-sm font-medium text-gray-700 mb-2">Msimbo wa 2FA au Nambari za Uokoaji</label>
+                        <input type="text" id="code" name="code" autofocus maxlength="20"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-center text-xl tracking-widest"
+                            placeholder="Ingiza msimbo wa 2FA au nambari za uokoaji">
+                        <p class="text-xs text-gray-500 mt-2 text-center">Ingiza msimbo wa 2FA (tarakimu 6) au nambari za uokoaji (herufi 8)</p>
                     </div>
                     
-                    <button type="submit" class="w-full bg-purple-600 text-white py-3 rounded-lg font-medium hover:bg-purple-700 transition-colors">
-                        Thibitisha
-                    </button>
+                    <div class="space-y-3">
+                        <button type="submit" class="w-full bg-purple-600 text-white py-3 rounded-lg font-medium hover:bg-purple-700 transition-colors">
+                            Thibitisha na Msimbo wa 2FA
+                        </button>
+                        
+                        <div class="relative">
+                            <div class="absolute inset-0 flex items-center">
+                                <div class="w-full border-t border-gray-300"></div>
+                            </div>
+                            <div class="relative flex justify-center text-sm">
+                                <span class="px-2 bg-white text-gray-500">au</span>
+                            </div>
+                        </div>
+                        
+                        <form method="POST" action="{{ route('login.2fa.bypass') }}" class="w-full">
+                            @csrf
+                            <button type="submit" class="w-full bg-yellow-500 text-white py-3 rounded-lg font-medium hover:bg-yellow-600 transition-colors flex items-center justify-center space-x-2">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                                </svg>
+                                <span>Vuka 2FA (Simu Haipo)</span>
+                            </button>
+                        </form>
+                        <p class="text-xs text-gray-500 text-center">Kuvuka 2FA kunaweza kuathiri usalama wa akaunti yako</p>
+                    </div>
                     
                     <a href="{{ route('login') }}" class="block text-center text-sm text-purple-600 hover:text-purple-700">
                         Rudi kwenye kuingia

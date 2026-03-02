@@ -93,7 +93,7 @@
                     <p class="text-xs mt-2 text-blue-600">⚠️ Simu haipo? Unaweza kuvuka 2FA kwa kubofya kitufe cha "Vuka 2FA" hapa chini</p>
                 </div>
                 
-                <form method="POST" action="{{ route('login.2fa.verify') }}" class="space-y-6">
+                <form method="POST" action="{{ route('login.2fa.verify') }}" class="space-y-6" id="twoFaVerifyForm">
                     @csrf
                     <input type="hidden" name="email" value="{{ session('2fa_email') }}">
                     <input type="hidden" name="password" value="{{ session('2fa_password') }}">
@@ -121,7 +121,7 @@
                             </div>
                         </div>
                         
-                        <form method="POST" action="{{ route('login.2fa.bypass') }}" class="w-full">
+                        <form method="POST" action="{{ route('login.2fa.bypass') }}" class="w-full" id="twoFaBypassForm">
                             @csrf
                             <button type="submit" class="w-full bg-yellow-500 text-white py-3 rounded-lg font-medium hover:bg-yellow-600 transition-colors flex items-center justify-center space-x-2">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -194,6 +194,40 @@
             }
             progressBar.style.width = progress + '%';
         }, 200);
+
+        function showAuthSplash() {
+            if (loadingScreen) {
+                loadingScreen.style.display = 'flex';
+                loadingScreen.style.opacity = '1';
+            }
+            if (loginForm) {
+                loginForm.style.opacity = '0';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginFormElement = document.getElementById('loginFormElement');
+            const twoFaVerifyForm = document.getElementById('twoFaVerifyForm');
+            const twoFaBypassForm = document.getElementById('twoFaBypassForm');
+
+            if (loginFormElement) {
+                loginFormElement.addEventListener('submit', function() {
+                    showAuthSplash();
+                });
+            }
+
+            if (twoFaVerifyForm) {
+                twoFaVerifyForm.addEventListener('submit', function() {
+                    showAuthSplash();
+                });
+            }
+
+            if (twoFaBypassForm) {
+                twoFaBypassForm.addEventListener('submit', function() {
+                    showAuthSplash();
+                });
+            }
+        });
         
         // Auto-focus on 2FA code input
         @if(session('2fa_required'))
@@ -204,6 +238,7 @@
                 // Auto-submit when 6 digits are entered
                 codeInput.addEventListener('input', function(e) {
                     if (e.target.value.length === 6) {
+                        showAuthSplash();
                         e.target.form.submit();
                     }
                 });

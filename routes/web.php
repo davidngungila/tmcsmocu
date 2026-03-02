@@ -39,6 +39,7 @@ use App\Http\Controllers\Settings\FinancialYearController;
 use App\Http\Controllers\Settings\SystemSettingsController;
 use App\Http\Controllers\Auth\RoleSwitchController;
 use App\Http\Controllers\Auth\ImpersonationController;
+use App\Http\Controllers\ProfileController;
 
 // Authentication Routes
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -230,6 +231,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/general', [GeneralSettingsController::class, 'store'])->name('general.store');
         Route::get('/account', [GeneralSettingsController::class, 'account'])->name('account');
         Route::get('/security', [GeneralSettingsController::class, 'security'])->name('security');
+        Route::post('/security/password', [GeneralSettingsController::class, 'updatePassword'])->name('security.password');
         Route::resource('notification-providers', \App\Http\Controllers\Settings\NotificationProviderController::class);
         Route::post('/notification-providers/{id}/set-primary', [\App\Http\Controllers\Settings\NotificationProviderController::class, 'setPrimary'])->name('notification-providers.set-primary');
         Route::post('/notification-providers/{id}/test-email', [\App\Http\Controllers\Settings\NotificationProviderController::class, 'testEmail'])->name('notification-providers.test-email');
@@ -264,9 +266,8 @@ Route::middleware(['auth'])->group(function () {
     });
     
     // Profile Routes
-    Route::get('/profile', function () {
-        return view('profile.show');
-    })->name('profile.show');
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     
     // Redirect root to dashboard
     Route::get('/', function () {

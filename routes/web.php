@@ -153,6 +153,8 @@ Route::middleware(['auth'])->group(function () {
     
     // Events Routes
     Route::get('/events/calendar', [EventController::class, 'calendar'])->name('events.calendar');
+    Route::get('/events/calendar/feed', [EventController::class, 'calendarFeed'])->name('events.calendar.feed');
+    Route::post('/events/calendar/update-dates', [EventController::class, 'calendarUpdateDates'])->name('events.calendar.update-dates');
     Route::get('/events/{id}/qr-code', [EventController::class, 'qrCode'])->name('events.qr-code');
     Route::resource('events', EventController::class);
     

@@ -23,6 +23,120 @@ class EventController extends Controller
         return view('events.calendar');
     }
 
+    public function calendarFeed(Request $request)
+    {
+        $request->validate([
+            'start' => 'nullable|date',
+            'end' => 'nullable|date',
+            'status' => 'nullable|string',
+            'category' => 'nullable|string',
+            'type' => 'nullable|string',
+            'q' => 'nullable|string|max:255',
+        ]);
+
+        $query = Event::query();
+
+        if ($request->filled('start') && $request->filled('end')) {
+            $start = $request->input('start');
+            $end = $request->input('end');
+
+            $query
+                ->where('start_date', '<', $end)
+                ->where(function ($sub) use ($start) {
+                    $sub->where(function ($q) use ($start) {
+                        $q->whereNotNull('end_date')->where('end_date', '>=', $start);
+                    })->orWhere(function ($q) use ($start) {
+                        $q->whereNull('end_date')->where('start_date', '>=', $start);
+                    });
+                });
+        }
+
+        if ($request->filled('status') && $request->input('status') !== 'all') {
+            $query->where('status', $request->input('status'));
+        }
+
+        if ($request->filled('category') && $request->input('category') !== 'all') {
+            $query->where('category', $request->input('category'));
+        }
+
+        if ($request->filled('type') && $request->input('type') !== 'all') {
+            $query->where('type', $request->input('type'));
+        }
+
+        if ($request->filled('q')) {
+            $q = $request->input('q');
+            $query->where(function ($sub) use ($q) {
+                $sub->where('title', 'like', '%' . $q . '%')
+                    ->orWhere('location', 'like', '%' . $q . '%')
+                    ->orWhere('parish', 'like', '%' . $q . '%')
+                    ->orWhere('community', 'like', '%' . $q . '%');
+            });
+        }
+
+        $events = $query
+            ->orderBy('start_date')
+            ->limit(500)
+            ->get();
+
+        $statusColors = [
+            'planned' => '#143F63',
+            'registration_open' => '#0f2f49',
+            'ongoing' => '#166534',
+            'completed' => '#4b5563',
+            'cancelled' => '#b91c1c',
+        ];
+
+        return response()->json(
+            $events->map(function (Event $event) use ($statusColors) {
+                $start = optional($event->start_date)->toIso8601String();
+                $end = optional($event->end_date)->toIso8601String();
+
+                return [
+                    'id' => (string) $event->id,
+                    'title' => (string) $event->title,
+                    'start' => $start,
+                    'end' => $end,
+                    'backgroundColor' => $statusColors[$event->status] ?? '#143F63',
+                    'borderColor' => $statusColors[$event->status] ?? '#143F63',
+                    'textColor' => '#ffffff',
+                    'extendedProps' => [
+                        'status' => $event->status,
+                        'type' => $event->type,
+                        'category' => $event->category,
+                        'location' => $event->location,
+                        'parish' => $event->parish,
+                        'community' => $event->community,
+                        'description' => $event->description,
+                        'start_date' => $start,
+                        'end_date' => $end,
+                    ],
+                ];
+            })->values()
+        );
+    }
+
+    public function calendarUpdateDates(Request $request)
+    {
+        $validated = $request->validate([
+            'id' => 'required|integer|exists:events,id',
+            'start' => 'required|date',
+            'end' => 'nullable|date|after_or_equal:start',
+        ]);
+
+        $event = Event::findOrFail($validated['id']);
+
+        $isAdmin = (auth()->user()->role->slug ?? null) === 'admin';
+        if (!$isAdmin && $event->created_by !== auth()->id()) {
+            abort(403);
+        }
+
+        $event->start_date = $validated['start'];
+        $event->end_date = $validated['end'] ?? null;
+        $event->save();
+
+        return response()->json(['ok' => true]);
+    }
+
     public function create()
     {
         $leaders = Leader::where('is_active', true)->get();

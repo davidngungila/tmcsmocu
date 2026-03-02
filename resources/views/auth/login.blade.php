@@ -28,12 +28,14 @@
         }
     </style>
 </head>
-<body class="bg-white min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+<body class="bg-white min-h-screen flex flex-col relative overflow-hidden">
     <!-- Background Gradient Shapes -->
     <div class="absolute inset-0 overflow-hidden pointer-events-none">
         <div class="absolute top-0 right-0 w-96 h-96 bg-blue-100 rounded-full opacity-20 blur-3xl"></div>
         <div class="absolute bottom-0 left-0 w-96 h-96 bg-purple-100 rounded-full opacity-20 blur-3xl"></div>
     </div>
+
+    <div class="flex-1 flex items-center justify-center p-4 relative">
     
     <!-- Loading Screen (shown initially) -->
     <div id="loadingScreen" class="absolute inset-0 bg-white z-50 flex flex-col items-center justify-center">
@@ -65,63 +67,21 @@
     <!-- Login Form (hidden initially) -->
     <div id="loginForm" class="relative z-10 w-full max-w-5xl opacity-0 transition-opacity duration-500">
         <div class="grid grid-cols-1 md:grid-cols-2 bg-white rounded-2xl shadow-2xl overflow-hidden">
-            <div class="hidden md:flex flex-col justify-between p-10 bg-gradient-to-br from-[#143F63] via-[#143F63] to-[#143F63] text-white">
-                <div>
-                    <div class="flex items-center space-x-3">
-                        <img src="{{ asset('logo.png') }}" alt="TmcsSmart Logo" class="h-12 w-auto">
-                        <div>
-                            <div class="text-xl font-bold">TmcsSmart</div>
-                            <div class="text-sm text-white/90">Chaptance ya Mt. Yoseph Mfanyakazi</div>
-                        </div>
-                    </div>
-
-                    <div class="mt-10 space-y-4">
-                        <div class="flex items-start space-x-3">
-                            <div class="w-9 h-9 rounded-xl bg-white/15 flex items-center justify-center flex-shrink-0">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
-                            </div>
-                            <div>
-                                <div class="font-semibold">Fedha</div>
-                                <div class="text-sm text-white/90">Fuatilia mapato na matumizi kwa urahisi.</div>
-                            </div>
-                        </div>
-                        <div class="flex items-start space-x-3">
-                            <div class="w-9 h-9 rounded-xl bg-white/15 flex items-center justify-center flex-shrink-0">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                </svg>
-                            </div>
-                            <div>
-                                <div class="font-semibold">Wanachama</div>
-                                <div class="text-sm text-white/90">Dhibiti taarifa za wanachama na shughuli.</div>
-                            </div>
-                        </div>
-                        <div class="flex items-start space-x-3">
-                            <div class="w-9 h-9 rounded-xl bg-white/15 flex items-center justify-center flex-shrink-0">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
-                                </svg>
-                            </div>
-                            <div>
-                                <div class="font-semibold">Mawasiliano</div>
-                                <div class="text-sm text-white/90">Tuma taarifa na ripoti kwa haraka.</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="text-xs text-white/80">
-                    © {{ date('Y') }} TmcsSmart
-                </div>
+            <div class="hidden md:flex flex-col items-center justify-center text-center p-10 bg-gradient-to-br from-[#143F63] via-[#143F63] to-[#143F63] text-white">
+                <img src="{{ asset('logo.png') }}" alt="TMCS Smart Logo" class="h-16 w-auto mb-6">
+                <div class="text-3xl font-bold tracking-wide">TMCS Smart</div>
+                <div class="text-base text-white/90 mt-2">Chaptance ya Mt. Yoseph Mfanyakazi</div>
+                <div class="text-base text-white/90 mt-1">Chuo Kikuu cha Ushirika Moshi</div>
+                <div class="text-sm text-white/90 mt-3 max-w-sm">Mfumo Wezeshi wa Uchakataji na Usimamizi wa Taarifa</div>
             </div>
 
             <div class="p-8 sm:p-10">
                 <div class="text-center mb-8 md:hidden">
                     <img src="{{ asset('logo.png') }}" alt="TmcsSmart Logo" class="h-14 w-auto mx-auto mb-4">
-                    <h1 class="text-2xl font-bold text-gray-800">TmcsSmart</h1>
+                    <h1 class="text-2xl font-bold text-gray-800">TMCS Smart</h1>
                     <p class="text-gray-600 mt-2">Chaptance ya Mt. Yoseph Mfanyakazi</p>
+                    <p class="text-gray-600 mt-1">Chuo Kikuu cha Ushirika Moshi</p>
+                    <p class="text-gray-600 mt-1 text-sm">Mfumo Wezeshi wa Uchakataji na Usimamizi wa Taarifa</p>
                 </div>
 
         @if($errors->any())
@@ -248,6 +208,10 @@
         </div>
     </div>
     
+    </div>
+
+    @include('layouts.footer')
+
     <script>
         // Simulate loading progress
         let progress = 0;

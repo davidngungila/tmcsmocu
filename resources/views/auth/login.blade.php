@@ -139,22 +139,23 @@
                                 <span class="px-2 bg-white text-gray-500">au</span>
                             </div>
                         </div>
-                        
-                        <form method="POST" action="{{ route('login.2fa.bypass') }}" class="w-full" id="twoFaBypassForm">
-                            @csrf
-                            <button type="submit" class="w-full bg-yellow-500 text-white py-3 rounded-lg font-medium hover:bg-yellow-600 transition-colors flex items-center justify-center space-x-2">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
-                                </svg>
-                                <span>Vuka 2FA (Simu Haipo)</span>
-                            </button>
-                        </form>
+
+                        <button type="button" onclick="document.getElementById('twoFaBypassForm').submit()" class="w-full bg-yellow-500 text-white py-3 rounded-lg font-medium hover:bg-yellow-600 transition-colors flex items-center justify-center space-x-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                            </svg>
+                            <span>Vuka 2FA (Simu Haipo)</span>
+                        </button>
                         <p class="text-xs text-gray-500 text-center">Kuvuka 2FA kunaweza kuathiri usalama wa akaunti yako</p>
                     </div>
                     
-                    <a href="{{ route('login') }}" class="block text-center text-sm text-purple-600 hover:text-purple-700">
+                    <a href="{{ route('login.2fa.cancel') }}" class="block text-center text-sm text-[#143F63] hover:text-[#0f2f49]">
                         Rudi kwenye kuingia
                     </a>
+                </form>
+
+                <form method="POST" action="{{ route('login.2fa.bypass') }}" class="hidden" id="twoFaBypassForm">
+                    @csrf
                 </form>
             </div>
         @else

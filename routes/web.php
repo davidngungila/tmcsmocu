@@ -46,6 +46,7 @@ Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/login/2fa/verify', [LoginController::class, 'verify2FA'])->name('login.2fa.verify');
 Route::post('/login/2fa/bypass', [LoginController::class, 'bypass2FA'])->name('login.2fa.bypass');
+Route::get('/login/2fa/cancel', [LoginController::class, 'cancel2FA'])->name('login.2fa.cancel');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 // Protected Routes

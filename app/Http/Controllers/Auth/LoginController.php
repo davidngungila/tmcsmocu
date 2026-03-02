@@ -152,6 +152,12 @@ class LoginController extends Controller
         return redirect()->intended(route('dashboard'))
             ->with('warning', 'Umeingia bila 2FA. Tafadhali hakikisha simu yako iko karibu kwa usalama.');
     }
+
+    public function cancel2FA(Request $request)
+    {
+        $request->session()->forget(['2fa_email', '2fa_password', '2fa_remember', '2fa_user_id']);
+        return redirect()->route('login');
+    }
     
     private function verify2FACode($user, $code)
     {

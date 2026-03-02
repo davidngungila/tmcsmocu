@@ -3,21 +3,21 @@
 @section('content')
 <div class="space-y-6">
     <!-- Header -->
-    <div class="flex items-center justify-between">
-        <div>
-            <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">⚙️ Mipangilio ya Mfumo</h1>
-            <p class="text-gray-600 mt-1 text-sm sm:text-base">Simamia mipangilio yote ya mfumo</p>
-        </div>
-    </div>
+	<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+	    <div>
+	        <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">⚙️ Mipangilio ya Mfumo</h1>
+	        <p class="text-gray-600 mt-1 text-sm sm:text-base">Simamia mipangilio yote ya mfumo</p>
+	    </div>
+	</div>
     
     <!-- Financial Year Section -->
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-        <div class="flex items-center justify-between mb-4">
-            <h2 class="text-lg font-bold text-gray-800">📅 Mwaka wa Fedha</h2>
-            <a href="{{ route('settings.financial-years.index') }}" class="text-purple-600 hover:text-purple-700 text-sm font-bold">
-                Mipangilio ya Mwaka wa Fedha →
-            </a>
-        </div>
+	    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
+	        <h2 class="text-lg font-bold text-gray-800">📅 Mwaka wa Fedha</h2>
+	        <a href="{{ route('settings.financial-years.index') }}" class="text-purple-600 hover:text-purple-700 text-sm font-bold">
+	            Mipangilio ya Mwaka wa Fedha →
+	        </a>
+	    </div>
         
         @if($activeYear)
         <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-4 border border-purple-200">
@@ -44,12 +44,12 @@
     
     <!-- System Health Section -->
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-        <div class="flex items-center justify-between mb-4">
-            <h2 class="text-lg font-bold text-gray-800">🖥️ Afya ya Mfumo</h2>
-            <a href="{{ route('settings.system.health') }}" class="text-purple-600 hover:text-purple-700 text-sm font-bold">
-                Angalia Zaidi →
-            </a>
-        </div>
+	    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
+	        <h2 class="text-lg font-bold text-gray-800">🖥️ Afya ya Mfumo</h2>
+	        <a href="{{ route('settings.system.health') }}" class="text-purple-600 hover:text-purple-700 text-sm font-bold">
+	            Angalia Zaidi →
+	        </a>
+	    </div>
         
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <!-- Database Status -->

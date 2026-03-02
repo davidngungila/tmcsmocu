@@ -3,18 +3,18 @@
 @section('content')
 <div class="space-y-6">
     <!-- Header Section -->
-    <div class="flex items-center justify-between">
-        <div>
-            <h1 class="text-3xl font-bold text-gray-800">Meza ya Mauzo (Sacrament Sales)</h1>
-            <p class="text-gray-600 mt-1">Manage all sacrament sales records</p>
-        </div>
-        <a href="{{ route('finance.sacraments.create') }}" class="bg-purple-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-purple-700 transition-colors shadow-sm">
-            <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-            </svg>
-            Add Sale
-        </a>
-    </div>
+	<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+	    <div>
+	        <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">Meza ya Mauzo (Sacrament Sales)</h1>
+	        <p class="text-gray-600 mt-1 text-sm sm:text-base">Manage all sacrament sales records</p>
+	    </div>
+	    <a href="{{ route('finance.sacraments.create') }}" class="bg-purple-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-bold hover:bg-purple-700 transition-colors shadow-sm text-sm sm:text-base whitespace-nowrap">
+	        <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+	            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+	        </svg>
+	        Add Sale
+	    </a>
+	</div>
     
     <!-- Statistics Cards -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6">

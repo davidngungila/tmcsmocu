@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
@@ -56,5 +58,27 @@ class User extends Authenticatable
     public function role()
     {
         return $this->belongsTo(Role::class);
+    }
+
+    public function roles(): BelongsToMany
+    {
+        return $this->belongsToMany(Role::class, 'user_role')->withTimestamps();
+    }
+
+    public function availableRoles()
+    {
+        $roles = $this->relationLoaded('roles') ? $this->roles : $this->roles()->get();
+
+        if ($this->relationLoaded('role')) {
+            $legacyRole = $this->role;
+        } else {
+            $legacyRole = $this->role()->first();
+        }
+
+        if ($legacyRole) {
+            $roles = $roles->concat([$legacyRole]);
+        }
+
+        return $roles->unique('id')->values();
     }
 }

@@ -74,13 +74,20 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
-            'role_id' => 'required|exists:roles,id',
+            'roles' => 'required|array|min:1',
+            'roles.*' => 'required|exists:roles,id',
         ]);
 
-        $validated['password'] = Hash::make($validated['password']);
-        $validated['email_verified_at'] = now();
+        $userData = [
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
+            'email_verified_at' => now(),
+            'role_id' => $validated['roles'][0],
+        ];
 
-        User::create($validated);
+        $user = User::create($userData);
+        $user->roles()->sync($validated['roles']);
 
         return redirect()->route('settings.users.index')
             ->with('success', 'User created successfully.');
@@ -121,7 +128,7 @@ class UserController extends Controller
 
     public function edit($id)
     {
-        $user = User::findOrFail($id);
+        $user = User::with('roles')->findOrFail($id);
         $roles = Role::all();
         return view('settings.users.edit', compact('user', 'roles'));
     }
@@ -134,7 +141,8 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $id,
             'password' => 'nullable|string|min:8|confirmed',
-            'role_id' => 'required|exists:roles,id',
+            'roles' => 'required|array|min:1',
+            'roles.*' => 'required|exists:roles,id',
         ]);
 
         if (empty($validated['password'])) {
@@ -143,7 +151,18 @@ class UserController extends Controller
             $validated['password'] = Hash::make($validated['password']);
         }
 
-        $user->update($validated);
+        $updateData = [
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'role_id' => $validated['roles'][0],
+        ];
+
+        if (!empty($validated['password'])) {
+            $updateData['password'] = Hash::make($validated['password']);
+        }
+
+        $user->update($updateData);
+        $user->roles()->sync($validated['roles']);
 
         return redirect()->route('settings.users.index')
             ->with('success', 'User updated successfully.');

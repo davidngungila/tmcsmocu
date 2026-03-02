@@ -11,7 +11,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        $middleware->appendToGroup('web', [
+            \App\Http\Middleware\ImpersonateUser::class,
+            \App\Http\Middleware\ApplyActiveRole::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

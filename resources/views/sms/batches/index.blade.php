@@ -3,12 +3,12 @@
 @section('content')
 <div class="space-y-6">
     <!-- Header -->
-    <div class="flex items-center justify-between">
-        <div>
-            <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">SMS Batches</h1>
-            <p class="text-gray-600 mt-1 text-sm sm:text-base">View SMS batch sending history</p>
-        </div>
-    </div>
+	<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+	    <div>
+	        <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">SMS Batches</h1>
+	        <p class="text-gray-600 mt-1 text-sm sm:text-base">View SMS batch sending history</p>
+	    </div>
+	</div>
     
     <!-- Statistics -->
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">

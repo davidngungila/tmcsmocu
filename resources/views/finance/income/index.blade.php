@@ -98,7 +98,7 @@
     <!-- Income Table -->
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <div class="overflow-x-auto -mx-6 px-6">
-            <table class="w-full min-w-[800px]">
+            <table class="w-full min-w-full">
                 <thead class="bg-gradient-to-r from-purple-50 to-purple-100 border-b border-gray-200">
                     <tr>
                         <th class="px-4 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Tarehe</th>
@@ -122,7 +122,7 @@
                                 {{ ucfirst(str_replace('_', ' ', $income->category)) }}
                             </span>
                         </td>
-                        <td class="px-4 py-4 min-w-[150px]">
+                        <td class="px-4 py-4 min-w-0">
                             <div class="text-sm font-bold text-gray-900 truncate">{{ $income->title }}</div>
                             @if($income->reference_number)
                             <div class="text-xs text-gray-500 truncate">Ref: {{ $income->reference_number }}</div>

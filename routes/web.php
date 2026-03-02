@@ -37,6 +37,8 @@ use App\Http\Controllers\Settings\PermissionController;
 use App\Http\Controllers\Settings\GeneralSettingsController;
 use App\Http\Controllers\Settings\FinancialYearController;
 use App\Http\Controllers\Settings\SystemSettingsController;
+use App\Http\Controllers\Auth\RoleSwitchController;
+use App\Http\Controllers\Auth\ImpersonationController;
 
 // Authentication Routes
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -47,6 +49,11 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 // Protected Routes
 Route::middleware(['auth'])->group(function () {
+    Route::post('/switch-role', RoleSwitchController::class)->name('switch-role');
+
+    Route::post('/impersonate/start', [ImpersonationController::class, 'start'])->name('impersonate.start');
+    Route::post('/impersonate/stop', [ImpersonationController::class, 'stop'])->name('impersonate.stop');
+
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     

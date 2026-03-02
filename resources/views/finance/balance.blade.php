@@ -4,8 +4,8 @@
 <div class="space-y-6">
     <!-- Header -->
     <div>
-        <h1 class="text-3xl font-bold text-gray-800">Mizania (Balance)</h1>
-        <p class="text-gray-600 mt-1">Financial balance overview and summary</p>
+        <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">Mizania (Balance)</h1>
+        <p class="text-gray-600 mt-1 text-sm sm:text-base">Financial balance overview and summary</p>
     </div>
     
     <!-- Main Balance Cards -->

@@ -3,25 +3,25 @@
 @section('content')
 <div class="space-y-6">
     <!-- Header -->
-    <div class="flex items-center justify-between">
-        <div>
-            <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">SMS Approval</h1>
-            <p class="text-gray-600 mt-1 text-sm sm:text-base">Review and approve SMS campaigns</p>
-        </div>
-    </div>
+	<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+	    <div>
+	        <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">SMS Approval</h1>
+	        <p class="text-gray-600 mt-1 text-sm sm:text-base">Review and approve SMS campaigns</p>
+	    </div>
+	</div>
     
-    <!-- Tabs -->
-    <div class="flex space-x-2 sm:space-x-4 border-b border-gray-200">
-        <button onclick="showTab('pending')" id="tab-pending" class="px-4 sm:px-6 py-2 sm:py-3 font-bold text-sm sm:text-base border-b-2 border-purple-600 text-purple-600">
-            Pending ({{ $pending->count() }})
-        </button>
-        <button onclick="showTab('approved')" id="tab-approved" class="px-4 sm:px-6 py-2 sm:py-3 font-bold text-sm sm:text-base border-b-2 border-transparent text-gray-600 hover:text-gray-800">
-            Approved ({{ $approved->count() }})
-        </button>
-        <button onclick="showTab('rejected')" id="tab-rejected" class="px-4 sm:px-6 py-2 sm:py-3 font-bold text-sm sm:text-base border-b-2 border-transparent text-gray-600 hover:text-gray-800">
-            Rejected ({{ $rejected->count() }})
-        </button>
-    </div>
+    	<!-- Tabs -->
+	<div class="flex flex-wrap gap-2 sm:gap-4 border-b border-gray-200">
+	    <button onclick="showTab('pending')" id="tab-pending" class="px-4 sm:px-6 py-2 sm:py-3 font-bold text-sm sm:text-base border-b-2 border-purple-600 text-purple-600">
+	        Pending ({{ $pending->count() }})
+	    </button>
+	    <button onclick="showTab('approved')" id="tab-approved" class="px-4 sm:px-6 py-2 sm:py-3 font-bold text-sm sm:text-base border-b-2 border-transparent text-gray-600 hover:text-gray-800">
+	        Approved ({{ $approved->count() }})
+	    </button>
+	    <button onclick="showTab('rejected')" id="tab-rejected" class="px-4 sm:px-6 py-2 sm:py-3 font-bold text-sm sm:text-base border-b-2 border-transparent text-gray-600 hover:text-gray-800">
+	        Rejected ({{ $rejected->count() }})
+	    </button>
+	</div>
     
     <!-- Pending Tab -->
     <div id="content-pending" class="tab-content">

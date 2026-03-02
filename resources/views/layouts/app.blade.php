@@ -24,7 +24,7 @@
             @include('layouts.header')
             
             <!-- Page Content -->
-            <main class="flex-1 p-6 w-full">
+            <main class="flex-1 p-4 sm:p-6 w-full">
                 @if(session('success'))
                     <div class="mb-4 bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg">
                         {{ session('success') }}

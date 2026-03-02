@@ -8,9 +8,9 @@
         </button>
         
         <!-- Search -->
-        <div class="hidden md:flex items-center">
-            <div class="relative">
-                <input type="text" placeholder="Tafuta (Ctrl+K)" class="pl-10 pr-4 py-2 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent w-64">
+        <div class="hidden md:flex items-center min-w-0">
+            <div class="relative min-w-0">
+                <input type="text" placeholder="Tafuta (Ctrl+K)" class="pl-10 pr-4 py-2 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent w-56 lg:w-64">
                 <svg class="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                 </svg>
@@ -19,6 +19,51 @@
     </div>
     
     <div class="flex items-center space-x-4">
+        @php
+            $headerAvailableRoles = (Auth::user() && ((Auth::user()->role->slug ?? null) === 'admin'))
+                ? \App\Models\Role::orderBy('name')->get()
+                : (Auth::user()?->availableRoles() ?? collect());
+            $headerActiveRoleId = session('active_role_id');
+            $headerActiveRole = $headerActiveRoleId ? $headerAvailableRoles->firstWhere('id', $headerActiveRoleId) : null;
+            $headerActiveRole = $headerActiveRole ?: (Auth::user()->role ?? $headerAvailableRoles->first());
+            $isImpersonating = session()->has('impersonate_user_id') && session()->has('impersonator_user_id');
+            $isAdmin = (Auth::user()->role->slug ?? null) === 'admin';
+            $impersonationUsers = $isAdmin ? \App\Models\User::select('id', 'name', 'email')->orderBy('name')->get() : collect();
+        @endphp
+
+        <form method="POST" action="{{ route('switch-role') }}" class="flex items-center space-x-2">
+            @csrf
+            <span class="text-sm text-gray-600 whitespace-nowrap">Role:</span>
+            <select name="role_id" onchange="this.form.submit()" class="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent max-w-44">
+                @foreach($headerAvailableRoles as $role)
+                    <option value="{{ $role->id }}" {{ ($headerActiveRole && $headerActiveRole->id === $role->id) ? 'selected' : '' }}>
+                        {{ $role->name }}
+                    </option>
+                @endforeach
+            </select>
+        </form>
+
+        @if($isAdmin)
+            @if($isImpersonating)
+                <form method="POST" action="{{ route('impersonate.stop') }}" class="hidden md:block">
+                    @csrf
+                    <button type="submit" class="px-3 py-2 text-sm border border-red-200 bg-red-50 text-red-700 rounded-lg hover:bg-red-100 transition-colors">
+                        Stop Switching User
+                    </button>
+                </form>
+            @else
+                <form method="POST" action="{{ route('impersonate.start') }}" class="hidden md:block">
+                    @csrf
+                    <select name="user_id" onchange="this.form.submit()" class="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent max-w-56">
+                        <option value="">Switch User (Admin)</option>
+                        @foreach($impersonationUsers as $u)
+                            <option value="{{ $u->id }}">{{ $u->name }} ({{ $u->email }})</option>
+                        @endforeach
+                    </select>
+                </form>
+            @endif
+        @endif
+
         <!-- Notifications Dropdown -->
         <div class="relative group" id="notifications-group">
             <button onclick="toggleNotificationsMenu()" class="relative p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
@@ -101,14 +146,14 @@
         </div>
         
         <!-- User Profile Dropdown -->
-        <div class="relative group">
+        <div class="relative group" id="profile-group">
             <button onclick="toggleProfileMenu()" class="flex items-center space-x-3 hover:bg-gray-50 rounded-lg px-3 py-2 border border-transparent hover:border-gray-200 transition-all duration-200">
-                <div class="text-right hidden md:block">
-                    <p class="text-sm font-bold text-gray-800 leading-tight">{{ Auth::user()->name ?? 'User' }}</p>
-                    <p class="text-xs text-gray-500 leading-tight">{{ Auth::user()->role->name ?? 'No Role' }}</p>
-                </div>
                 <div class="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold text-sm border-2 border-white shadow-sm">
                     {{ strtoupper(substr(Auth::user()->name ?? 'U', 0, 1)) }}
+                </div>
+                <div class="text-right hidden md:block">
+                    <p class="text-sm font-bold text-gray-800 leading-tight">{{ $isAdmin ? 'System Admin' : (Auth::user()->name ?? 'User') }}</p>
+                    <p class="text-xs text-gray-500 leading-tight">{{ $isAdmin ? 'admin@example.com' : (Auth::user()->email ?? '') }}</p>
                 </div>
                 <svg class="w-4 h-4 text-gray-500 hidden md:block transition-transform group-hover:rotate-180 duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
@@ -119,9 +164,18 @@
             <div id="profile-menu" class="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-xl border-2 border-gray-200 hidden z-50 overflow-hidden transition-all duration-300 opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100">
                 <div class="p-2">
                     <div class="px-3 py-2 mb-2 border-b border-gray-200">
-                        <p class="text-sm font-bold text-gray-900">{{ Auth::user()->name ?? 'User' }}</p>
-                        <p class="text-xs text-gray-500">{{ Auth::user()->email ?? '' }}</p>
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
+                                {{ strtoupper(substr(Auth::user()->name ?? 'U', 0, 1)) }}
+                            </div>
+                            <div class="min-w-0">
+                                <p class="text-sm font-bold text-gray-900 truncate">{{ $isAdmin ? 'System Admin' : (Auth::user()->name ?? 'User') }}</p>
+                                <p class="text-xs text-gray-500 truncate">{{ $isAdmin ? 'admin@example.com' : (Auth::user()->email ?? '') }}</p>
+                                <p class="text-xs text-gray-500 truncate">Role: {{ $activeRole->name ?? 'No Role' }}</p>
+                            </div>
+                        </div>
                     </div>
+
                     <a href="{{ route('profile.show') }}" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 rounded-lg transition-colors border-l-2 border-transparent hover:border-purple-500">
                         <svg class="w-5 h-5 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
@@ -207,7 +261,7 @@
     // Show menus on hover (desktop only)
     document.addEventListener('DOMContentLoaded', function() {
         // Profile menu hover
-        const profileGroup = document.querySelector('.relative.group');
+        const profileGroup = document.getElementById('profile-group');
         const profileMenu = document.getElementById('profile-menu');
         
         if (profileGroup && profileMenu) {

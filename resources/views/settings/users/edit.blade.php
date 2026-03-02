@@ -59,14 +59,14 @@
             
             <div>
                 <label class="block text-sm font-bold text-gray-700 mb-2">Role *</label>
-                <select name="role_id" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                <select name="roles[]" multiple required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                     @foreach($roles as $role)
-                    <option value="{{ $role->id }}" {{ old('role_id', $user->role_id) == $role->id ? 'selected' : '' }}>
+                    <option value="{{ $role->id }}" {{ in_array($role->id, old('roles', $user->roles->pluck('id')->all() ?: [$user->role_id])) ? 'selected' : '' }}>
                         {{ $role->name }} - {{ $role->description }}
                     </option>
                     @endforeach
                 </select>
-                @error('role_id')
+                @error('roles')
                     <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                 @enderror
             </div>

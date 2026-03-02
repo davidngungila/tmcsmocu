@@ -55,7 +55,8 @@
                 <div class="text-3xl font-bold tracking-wide">TMCS Smart</div>
                 <div class="text-base text-white/90 mt-2">Chaptance ya Mt. Yoseph Mfanyakazi</div>
                 <div class="text-base text-white/90 mt-1">Chuo Kikuu cha Ushirika Moshi</div>
-                <div class="text-sm text-white/90 mt-3 max-w-sm">Mfumo Wezeshi wa Uchakataji na Usimamizi wa Taarifa</div>
+                <div class="w-32 border-t border-white/40 my-5"></div>
+                <div class="text-sm text-white/90 max-w-sm">Mfumo Wezeshi wa Uchakataji na Usimamizi wa Taarifa</div>
             </div>
 
             <div class="p-8 sm:p-10">
@@ -64,7 +65,8 @@
                     <h1 class="text-2xl font-bold text-gray-800">TMCS Smart</h1>
                     <p class="text-gray-600 mt-2">Chaptance ya Mt. Yoseph Mfanyakazi</p>
                     <p class="text-gray-600 mt-1">Chuo Kikuu cha Ushirika Moshi</p>
-                    <p class="text-gray-600 mt-1 text-sm">Mfumo Wezeshi wa Uchakataji na Usimamizi wa Taarifa</p>
+                    <div class="w-28 border-t border-gray-300 mx-auto my-4"></div>
+                    <p class="text-gray-600 text-sm">Mfumo Wezeshi wa Uchakataji na Usimamizi wa Taarifa</p>
                 </div>
 
         @if($errors->any())

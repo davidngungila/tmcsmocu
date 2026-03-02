@@ -39,28 +39,11 @@
     
     <!-- Loading Screen (shown initially) -->
     <div id="loadingScreen" class="absolute inset-0 bg-white z-50 flex flex-col items-center justify-center">
-        <div class="relative">
-            <!-- Outer Circle -->
-            <div class="w-24 h-24 border-4 border-blue-100 rounded-full"></div>
-            <!-- Inner Spinning Circle -->
-            <div class="absolute top-0 left-0 w-24 h-24 border-4 border-transparent border-t-blue-600 rounded-full spinner"></div>
-            <!-- Inner Crescent -->
-            <div class="absolute top-2 left-2 w-20 h-20 border-4 border-blue-800 rounded-full" style="clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%);"></div>
-        </div>
-        
-        <h2 class="text-2xl font-bold text-gray-800 mt-8">Inaweka mipangilio ya mfumo wako...</h2>
-        <p class="text-[#143F63] mt-2 text-sm">Tunaandaa uzoefu bora wa mfumo</p>
-        
-        <!-- Progress Bar -->
-        <div class="w-64 h-2 bg-gray-200 rounded-full mt-6 overflow-hidden">
-            <div id="progressBar" class="h-full bg-gradient-to-r from-[#143F63] to-[#143F63] rounded-full transition-all duration-1000" style="width: 0%"></div>
-        </div>
-        
-        <!-- Loading Dots -->
-        <div class="flex space-x-2 mt-4">
-            <div class="w-2 h-2 bg-[#143F63] rounded-full pulse-dots"></div>
-            <div class="w-2 h-2 bg-[#143F63] rounded-full pulse-dots"></div>
-            <div class="w-2 h-2 bg-[#143F63] rounded-full pulse-dots"></div>
+        <div class="relative w-20 h-20">
+            <div class="absolute inset-0 border-4 border-gray-200 border-t-[#143F63] rounded-full spinner"></div>
+            <div class="absolute inset-0 flex items-center justify-center">
+                <img src="{{ asset('logo.png') }}" alt="TMCS Smart Logo" class="h-10 w-auto">
+            </div>
         </div>
     </div>
     
@@ -213,29 +196,17 @@
     @include('layouts.footer')
 
     <script>
-        // Simulate loading progress
-        let progress = 0;
-        const progressBar = document.getElementById('progressBar');
+        // Splash handling
         const loadingScreen = document.getElementById('loadingScreen');
         const loginForm = document.getElementById('loginForm');
-        
-        const interval = setInterval(() => {
-            progress += Math.random() * 15;
-            if (progress > 100) {
-                progress = 100;
-                clearInterval(interval);
-                
-                // Hide loading screen and show login form
-                setTimeout(() => {
-                    loadingScreen.style.opacity = '0';
-                    setTimeout(() => {
-                        loadingScreen.style.display = 'none';
-                        loginForm.style.opacity = '1';
-                    }, 500);
-                }, 300);
-            }
-            progressBar.style.width = progress + '%';
-        }, 200);
+
+        setTimeout(() => {
+            loadingScreen.style.opacity = '0';
+            setTimeout(() => {
+                loadingScreen.style.display = 'none';
+                loginForm.style.opacity = '1';
+            }, 300);
+        }, 600);
 
         function showAuthSplash() {
             if (loadingScreen) {

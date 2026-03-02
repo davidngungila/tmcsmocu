@@ -171,7 +171,7 @@
                             <div class="min-w-0">
                                 <p class="text-sm font-bold text-gray-900 truncate">{{ $isAdmin ? 'System Admin' : (Auth::user()->name ?? 'User') }}</p>
                                 <p class="text-xs text-gray-500 truncate">{{ $isAdmin ? 'admin@example.com' : (Auth::user()->email ?? '') }}</p>
-                                <p class="text-xs text-gray-500 truncate">Role: {{ $activeRole->name ?? 'No Role' }}</p>
+                                <p class="text-xs text-gray-500 truncate">Role: {{ $headerActiveRole->name ?? 'No Role' }}</p>
                             </div>
                         </div>
                     </div>

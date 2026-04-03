@@ -3,15 +3,23 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Community extends Model
 {
     protected $fillable = [
         'name',
+        'academic_programme',
         'description',
-        'leader_id',
+        'chairperson_name',
+        'chairperson_email',
+        'chairperson_phone',
+        'secretary_name',
+        'secretary_email',
+        'secretary_phone',
+        'treasurer_name',
+        'treasurer_email',
+        'treasurer_phone',
         'is_active',
     ];
 
@@ -19,13 +27,38 @@ class Community extends Model
         'is_active' => 'boolean',
     ];
 
-    public function leader(): BelongsTo
+    public function parishioners(): HasMany
     {
-        return $this->belongsTo(Parishioner::class, 'leader_id');
+        return $this->hasMany(Parishioner::class);
     }
 
-    public function parishioners(): BelongsToMany
+    public function activeParishioners(): HasMany
     {
-        return $this->belongsToMany(Parishioner::class, 'parishioner_community')->withPivot('joined_date', 'is_active')->withTimestamps();
+        return $this->hasMany(Parishioner::class)->where('status', 'active');
+    }
+
+    public function studentParishioners(): HasMany
+    {
+        return $this->hasMany(Parishioner::class)->where('member_type', 'student')->where('status', 'active');
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
+
+    public function scopeByProgramme($query, $programme)
+    {
+        return $query->where('academic_programme', $programme);
+    }
+
+    public function getMemberCountAttribute(): int
+    {
+        return $this->activeParishioners()->count();
+    }
+
+    public function getStudentCountAttribute(): int
+    {
+        return $this->studentParishioners()->count();
     }
 }

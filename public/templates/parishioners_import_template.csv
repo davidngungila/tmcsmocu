@@ -1,0 +1,12 @@
+first_name,last_name,middle_name,member_type,phone,email,date_of_birth,gender,address,occupation,registration_number,academic_programme,year_of_study,employee_id,department,guardian_name,guardian_phone,notes
+John,Doe,Michael,student,+255712345678,john.doe@email.com,2000-01-15,male,123 Main Street,Dar es Salaam,MoCU/BICT/166/24,BBICT,2,,,,
+Jane,Smith,Patricia,employee,+255723456789,jane.smith@email.com,1985-05-20,female,456 Oak Street,Dar es Salaam,,,,,Finance,EMP001,,
+David,Johnson,,child,+255734567890,,2010-08-10,male,789 Pine Street,Dar es Salaam,,,,,,,,John Johnson,+255712345678,Child of parishioner
+Mary,Williams,Elizabeth,student,+255745678901,mary.williams@email.com,2001-03-25,female,321 Elm Street,Dar es Salaam,MoCU/BAPSM/145/24,BAPSM,3,,,,
+Robert,Brown,James,employee,+255756789012,robert.brown@email.com,1978-11-30,male,654 Maple Street,Dar es Salaam,,,,,Administration,EMP002,,
+Emily,Davis,Sarah,student,+255767890123,emily.davis@email.com,2002-07-18,female,987 Birch Street,Dar es Salaam,MoCU/LL.B/178/24,LL.B,2,,,,
+Michael,Miller,,child,+255778901234,,2012-02-14,male,147 Cedar Street,Dar es Salaam,,,,,,,,Robert Miller,+255756789012,Child of employee
+Sarah,Wilson,Amanda,student,+255789012345,sarah.wilson@email.com,2003-09-05,female,258 Spruce Street,Dar es Salaam,MoCU/BHRM/189/24,BHRM,1,,,,
+James,Moore,Robert,employee,+255790123456,james.moore@email.com,1980-04-22,male,369 Fir Street,Dar es Salaam,,,,,ICT,EMP003,,
+Lisa,Anderson,Marie,student,+255801234567,lisa.anderson@email.com,2004-06-30,female,741 Pine Street,Dar es Salaam,MoCU/BBA/201/24,BBA,1,,,,
+Christopher,Taylor,,child,+255812345678,,2015-11-08,male,852 Oak Street,Dar es Salaam,,,,,,,,Christopher Taylor,+255790123456,Child of staff

@@ -25,8 +25,8 @@ class SystemSettingsController extends Controller
         // Statistics
         $stats = [
             'total_users' => User::count(),
-            'active_users' => User::where('is_active', true)->count(),
-            'suspended_users' => User::where('is_active', false)->count(),
+            'active_users' => User::whereNotNull('email_verified_at')->count(),
+            'suspended_users' => User::whereNull('email_verified_at')->count(),
             'total_roles' => Role::count(),
             'total_transactions' => FinanceTransaction::count(),
         ];
@@ -137,9 +137,9 @@ class SystemSettingsController extends Controller
     
     private function getOnlineUsers()
     {
-        // Get users active in last 5 minutes
+        // Get users active in last 5 minutes (using updated_at as proxy for activity)
         $fiveMinutesAgo = now()->subMinutes(5);
-        return User::where('last_activity_at', '>=', $fiveMinutesAgo)->count();
+        return User::where('updated_at', '>=', $fiveMinutesAgo)->count();
     }
     
     private function getRequestsPerSecond()
@@ -161,6 +161,39 @@ class SystemSettingsController extends Controller
         ];
         
         return view('settings.system.health', compact('systemHealth', 'errorLogs'));
+    }
+    
+    public function backupIndex()
+    {
+        // Get backup history (mock data for now)
+        $backups = [
+            (object)[
+                'name' => 'daily_backup_' . date('Y-m-d'),
+                'type' => 'automatic',
+                'size' => 156.7,
+                'status' => 'completed',
+                'created_at' => now()->subHours(2),
+                'description' => 'Daily automatic backup'
+            ],
+            (object)[
+                'name' => 'manual_backup_' . date('Y-m-d', strtotime('-1 day')),
+                'type' => 'manual',
+                'size' => 158.2,
+                'status' => 'completed',
+                'created_at' => now()->subDay(),
+                'description' => 'Manual backup before update'
+            ],
+            (object)[
+                'name' => 'weekly_backup_' . date('Y-m-d', strtotime('-7 days')),
+                'type' => 'scheduled',
+                'size' => 162.4,
+                'status' => 'completed',
+                'created_at' => now()->subDays(7),
+                'description' => 'Weekly scheduled backup'
+            ]
+        ];
+        
+        return view('settings.backup.index', compact('backups'));
     }
     
     public function backup()

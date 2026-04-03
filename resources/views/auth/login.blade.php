@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Ingia - TmcsSmart</title>
+    <title>Login - TmcsSmart</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
         @keyframes spin {
@@ -53,20 +53,20 @@
             <div class="hidden md:flex flex-col items-center justify-center text-center p-10 bg-gradient-to-br from-[#143F63] via-[#143F63] to-[#143F63] text-white">
                 <img src="{{ asset('logo.png') }}" alt="TMCS Smart Logo" class="h-16 w-auto mb-6">
                 <div class="text-3xl font-bold tracking-wide">TMCS Smart</div>
-                <div class="text-base text-white/90 mt-2">Chaptance ya Mt. Yoseph Mfanyakazi</div>
-                <div class="text-base text-white/90 mt-1">Chuo Kikuu cha Ushirika Moshi</div>
+                <div class="text-base text-white/90 mt-2">St. Joseph Worker Parish</div>
+                <div class="text-base text-white/90 mt-1">Moshi Cooperative University</div>
                 <div class="w-32 border-t border-white/40 my-5"></div>
-                <div class="text-sm text-white/90 max-w-sm">Mfumo Wezeshi wa Uchakataji na Usimamizi wa Taarifa</div>
+                <div class="text-sm text-white/90 max-w-sm">Data Processing and Management Information System</div>
             </div>
 
             <div class="p-8 sm:p-10">
                 <div class="text-center mb-8 md:hidden">
                     <img src="{{ asset('logo.png') }}" alt="TmcsSmart Logo" class="h-14 w-auto mx-auto mb-4">
                     <h1 class="text-2xl font-bold text-gray-800">TMCS Smart</h1>
-                    <p class="text-gray-600 mt-2">Chaptance ya Mt. Yoseph Mfanyakazi</p>
-                    <p class="text-gray-600 mt-1">Chuo Kikuu cha Ushirika Moshi</p>
+                    <p class="text-gray-600 mt-2">St. Joseph Worker Parish</p>
+                    <p class="text-gray-600 mt-1">Moshi Cooperative University</p>
                     <div class="w-28 border-t border-gray-300 mx-auto my-4"></div>
-                    <p class="text-gray-600 text-sm">Mfumo Wezeshi wa Uchakataji na Usimamizi wa Taarifa</p>
+                    <p class="text-gray-600 text-sm">Data Processing and Management Information System</p>
                 </div>
 
         @if($errors->any())
@@ -89,15 +89,15 @@
                 <div class="mb-4 bg-blue-50 border border-blue-200 text-blue-800 px-4 py-3 rounded-lg">
                     <div class="mt-2 flex items-center justify-end">
                         <div class="relative group">
-                            <button type="button" class="inline-flex items-center justify-center w-8 h-8 rounded-full hover:bg-blue-100 text-blue-700" aria-label="Maelezo">
+                            <button type="button" class="inline-flex items-center justify-center w-8 h-8 rounded-full hover:bg-blue-100 text-blue-700" aria-label="Info">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z" />
                                 </svg>
                             </button>
 						<div class="absolute right-0 mt-2 w-80 bg-white border border-gray-200 rounded-lg shadow-lg p-3 text-xs text-gray-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-							<p class="font-bold text-gray-900">Thibitisha Kuingia</p>
-							<p class="mt-1">Tafadhali ingiza msimbo wa 2FA kutoka kwenye programu yako ya uwakilishi</p>
-							<p class="mt-2">⚠️ Simu haipo? Unaweza kuvuka 2FA kwa kubofya kitufe cha "Vuka 2FA" hapa chini.</p>
+							<p class="font-bold text-gray-900">Verify Login</p>
+							<p class="mt-1">Please enter the 2FA code from your authenticator app</p>
+							<p class="mt-2">⚠️ No phone? You can bypass 2FA by clicking the "Bypass 2FA" button below.</p>
 						</div>
                         </div>
                     </div>
@@ -110,19 +110,19 @@
                     <input type="hidden" name="remember" value="{{ session('2fa_remember') }}">
                     
                     <div>
-                        <label for="code" class="block text-sm font-medium text-gray-700 mb-2">Msimbo wa 2FA au Nambari za Uokoaji</label>
+                        <label for="code" class="block text-sm font-medium text-gray-700 mb-2">2FA Code or Backup Codes</label>
                         <input type="text" id="code" name="code" autofocus maxlength="20"
                             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#143F63] focus:border-transparent text-center text-xl tracking-widest"
-                            placeholder="Ingiza msimbo wa 2FA au nambari za uokoaji">
+                            placeholder="Enter 2FA code or backup codes">
                         <div class="mt-2 flex items-center justify-center">
                             <div class="relative group">
-                                <button type="button" class="inline-flex items-center justify-center w-8 h-8 rounded-full hover:bg-gray-100 text-gray-600" aria-label="Maelezo ya Msimbo">
+                                <button type="button" class="inline-flex items-center justify-center w-8 h-8 rounded-full hover:bg-gray-100 text-gray-600" aria-label="Code Info">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z" />
                                     </svg>
                                 </button>
                                 <div class="absolute left-1/2 -translate-x-1/2 mt-2 w-72 bg-white border border-gray-200 rounded-lg shadow-lg p-3 text-xs text-gray-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                                    Ingiza msimbo wa 2FA (tarakimu 6) au nambari za uokoaji (herufi 8)
+                                    Enter 2FA code (6 digits) or backup codes (8 characters)
                                 </div>
                             </div>
                         </div>
@@ -130,7 +130,7 @@
                     
                     <div class="space-y-3">
                         <button type="submit" class="w-full bg-[#143F63] text-white py-3 rounded-lg font-medium hover:bg-[#0f2f49] transition-colors">
-                            Thibitisha na Msimbo wa 2FA
+                            Verify with 2FA Code
                         </button>
                         
                         <div class="relative">
@@ -138,7 +138,7 @@
                                 <div class="w-full border-t border-gray-300"></div>
                             </div>
                             <div class="relative flex justify-center text-sm">
-                                <span class="px-2 bg-white text-gray-500">au</span>
+                                <span class="px-2 bg-white text-gray-500">or</span>
                             </div>
                         </div>
 
@@ -146,13 +146,13 @@
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
                             </svg>
-                            <span>Vuka 2FA (Simu Haipo)</span>
+                            <span>Bypass 2FA (No Phone)</span>
                         </button>
-                        <p class="text-xs text-gray-500 text-center">Kuvuka 2FA kunaweza kuathiri usalama wa akaunti yako</p>
+                        <p class="text-xs text-gray-500 text-center">Bypassing 2FA may affect your account security</p>
                     </div>
                     
                     <a href="{{ route('login.2fa.cancel') }}" class="block text-center text-sm text-[#143F63] hover:text-[#0f2f49]">
-                        Rudi kwenye kuingia
+                        Back to login
                     </a>
                 </form>
 
@@ -166,13 +166,13 @@
                 @csrf
                 
                 <div>
-                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Barua Pepe</label>
+                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email</label>
                     <input type="email" id="email" name="email" value="{{ old('email') }}" required autofocus
                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#143F63] focus:border-transparent">
                 </div>
                 
                 <div>
-                    <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Nenosiri</label>
+                    <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
                     <input type="password" id="password" name="password" required
                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#143F63] focus:border-transparent">
                 </div>
@@ -180,13 +180,13 @@
                 <div class="flex items-center justify-between">
                     <label class="flex items-center">
                         <input type="checkbox" name="remember" class="rounded border-gray-300 text-[#143F63] focus:ring-[#143F63]">
-                        <span class="ml-2 text-sm text-gray-600">Nikumbuke</span>
+                        <span class="ml-2 text-sm text-gray-600">Remember me</span>
                     </label>
-                    <a href="#" class="text-sm text-[#143F63] hover:text-[#0f2f49]">Umesahau nenosiri?</a>
+                    <a href="#" class="text-sm text-[#143F63] hover:text-[#0f2f49]">Forgot password?</a>
                 </div>
                 
                 <button type="submit" class="w-full bg-[#143F63] text-white py-3 rounded-lg font-medium hover:bg-[#0f2f49] transition-colors">
-                    Ingia
+                    Login
                 </button>
             </form>
         @endif

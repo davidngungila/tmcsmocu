@@ -13,7 +13,7 @@ class ApplyActiveRole
         $user = Auth::user();
 
         if ($user) {
-            $availableRoles = $user->availableRoles();
+            $availableRoles = $user->roles()->get();
             $activeRoleId = $request->session()->get('active_role_id');
 
             $activeRole = $activeRoleId ? $availableRoles->firstWhere('id', $activeRoleId) : null;

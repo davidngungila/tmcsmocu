@@ -15,7 +15,7 @@ class FinancialYearController extends Controller
      */
     public function index()
     {
-        $financialYears = FinancialYear::orderBy('start_date', 'desc')->get();
+        $financialYears = FinancialYear::orderBy('start_date', 'desc')->paginate(10);
         $activeYear = FinancialYear::getActive();
         
         return view('settings.financial-years.index', compact('financialYears', 'activeYear'));
@@ -57,6 +57,40 @@ class FinancialYearController extends Controller
 
         return redirect()->route('settings.financial-years.index')
             ->with('success', 'Financial year created successfully.');
+    }
+
+    /**
+     * Show the form for editing a financial year
+     */
+    public function edit($id)
+    {
+        $financialYear = FinancialYear::findOrFail($id);
+        return view('settings.financial-years.edit', compact('financialYear'));
+    }
+
+    /**
+     * Update a financial year
+     */
+    public function update(Request $request, $id)
+    {
+        $financialYear = FinancialYear::findOrFail($id);
+        
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after:start_date',
+            'notes' => 'nullable|string',
+        ]);
+
+        $financialYear->update([
+            'name' => $validated['name'],
+            'start_date' => $validated['start_date'],
+            'end_date' => $validated['end_date'],
+            'notes' => $validated['notes'] ?? null,
+        ]);
+
+        return redirect()->route('settings.financial-years.index')
+            ->with('success', 'Financial year updated successfully.');
     }
 
     /**

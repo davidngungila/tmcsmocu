@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('event_id')->constrained('events')->onDelete('cascade');
             $table->foreignId('parishioner_id')->nullable()->constrained('parishioners')->onDelete('cascade');
-            $table->foreignId('registration_id')->nullable()->constrained('event_registrations')->onDelete('set null');
+            $table->foreignId('registration_id')->nullable();
             
             // For non-parishioner attendance
             $table->string('name')->nullable();

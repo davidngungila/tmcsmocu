@@ -1,33 +1,220 @@
 @extends('layouts.app')
 
+@section('title', 'Communities')
+
 @section('content')
-<div class="space-y-6">
-    <!-- Header Section -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">Communities</h1>
-            <p class="text-gray-600 mt-1 text-sm sm:text-base">Manage church communities and groups</p>
+            <h1 class="h3 mb-0">Communities</h1>
+            <p class="text-muted mb-0">Spiritual Communities by Academic Programme</p>
         </div>
-        <a href="{{ route('communities.create') }}" class="bg-purple-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-bold hover:bg-purple-700 transition-colors shadow-sm text-sm sm:text-base whitespace-nowrap">
-            <svg class="w-4 h-4 sm:w-5 sm:h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-            </svg>
-            Create Community
-        </a>
+        <div>
+            <a href="{{ route('communities.create') }}" class="btn btn-primary">
+                <i class="fas fa-plus me-2"></i>Add Community
+            </a>
+        </div>
     </div>
-    
+
     <!-- Statistics Cards -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-        <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-4 sm:p-6 border border-blue-200 shadow-sm">
-            <div class="flex items-center justify-between">
-                <div class="flex-1 min-w-0">
-                    <p class="text-xs sm:text-sm font-medium text-blue-700 truncate">Total Communities</p>
-                    <p class="text-xl sm:text-2xl font-bold text-blue-900 mt-2 truncate">{{ number_format($totalCommunities ?? 0) }}</p>
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="mb-0">{{ $totalCommunities }}</h4>
+                            <p class="mb-0">Total Communities</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-users fa-2x"></i>
+                        </div>
+                    </div>
                 </div>
-                <div class="w-10 h-10 sm:w-12 sm:h-12 bg-blue-500 rounded-lg flex items-center justify-center flex-shrink-0 ml-2">
-                    <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                    </svg>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="mb-0">{{ $activeCommunities }}</h4>
+                            <p class="mb-0">Active Communities</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-check-circle fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="mb-0">{{ $totalMembers }}</h4>
+                            <p class="mb-0">Total Members</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-user-friends fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="mb-0">{{ $totalStudents }}</h4>
+                            <p class="mb-0">Total Students</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-graduation-cap fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search and Filters -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="GET" action="{{ route('communities.index') }}" class="row g-3">
+                <div class="col-md-4">
+                    <label for="search" class="form-label">Search</label>
+                    <input type="text" class="form-control" id="search" name="search" 
+                           value="{{ request('search') }}" placeholder="Search by name or programme...">
+                </div>
+                <div class="col-md-3">
+                    <label for="status" class="form-label">Status</label>
+                    <select class="form-select" id="status" name="status">
+                        <option value="">All</option>
+                        <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}">Active</option>
+                        <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}">Inactive</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">&nbsp;</label>
+                    <button type="submit" class="btn btn-outline-primary w-100">
+                        <i class="fas fa-search me-2"></i>Filter
+                    </button>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">&nbsp;</label>
+                    <a href="{{ route('communities.index') }}" class="btn btn-outline-secondary w-100">
+                        <i class="fas fa-times me-2"></i>Clear
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Communities Table -->
+    <div class="card">
+        <div class="card-body">
+            @if($communities->count() > 0)
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Academic Programme</th>
+                                <th>Chairperson</th>
+                                <th>Members</th>
+                                <th>Students</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($communities as $community)
+                                <tr>
+                                    <td>
+                                        <strong>{{ $community->name }}</strong>
+                                        @if($community->description)
+                                            <br><small class="text-muted">{{ Str::limit($community->description, 50) }}</small>
+                                        @endif
+                                    </td>
+                                    <td>{{ $community->academic_programme }}</td>
+                                    <td>
+                                        @if($community->chairperson_name)
+                                            {{ $community->chairperson_name }}<br>
+                                            <small class="text-muted">{{ $community->chairperson_email }}</small>
+                                        @else
+                                            <span class="text-muted">Not assigned</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-info">{{ $community->parishioners_count ?? 0 }}</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-primary">{{ $community->student_parishioners_count ?? 0 }}</span>
+                                    </td>
+                                    <td>
+                                        @if($community->is_active)
+                                            <span class="badge bg-success">Active</span>
+                                        @else
+                                            <span class="badge bg-danger">Inactive</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <a href="{{ route('communities.show', $community->id) }}" 
+                                               class="btn btn-sm btn-outline-primary" title="View">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <a href="{{ route('communities.edit', $community->id) }}" 
+                                               class="btn btn-sm btn-outline-warning" title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <form method="POST" action="{{ route('communities.destroy', $community->id) }}" 
+                                                  class="d-inline" onsubmit="return confirm('Are you sure you want to delete this community?')">
+                                                @csrf
+                                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                    <div class="text-muted">
+                        Showing {{ $communities->firstItem() }} to {{ $communities->lastItem() }} 
+                        of {{ $communities->total() }} communities
+                    </div>
+                    {{ $communities->links() }}
+                </div>
+            @else
+                <div class="text-center py-5">
+                    <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">No communities found</h5>
+                    <p class="text-muted">
+                        @if(request('search') || request('status'))
+                            No communities match your search criteria.
+                        @else
+                            No communities have been registered yet.
+                        @endif
+                    </p>
+                    <a href="{{ route('communities.create') }}" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i>Add First Community
+                    </a>
+                </div>
+            @endif
+        </div>
+    </div>
+</div>
+@endsection
                 </div>
             </div>
         </div>

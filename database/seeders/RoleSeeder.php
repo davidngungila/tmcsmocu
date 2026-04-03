@@ -14,27 +14,27 @@ class RoleSeeder extends Seeder
     {
         $roles = [
             [
-                'name' => 'Padri',
-                'slug' => 'padri',
-                'description' => 'Padri / Baba wa Kanisa - Full access to all features',
+                'name' => 'Priest',
+                'slug' => 'priest',
+                'description' => 'Priest / Church Father - Full access to all features',
                 'permissions' => ['*'], // All permissions
             ],
             [
-                'name' => 'Viongozi',
-                'slug' => 'viongozi',
-                'description' => 'Viongozi wa Chaptance - Limited administrative access',
+                'name' => 'Church Leader',
+                'slug' => 'leader',
+                'description' => 'Church Leadership Team - Limited administrative access',
                 'permissions' => ['view_reports', 'manage_events', 'view_parishioners'],
             ],
             [
-                'name' => 'Katibu',
-                'slug' => 'katibu',
-                'description' => 'Katibu - Secretary with data entry and management access',
+                'name' => 'Secretary',
+                'slug' => 'secretary',
+                'description' => 'Church Secretary - Data entry and management access',
                 'permissions' => ['create_parishioners', 'create_events', 'create_sms'],
             ],
             [
-                'name' => 'Mweka Hazina',
-                'slug' => 'mweka_hazina',
-                'description' => 'Mweka Hazina - Treasurer with finance management access',
+                'name' => 'Treasurer',
+                'slug' => 'treasurer',
+                'description' => 'Church Treasurer - Finance management access',
                 'permissions' => ['manage_finance', 'view_reports', 'approve_sms'],
             ],
             [

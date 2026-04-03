@@ -4,34 +4,34 @@ After running the database seeders, you can use the following credentials to log
 
 ## Test Users
 
-### 1. Padri (Full Access)
-- **Email:** `padri@example.com`
-- **Password:** `password`
-- **Role:** Padri / Baba wa Kanisa
+### 1. Priest (Full Access)
+- **Email:** `priest@church.com`
+- **Password:** `password123`
+- **Role:** Priest / Church Father
 - **Access:** Full access to all features
 
-### 2. Viongozi (Limited Admin)
-- **Email:** `viongozi@example.com`
-- **Password:** `password`
-- **Role:** Viongozi wa Chaptance
+### 2. Church Leader (Limited Admin)
+- **Email:** `leader@church.com`
+- **Password:** `password123`
+- **Role:** Church Leadership Team
 - **Access:** View reports, manage events, view parishioners
 
-### 3. Katibu (Secretary)
-- **Email:** `katibu@example.com`
-- **Password:** `password`
-- **Role:** Katibu
+### 3. Secretary (Secretary)
+- **Email:** `secretary@church.com`
+- **Password:** `password123`
+- **Role:** Church Secretary
 - **Access:** Create parishioners, create events, create SMS
 
-### 4. Mweka Hazina (Treasurer)
-- **Email:** `hazina@example.com`
-- **Password:** `password`
-- **Role:** Mweka Hazina
+### 4. Treasurer (Treasurer)
+- **Email:** `treasurer@church.com`
+- **Password:** `password123`
+- **Role:** Church Treasurer
 - **Access:** Manage finance, view reports, approve SMS
 
 ### 5. System Admin
-- **Email:** `admin@example.com`
-- **Password:** `password`
-- **Role:** System Admin
+- **Email:** `admin@church.com`
+- **Password:** `admin123`
+- **Role:** System Administrator
 - **Access:** Full system access
 
 ## How to Seed the Database
@@ -54,7 +54,21 @@ php artisan migrate --seed
 
 ## Default Password
 
-All test users have the default password: **`password`**
+All test users have the default password: **`password123`** (except admin: `admin123`)
 
 ⚠️ **Important:** Change these passwords in production!
+
+## System Changes Made
+
+✅ **Translated to English:**
+- Participant types: `regular_member`, `youth`, `choir`, `guest`, `minister`, `usher`, `media`, `security`, `protocol`
+- Event types: `regular_mass`, `special_mass`, `wedding_mass`, `funeral_mass`, `confirmation_mass`, etc.
+- Role names: `Priest`, `Church Leader`, `Secretary`, `Treasurer`, `System Admin`
+
+✅ **Sample Users Created:**
+- Father John Smith (Priest)
+- Michael Johnson (Church Leader)  
+- Sarah Williams (Secretary)
+- David Brown (Treasurer)
+- System Administrator
 

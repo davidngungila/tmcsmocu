@@ -1,0 +1,21 @@
+region,region_code,district,district_code,ward,ward_code,street,place
+Arusha,AR,Arumeru,AR01,Ngaramtoni,AR0101,Moshi Road,Kilimanjaro View
+Arusha,AR,Arumeru,AR01,Ngaramtoni,AR0101,Moshi Road,Moshi Bus Stop
+Arusha,AR,Arumeru,AR01,Ngaramtoni,AR0101,Moshi Road,Arusha Hotel
+Dar es Salaam,DS,Ilala,DS01,Ilala,DS0101,Indira Gandhi Street,Post Office
+Dar es Salaam,DS,Ilala,DS0101,Ilala,DS0101,Indira Gandhi Street,City Centre
+Dar es Salaam,DS,Ilala,DS0101,Ilala,DS0101,Indira Gandhi Street,Bank of Tanzania
+Dar es Salaam,DS,Ilala,DS0101,Kisutu,DS0102,Kivukoni Front,Ferry Terminal
+Dar es Salaam,DS,Ilala,DS0101,Kisutu,DS0102,Kivukoni Front,Kivukoni Fish Market
+Dar es Salaam,DS,Kinondoni,DS02,Kinondoni,DS0201,Morogoro Road,Ubungo Bus Terminal
+Dar es Salaam,DS,Kinondoni,DS0201,Kinondoni,DS0201,Morogoro Road,Mlimani City
+Dar es Salaam,DS,Kinondoni,DS0201,Kinondoni,DS0201,Morogoro Road,University of Dar es Salaam
+Dar es Salaam,DS,Temeke,DS03,Temeke,DS0301,Nyerere Road,Temeke Hospital
+Dar es Salaam,DS,Temeke,DS0303,Chang'ombe,DS0303,Julius Nyerere International Airport
+Dar es Salaam,DS,Temeke,DS0303,Chang'ombe,DS0303,Julius Nyerere International Airport,Arrival Hall
+Dodoma,DO,Dodoma Urban,DO01,Dodoma Urban,DO0101,Makole Road,Parliament Buildings
+Dodoma,DO,Dodoma Urban,DO01,Dodoma Urban,DO0101,Makole Road,President's Office
+Dodoma,DO,Dodoma Urban,DO01,Dodoma Urban,DO0101,Makole Road,Ministry of Finance
+Mwanza,MU,Ilemela,MU01,Ilemela,MU0101,Nyerere Road,Mwanza Airport
+Mwanza,MU,Ilemela,MU01,Ilemela,MU0101,Nyerere Road,Rock City Mall
+Mwanza,MU,Ilemela,MU01,Ilemela,MU0101,Nyerere Road,Mwanza Ferry Terminal

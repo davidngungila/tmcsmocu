@@ -25,33 +25,33 @@
                         <select name="type" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                             <option value="">Select Type</option>
                             <optgroup label="Catholic Masses">
-                                <option value="misa_ya_kawaida" {{ old('type') === 'misa_ya_kawaida' ? 'selected' : '' }}>Regular Mass</option>
-                                <option value="misa_maalum" {{ old('type') === 'misa_maalum' ? 'selected' : '' }}>Special Mass (Wedding, Funeral, Confirmation)</option>
-                                <option value="harusi" {{ old('type') === 'harusi' ? 'selected' : '' }}>Wedding Mass</option>
-                                <option value="mazishi" {{ old('type') === 'mazishi' ? 'selected' : '' }}>Funeral Mass</option>
-                                <option value="kipaimara" {{ old('type') === 'kipaimara' ? 'selected' : '' }}>Confirmation Mass</option>
+                                <option value="regular_mass" {{ old('type') === 'regular_mass' ? 'selected' : '' }}>Regular Mass</option>
+                                <option value="special_mass" {{ old('type') === 'special_mass' ? 'selected' : '' }}>Special Mass (Wedding, Funeral, Confirmation)</option>
+                                <option value="wedding_mass" {{ old('type') === 'wedding_mass' ? 'selected' : '' }}>Wedding Mass</option>
+                                <option value="funeral_mass" {{ old('type') === 'funeral_mass' ? 'selected' : '' }}>Funeral Mass</option>
+                                <option value="confirmation_mass" {{ old('type') === 'confirmation_mass' ? 'selected' : '' }}>Confirmation Mass</option>
                             </optgroup>
                             <optgroup label="Catholic Devotions">
                                 <option value="novena" {{ old('type') === 'novena' ? 'selected' : '' }}>Novena</option>
                                 <option value="adoration" {{ old('type') === 'adoration' ? 'selected' : '' }}>Adoration</option>
-                                <option value="ekaristi_takatifu" {{ old('type') === 'ekaristi_takatifu' ? 'selected' : '' }}>Holy Eucharist</option>
+                                <option value="holy_eucharist" {{ old('type') === 'holy_eucharist' ? 'selected' : '' }}>Holy Eucharist</option>
                             </optgroup>
                             <optgroup label="Liturgical Seasons">
-                                <option value="kwaresima" {{ old('type') === 'kwaresima' ? 'selected' : '' }}>Lent</option>
-                                <option value="kipindi_cha_pasaka" {{ old('type') === 'kipindi_cha_pasaka' ? 'selected' : '' }}>Easter Season</option>
+                                <option value="lent" {{ old('type') === 'lent' ? 'selected' : '' }}>Lent</option>
+                                <option value="easter_season" {{ old('type') === 'easter_season' ? 'selected' : '' }}>Easter Season</option>
                             </optgroup>
                             <optgroup label="Meetings & Events">
-                                <option value="mikutano_ya_jumuiya" {{ old('type') === 'mikutano_ya_jumuiya' ? 'selected' : '' }}>Community Meetings</option>
+                                <option value="community_meetings" {{ old('type') === 'community_meetings' ? 'selected' : '' }}>Community Meetings</option>
                                 <option value="semina" {{ old('type') === 'semina' ? 'selected' : '' }}>Seminar</option>
                                 <option value="retreata" {{ old('type') === 'retreata' ? 'selected' : '' }}>Retreat</option>
-                                <option value="matukio_ya_dayosisi" {{ old('type') === 'matukio_ya_dayosisi' ? 'selected' : '' }}>Diocese Events</option>
+                                <option value="diocese_events" {{ old('type') === 'diocese_events' ? 'selected' : '' }}>Diocese Events</option>
                             </optgroup>
                             <optgroup label="Other">
-                                <option value="ibada" {{ old('type') === 'ibada' ? 'selected' : '' }}>Worship Service</option>
-                                <option value="mkesha" {{ old('type') === 'mkesha' ? 'selected' : '' }}>Overnight Service</option>
-                                <option value="mkutano_wa_vijana" {{ old('type') === 'mkutano_wa_vijana' ? 'selected' : '' }}>Youth Meeting</option>
+                                <option value="worship_service" {{ old('type') === 'worship_service' ? 'selected' : '' }}>Worship Service</option>
+                                <option value="overnight_service" {{ old('type') === 'overnight_service' ? 'selected' : '' }}>Overnight Service</option>
+                                <option value="youth_meeting" {{ old('type') === 'youth_meeting' ? 'selected' : '' }}>Youth Meeting</option>
                                 <option value="charity" {{ old('type') === 'charity' ? 'selected' : '' }}>Charity</option>
-                                <option value="hija" {{ old('type') === 'hija' ? 'selected' : '' }}>Pilgrimage</option>
+                                <option value="pilgrimage" {{ old('type') === 'pilgrimage' ? 'selected' : '' }}>Pilgrimage</option>
                             </optgroup>
                         </select>
                         @error('type')

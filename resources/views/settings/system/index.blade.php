@@ -5,17 +5,17 @@
     <!-- Header -->
 	<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
 	    <div>
-	        <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">⚙️ Mipangilio ya Mfumo</h1>
-	        <p class="text-gray-600 mt-1 text-sm sm:text-base">Simamia mipangilio yote ya mfumo</p>
+	        <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">⚙️ System Settings</h1>
+	        <p class="text-gray-600 mt-1 text-sm sm:text-base">Manage all system settings and configurations</p>
 	    </div>
 	</div>
     
     <!-- Financial Year Section -->
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
 	    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
-	        <h2 class="text-lg font-bold text-gray-800">📅 Mwaka wa Fedha</h2>
+	        <h2 class="text-lg font-bold text-gray-800">📅 Financial Year</h2>
 	        <a href="{{ route('settings.financial-years.index') }}" class="text-purple-600 hover:text-purple-700 text-sm font-bold">
-	            Mipangilio ya Mwaka wa Fedha →
+	            Financial Year Settings →
 	        </a>
 	    </div>
         
@@ -23,11 +23,11 @@
         <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-4 border border-purple-200">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm font-medium text-purple-700">Mwaka Unaofanya Kazi</p>
+                    <p class="text-sm font-medium text-purple-700">Active Financial Year</p>
                     <p class="text-xl font-bold text-purple-900 mt-1">{{ $activeYear->name }}</p>
                     <p class="text-xs text-purple-600 mt-1">
-                        {{ \Carbon\Carbon::parse($activeYear->start_date)->format('d/m/Y') }} - 
-                        {{ \Carbon\Carbon::parse($activeYear->end_date)->format('d/m/Y') }}
+                        {{ \Carbon\Carbon::parse($activeYear->start_date)->format('M d, Y') }} - 
+                        {{ \Carbon\Carbon::parse($activeYear->end_date)->format('M d, Y') }}
                     </p>
                 </div>
                 <div class="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center">
@@ -37,7 +37,7 @@
         </div>
         @else
         <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-            <p class="text-sm text-yellow-800">Hakuna mwaka wa fedha unaofanya kazi. <a href="{{ route('settings.financial-years.create') }}" class="font-bold underline">Fungua mwaka mpya</a></p>
+            <p class="text-sm text-yellow-800">No active financial year. <a href="{{ route('settings.financial-years.create') }}" class="font-bold underline">Create a new financial year</a></p>
         </div>
         @endif
     </div>
@@ -45,9 +45,9 @@
     <!-- System Health Section -->
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
 	    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
-	        <h2 class="text-lg font-bold text-gray-800">🖥️ Afya ya Mfumo</h2>
+	        <h2 class="text-lg font-bold text-gray-800">🖥️ System Health</h2>
 	        <a href="{{ route('settings.system.health') }}" class="text-purple-600 hover:text-purple-700 text-sm font-bold">
-	            Angalia Zaidi →
+	            View More →
 	        </a>
 	    </div>
         
@@ -60,13 +60,13 @@
                 </div>
                 <p class="text-xs text-green-600">
                     @if($systemHealth['database']['connected'] ?? false)
-                        Imara
+                        Connected
                     @else
-                        Haijaunganishwa
+                        Disconnected
                     @endif
                 </p>
                 @if(isset($systemHealth['database']['size_mb']))
-                <p class="text-xs text-green-600 mt-1">Ukubwa: {{ number_format($systemHealth['database']['size_mb'], 2) }} MB</p>
+                <p class="text-xs text-green-600 mt-1">Size: {{ number_format($systemHealth['database']['size_mb'], 2) }} MB</p>
                 @endif
             </div>
             
@@ -90,14 +90,14 @@
             <!-- Performance -->
             <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-4 border border-purple-200">
                 <div class="flex items-center justify-between mb-2">
-                    <p class="text-sm font-medium text-purple-700">Utendaji</p>
+                    <p class="text-sm font-medium text-purple-700">Performance</p>
                     <span class="text-purple-600 text-lg">◉</span>
                 </div>
                 @if(isset($systemHealth['performance']['response_time']))
-                <p class="text-xs text-purple-600">Muda wa Kujibu: {{ $systemHealth['performance']['response_time'] }}ms</p>
+                <p class="text-xs text-purple-600">Response Time: {{ $systemHealth['performance']['response_time'] }}ms</p>
                 @endif
                 @if(isset($systemHealth['performance']['online_users']))
-                <p class="text-xs text-purple-600 mt-1">Watumiaji Mtandaoni: {{ $systemHealth['performance']['online_users'] }}</p>
+                <p class="text-xs text-purple-600 mt-1">Online Users: {{ $systemHealth['performance']['online_users'] }}</p>
                 @endif
             </div>
         </div>
@@ -105,11 +105,11 @@
         @if(isset($systemHealth['database']['last_backup']))
         <div class="mt-4 pt-4 border-t border-gray-200">
             <div class="flex items-center justify-between">
-                <p class="text-sm text-gray-600">Backup ya Mwisho: {{ $systemHealth['database']['last_backup'] ?? 'Hajafanywa' }}</p>
+                <p class="text-sm text-gray-600">Last Backup: {{ $systemHealth['database']['last_backup'] ?? 'Not performed' }}</p>
                 <form method="POST" action="{{ route('settings.system.backup') }}" class="inline">
                     @csrf
                     <button type="submit" class="text-sm bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors font-bold">
-                        Fanya Backup Sasa
+                        Create Backup Now
                     </button>
                 </form>
             </div>
@@ -122,11 +122,11 @@
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-xs text-gray-500 mb-1">Watumiaji Wote</p>
+                    <p class="text-xs text-gray-500 mb-1">Total Users</p>
                     <p class="text-2xl font-bold text-gray-900">{{ $stats['total_users'] ?? 0 }}</p>
                     <p class="text-xs text-gray-500 mt-1">
-                        Walio hai: {{ $stats['active_users'] ?? 0 }} | 
-                        Waliozuiwa: {{ $stats['suspended_users'] ?? 0 }}
+                        Active: {{ $stats['active_users'] ?? 0 }} | 
+                        Suspended: {{ $stats['suspended_users'] ?? 0 }}
                     </p>
                 </div>
                 <div class="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
@@ -140,7 +140,7 @@
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-xs text-gray-500 mb-1">Majukumu</p>
+                    <p class="text-xs text-gray-500 mb-1">Roles</p>
                     <p class="text-2xl font-bold text-gray-900">{{ $stats['total_roles'] ?? 0 }}</p>
                 </div>
                 <div class="w-10 h-10 bg-purple-500 rounded-lg flex items-center justify-center">
@@ -154,7 +154,7 @@
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-xs text-gray-500 mb-1">Miamala ya Fedha</p>
+                    <p class="text-xs text-gray-500 mb-1">Financial Transactions</p>
                     <p class="text-2xl font-bold text-gray-900">{{ number_format($stats['total_transactions'] ?? 0) }}</p>
                 </div>
                 <div class="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
@@ -168,9 +168,9 @@
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-xs text-gray-500 mb-1">Mipangilio</p>
+                    <p class="text-xs text-gray-500 mb-1">Settings</p>
                     <p class="text-2xl font-bold text-gray-900">6</p>
-                    <p class="text-xs text-gray-500 mt-1">Sehemu zote</p>
+                    <p class="text-xs text-gray-500 mt-1">All sections</p>
                 </div>
                 <div class="w-10 h-10 bg-yellow-500 rounded-lg flex items-center justify-center">
                     <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -189,9 +189,9 @@
                 <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
                     <span class="text-2xl">📅</span>
                 </div>
-                <h3 class="text-lg font-bold text-gray-800">Mwaka wa Fedha</h3>
+                <h3 class="text-lg font-bold text-gray-800">Financial Year</h3>
             </div>
-            <p class="text-sm text-gray-600">Simamia miaka ya fedha na vipindi</p>
+            <p class="text-sm text-gray-600">Manage financial years and periods</p>
         </a>
         
         <!-- Users -->
@@ -200,9 +200,9 @@
                 <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
                     <span class="text-2xl">👥</span>
                 </div>
-                <h3 class="text-lg font-bold text-gray-800">Watumiaji</h3>
+                <h3 class="text-lg font-bold text-gray-800">Users</h3>
             </div>
-            <p class="text-sm text-gray-600">Simamia watumiaji na majukumu</p>
+            <p class="text-sm text-gray-600">Manage users and roles</p>
         </a>
         
         <!-- Permissions -->
@@ -211,9 +211,9 @@
                 <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
                     <span class="text-2xl">🔐</span>
                 </div>
-                <h3 class="text-lg font-bold text-gray-800">Ruhusa</h3>
+                <h3 class="text-lg font-bold text-gray-800">Permissions</h3>
             </div>
-            <p class="text-sm text-gray-600">Simamia ruhusa na majukumu</p>
+            <p class="text-sm text-gray-600">Manage permissions and roles</p>
         </a>
         
         <!-- General Settings -->
@@ -222,9 +222,9 @@
                 <div class="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center">
                     <span class="text-2xl">⚙️</span>
                 </div>
-                <h3 class="text-lg font-bold text-gray-800">Mipangilio ya Jumla</h3>
+                <h3 class="text-lg font-bold text-gray-800">General Settings</h3>
             </div>
-            <p class="text-sm text-gray-600">Mipangilio ya mfumo kwa ujumla</p>
+            <p class="text-sm text-gray-600">General system settings</p>
         </a>
         
         <!-- SMS Settings -->
@@ -233,9 +233,9 @@
                 <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
                     <span class="text-2xl">📱</span>
                 </div>
-                <h3 class="text-lg font-bold text-gray-800">Mipangilio ya SMS</h3>
+                <h3 class="text-lg font-bold text-gray-800">SMS Settings</h3>
             </div>
-            <p class="text-sm text-gray-600">Simamia SMS na watoa huduma</p>
+            <p class="text-sm text-gray-600">Manage SMS and providers</p>
         </a>
         
         <!-- Email Settings -->
@@ -244,9 +244,9 @@
                 <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
                     <span class="text-2xl">📧</span>
                 </div>
-                <h3 class="text-lg font-bold text-gray-800">Mipangilio ya Barua Pepe</h3>
+                <h3 class="text-lg font-bold text-gray-800">Email Settings</h3>
             </div>
-            <p class="text-sm text-gray-600">Simamia barua pepe na SMTP</p>
+            <p class="text-sm text-gray-600">Manage email and SMTP</p>
         </a>
     </div>
 </div>

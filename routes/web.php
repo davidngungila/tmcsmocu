@@ -138,8 +138,18 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('assets', AssetController::class);
     
     // Parishioners Routes
+    // Specific routes must come before parameterized routes
     Route::get('/parishioners', [ParishionerController::class, 'index'])->name('parishioners.index');
     Route::get('/parishioners/create', [ParishionerController::class, 'create'])->name('parishioners.create');
+    Route::get('/parishioners/import', [ParishionerController::class, 'import'])->name('parishioners.import');
+    Route::post('/parishioners/import', [ParishionerController::class, 'importStore'])->name('parishioners.import.store');
+    Route::get('/parishioners/member-types', [ParishionerController::class, 'memberTypes'])->name('parishioners.member-types');
+    Route::get('/parishioners/manage', [ParishionerController::class, 'manage'])->name('parishioners.manage');
+    Route::post('/parishioners/export', [ParishionerController::class, 'export'])->name('parishioners.export');
+    Route::post('/parishioners/bulk-activate', [ParishionerController::class, 'bulkActivate'])->name('parishioners.bulk-activate');
+    Route::post('/parishioners/bulk-deactivate', [ParishionerController::class, 'bulkDeactivate'])->name('parishioners.bulk-deactivate');
+    
+    // Parameterized routes (must come after specific routes)
     Route::post('/parishioners', [ParishionerController::class, 'store'])->name('parishioners.store');
     Route::get('/parishioners/{id}', [ParishionerController::class, 'show'])->name('parishioners.show');
     Route::get('/parishioners/{id}/edit', [ParishionerController::class, 'edit'])->name('parishioners.edit');
@@ -148,6 +158,217 @@ Route::middleware(['auth'])->group(function () {
     
     // Communities Routes
     Route::resource('communities', CommunityController::class);
+    
+    // Locations Routes - Using closures to bypass Laravel's controller resolution
+    // Specific routes must come before parameterized routes
+    Route::get('/locations', function() {
+        try {
+            $controller = new \App\Http\Controllers\LocationController();
+            return $controller->index(request());
+        } catch (\Exception $e) {
+            return 'Error: ' . $e->getMessage();
+        }
+    })->name('locations.index');
+    
+    Route::get('/locations/create', function() {
+        try {
+            $controller = new \App\Http\Controllers\LocationController();
+            return $controller->create();
+        } catch (\Exception $e) {
+            return 'Error: ' . $e->getMessage();
+        }
+    })->name('locations.create');
+    
+    Route::post('/locations', function() {
+        try {
+            $controller = new \App\Http\Controllers\LocationController();
+            return $controller->store(request());
+        } catch (\Exception $e) {
+            return 'Error: ' . $e->getMessage();
+        }
+    })->name('locations.store');
+    
+    Route::post('/locations/import', function() {
+        try {
+            $controller = new \App\Http\Controllers\LocationController();
+            return $controller->import(request());
+        } catch (\Exception $e) {
+            return 'Error: ' . $e->getMessage();
+        }
+    })->name('locations.import');
+    
+    Route::post('/locations/export', function() {
+        try {
+            $controller = new \App\Http\Controllers\LocationController();
+            return $controller->export();
+        } catch (\Exception $e) {
+            return 'Error: ' . $e->getMessage();
+        }
+    })->name('locations.export');
+    
+    // API Routes for Location Browser
+    Route::get('/api/locations/regions', function() {
+        try {
+            $regions = \App\Models\Location::select('region', 'region_code')
+                ->distinct('region_code')
+                ->groupBy('region', 'region_code')
+                ->get()
+                ->map(function($region) {
+                    $region->name = $region->region;
+                    $region->count = \App\Models\Location::where('region_code', $region->region_code)->count();
+                    return $region;
+                });
+            return response()->json($regions);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    });
+    
+    Route::get('/api/locations/districts/{regionCode}', function($regionCode) {
+        try {
+            $districts = \App\Models\Location::where('region_code', $regionCode)
+                ->select('district', 'district_code')
+                ->distinct('district_code')
+                ->groupBy('district', 'district_code')
+                ->get()
+                ->map(function($district) {
+                    $district->name = $district->district;
+                    $district->count = \App\Models\Location::where('district_code', $district->district_code)->count();
+                    return $district;
+                });
+            return response()->json($districts);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    });
+    
+    Route::get('/api/locations/wards/{districtCode}', function($districtCode) {
+        try {
+            $wards = \App\Models\Location::where('district_code', $districtCode)
+                ->select('ward', 'ward_code')
+                ->distinct('ward_code')
+                ->groupBy('ward', 'ward_code')
+                ->get()
+                ->map(function($ward) {
+                    $ward->name = $ward->ward;
+                    $ward->count = \App\Models\Location::where('ward_code', $ward->ward_code)->count();
+                    return $ward;
+                });
+            return response()->json($wards);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    });
+    
+    Route::get('/api/locations/streets/{wardCode}', function($wardCode) {
+        try {
+            $streets = \App\Models\Location::where('ward_code', $wardCode)
+                ->whereNotNull('street')
+                ->where('street', '!=', '')
+                ->select('street')
+                ->distinct('street')
+                ->get()
+                ->map(function($street) {
+                    $street->name = $street->street;
+                    $street->count = \App\Models\Location::where('street', $street->street)->count();
+                    return $street;
+                });
+            return response()->json($streets);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    });
+    
+    Route::get('/api/locations/places/{streetName}', function($streetName) {
+        try {
+            $places = \App\Models\Location::where('street', $streetName)
+                ->whereNotNull('place')
+                ->where('place', '!=', '')
+                ->select('place', 'region', 'district', 'ward', 'street', 'is_active')
+                ->distinct('place')
+                ->get()
+                ->map(function($place) {
+                    $place->name = $place->place;
+                    return $place;
+                });
+            return response()->json($places);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    });
+    
+    Route::get('/api/locations/search', function(\Illuminate\Http\Request $request) {
+        try {
+            $query = $request->get('q');
+            if (strlen($query) < 2) {
+                return response()->json([]);
+            }
+            
+            $results = \App\Models\Location::where(function($q) use ($query) {
+                    $q->where('region', 'like', "%{$query}%")
+                      ->orWhere('district', 'like', "%{$query}%")
+                      ->orWhere('ward', 'like', "%{$query}%")
+                      ->orWhere('street', 'like', "%{$query}%")
+                      ->orWhere('place', 'like', "%{$query}%");
+                })
+                ->select('region', 'region_code', 'district', 'district_code', 'ward', 'ward_code', 'street', 'place', 'is_active')
+                ->limit(50)
+                ->get()
+                ->map(function($result) {
+                    $result->name = $result->place ?: $result->street ?: $result->ward ?: $result->district ?: $result->region;
+                    return $result;
+                });
+                
+            return response()->json($results);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    });
+    
+    // Parameterized routes (must come after specific routes)
+    Route::get('/locations/{location}', function($location) {
+        try {
+            $controller = new \App\Http\Controllers\LocationController();
+            // Find the location model manually
+            $locationModel = \App\Models\Location::findOrFail($location);
+            return $controller->show($locationModel);
+        } catch (\Exception $e) {
+            return 'Error: ' . $e->getMessage();
+        }
+    })->name('locations.show');
+    
+    Route::get('/locations/{location}/edit', function($location) {
+        try {
+            $controller = new \App\Http\Controllers\LocationController();
+            // Find the location model manually
+            $locationModel = \App\Models\Location::findOrFail($location);
+            return $controller->edit($locationModel);
+        } catch (\Exception $e) {
+            return 'Error: ' . $e->getMessage();
+        }
+    })->name('locations.edit');
+    
+    Route::put('/locations/{location}', function($location) {
+        try {
+            $controller = new \App\Http\Controllers\LocationController();
+            // Find the location model manually
+            $locationModel = \App\Models\Location::findOrFail($location);
+            return $controller->update(request(), $locationModel);
+        } catch (\Exception $e) {
+            return 'Error: ' . $e->getMessage();
+        }
+    })->name('locations.update');
+    
+    Route::delete('/locations/{location}', function($location) {
+        try {
+            $controller = new \App\Http\Controllers\LocationController();
+            // Find the location model manually
+            $locationModel = \App\Models\Location::findOrFail($location);
+            return $controller->destroy($locationModel);
+        } catch (\Exception $e) {
+            return 'Error: ' . $e->getMessage();
+        }
+    })->name('locations.destroy');
     
     // Apostolic Groups Routes
     Route::resource('apostolic-groups', ApostolicGroupController::class);
@@ -225,6 +446,7 @@ Route::middleware(['auth'])->group(function () {
         // System Settings Dashboard
         Route::get('/system', [SystemSettingsController::class, 'index'])->name('system.index');
         Route::get('/system/health', [SystemSettingsController::class, 'health'])->name('system.health');
+        Route::get('/system/backup', [SystemSettingsController::class, 'backupIndex'])->name('system.backup.index');
         Route::post('/system/backup', [SystemSettingsController::class, 'backup'])->name('system.backup');
         
         Route::resource('users', UserController::class);
@@ -245,6 +467,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/financial-years', [FinancialYearController::class, 'index'])->name('financial-years.index');
         Route::get('/financial-years/create', [FinancialYearController::class, 'create'])->name('financial-years.create');
         Route::post('/financial-years', [FinancialYearController::class, 'store'])->name('financial-years.store');
+        Route::get('/financial-years/{id}/edit', [FinancialYearController::class, 'edit'])->name('financial-years.edit');
+        Route::put('/financial-years/{id}', [FinancialYearController::class, 'update'])->name('financial-years.update');
         Route::post('/financial-years/{id}/set-active', [FinancialYearController::class, 'setActive'])->name('financial-years.set-active');
         Route::post('/financial-years/{id}/close', [FinancialYearController::class, 'close'])->name('financial-years.close');
         Route::get('/financial-years/{id}/transition', [FinancialYearController::class, 'showTransition'])->name('financial-years.transition');

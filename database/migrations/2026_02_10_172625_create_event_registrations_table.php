@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('email')->nullable();
             
             // Participant type
-            $table->enum('participant_type', ['muumini_wa_kawaida', 'vijana', 'kwaya', 'mgeni', 'mhudumu', 'usher', 'media', 'security', 'protocol'])->default('muumini_wa_kawaida');
+            $table->enum('participant_type', ['regular_member', 'youth', 'choir', 'guest', 'minister', 'usher', 'media', 'security', 'protocol'])->default('regular_member');
             
             // Registration details
             $table->enum('status', ['pending', 'confirmed', 'cancelled'])->default('pending');

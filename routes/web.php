@@ -677,13 +677,30 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/system/backup', [SystemSettingsController::class, 'backup'])->name('system.backup');
         
         Route::resource('users', UserController::class);
+        
+        // Permissions Management
         Route::get('/permissions', [PermissionController::class, 'index'])->name('permissions.index');
-        Route::put('/permissions/{id}', [PermissionController::class, 'updatePermissions'])->name('permissions.update');
+        Route::get('/permissions/{id}/edit', [PermissionController::class, 'edit'])->name('permissions.edit');
+        Route::put('/permissions/{id}', [PermissionController::class, 'update'])->name('permissions.update');
+        Route::get('/permissions/{id}/show', [PermissionController::class, 'show'])->name('permissions.show');
+        Route::delete('/roles/{id}', [PermissionController::class, 'destroy'])->name('roles.destroy');
+        Route::post('/roles/{id}/toggle', [PermissionController::class, 'toggleStatus'])->name('roles.toggle');
+        Route::post('/roles/{id}/clone', [PermissionController::class, 'clone'])->name('roles.clone');
+        Route::post('/roles/bulk-activate', [PermissionController::class, 'bulkActivate'])->name('roles.bulk-activate');
+        Route::post('/roles/bulk-deactivate', [PermissionController::class, 'bulkDeactivate'])->name('roles.bulk-deactivate');
+        Route::post('/roles/bulk-delete', [PermissionController::class, 'bulkDelete'])->name('roles.bulk-delete');
+        Route::get('/permissions/export', [PermissionController::class, 'exportPermissions'])->name('permissions.export');
+        Route::post('/permissions/import', [PermissionController::class, 'importPermissions'])->name('permissions.import');
         Route::get('/general', [GeneralSettingsController::class, 'index'])->name('general');
         Route::post('/general', [GeneralSettingsController::class, 'store'])->name('general.store');
         Route::get('/account', [GeneralSettingsController::class, 'account'])->name('account');
+        Route::post('/account', [GeneralSettingsController::class, 'updateAccount'])->name('account.update');
         Route::get('/security', [GeneralSettingsController::class, 'security'])->name('security');
         Route::post('/security/password', [GeneralSettingsController::class, 'updatePassword'])->name('security.password');
+        Route::post('/security/email', [GeneralSettingsController::class, 'updateEmail'])->name('security.email');
+        Route::get('/security/2fa/setup', [GeneralSettingsController::class, 'enableTwoFactor'])->name('security.2fa.setup');
+        Route::post('/security/2fa/verify', [GeneralSettingsController::class, 'verifyTwoFactor'])->name('security.2fa.verify');
+        Route::post('/security/2fa/disable', [GeneralSettingsController::class, 'disableTwoFactor'])->name('security.2fa.disable');
         Route::resource('notification-providers', \App\Http\Controllers\Settings\NotificationProviderController::class);
         Route::post('/notification-providers/{id}/set-primary', [\App\Http\Controllers\Settings\NotificationProviderController::class, 'setPrimary'])->name('notification-providers.set-primary');
         Route::post('/notification-providers/{id}/test-email', [\App\Http\Controllers\Settings\NotificationProviderController::class, 'testEmail'])->name('notification-providers.test-email');
@@ -744,6 +761,52 @@ Route::middleware(['auth'])->group(function () {
     // Profile Routes
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::post('/profile/upload-avatar', [ProfileController::class, 'uploadAvatar'])->name('profile.upload-avatar');
+    Route::post('/profile/remove-avatar', [ProfileController::class, 'removeAvatar'])->name('profile.remove-avatar');
+    Route::get('/profile/stats', [ProfileController::class, 'getStats'])->name('profile.stats');
+    
+    // POS Routes
+    Route::prefix('shop')->name('shop.')->group(function () {
+        Route::get('/pos', [PosController::class, 'index'])->name('pos');
+        Route::post('/pos/process', [PosController::class, 'processSale'])->name('pos.process');
+        Route::get('/pos/receipt/{sale}', [PosController::class, 'receipt'])->name('pos.receipt');
+        Route::get('/inventory', [ProductController::class, 'index'])->name('inventory.index');
+        Route::get('/inventory/create', [ProductController::class, 'create'])->name('inventory.create');
+        Route::post('/inventory', [ProductController::class, 'store'])->name('inventory.store');
+        Route::get('/inventory/{product}/edit', [ProductController::class, 'edit'])->name('inventory.edit');
+        Route::put('/inventory/{product}', [ProductController::class, 'update'])->name('inventory.update');
+        Route::delete('/inventory/{product}', [ProductController::class, 'destroy'])->name('inventory.destroy');
+        Route::get('/sales', [PosController::class, 'sales'])->name('sales.index');
+        Route::get('/sales/{sale}', [PosController::class, 'showSale'])->name('sales.show');
+        Route::get('/reports', [PosController::class, 'reports'])->name('reports.index');
+        Route::get('/reports/sales', [PosController::class, 'salesReport'])->name('reports.sales');
+        Route::get('/reports/inventory', [PosController::class, 'inventoryReport'])->name('reports.inventory');
+        Route::get('/low-stock', [PosController::class, 'lowStock'])->name('low-stock');
+        Route::post('/inventory/{product}/stock', [ProductController::class, 'updateStock'])->name('inventory.update-stock');
+    });
+    
+    // SMS Routes
+    Route::prefix('sms')->name('sms.')->group(function () {
+        Route::get('/create', [SmsController::class, 'create'])->name('create');
+        Route::post('/send', [SmsController::class, 'send'])->name('send');
+        Route::get('/broadcast', [SmsController::class, 'broadcast'])->name('broadcast');
+        Route::post('/broadcast/send', [SmsController::class, 'sendBroadcast'])->name('broadcast.send');
+        Route::get('/scheduled', [SmsController::class, 'scheduled'])->name('scheduled');
+        Route::post('/scheduled/create', [SmsController::class, 'createScheduled'])->name('scheduled.create');
+        Route::get('/scheduled/{message}/cancel', [SmsController::class, 'cancelScheduled'])->name('scheduled.cancel');
+        Route::get('/email', [SmsController::class, 'email'])->name('email');
+        Route::post('/email/send', [SmsController::class, 'sendEmail'])->name('email.send');
+        Route::get('/log', [SmsController::class, 'log'])->name('log');
+        Route::get('/log/{message}', [SmsController::class, 'showMessage'])->name('log.show');
+        Route::get('/templates', [SmsController::class, 'templates'])->name('templates');
+        Route::get('/templates/create', [SmsController::class, 'createTemplate'])->name('templates.create');
+        Route::post('/templates', [SmsController::class, 'storeTemplate'])->name('templates.store');
+        Route::get('/templates/{template}/edit', [SmsController::class, 'editTemplate'])->name('templates.edit');
+        Route::put('/templates/{template}', [SmsController::class, 'updateTemplate'])->name('templates.update');
+        Route::delete('/templates/{template}', [SmsController::class, 'deleteTemplate'])->name('templates.delete');
+        Route::get('/balance', [SmsController::class, 'balance'])->name('balance');
+        Route::post('/sync-status', [SmsController::class, 'syncStatus'])->name('sync-status');
+    });
     
     // Redirect root to dashboard
     Route::get('/', function () {

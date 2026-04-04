@@ -83,7 +83,7 @@
     <!-- Filters Section -->
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
         <h3 class="text-lg font-bold text-gray-800 mb-4">🔍 Filters</h3>
-        <form method="GET" action="{{ route('contributions.index') }}" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <form method="GET" action="{{ route('finance.contributions.index') }}" class="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Contribution Type</label>
                 <select name="type" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
@@ -174,8 +174,8 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                 <div class="flex justify-end space-x-2">
-                                    <a href="{{ route('contributions.show', $contribution) }}" class="text-blue-600 hover:text-blue-900">View</a>
-                                    <a href="{{ route('contributions.edit', $contribution) }}" class="text-purple-600 hover:text-purple-900">Edit</a>
+                                    <a href="{{ route('finance.contributions.show', $contribution) }}" class="text-blue-600 hover:text-blue-900">View</a>
+                                    <a href="{{ route('finance.contributions.edit', $contribution) }}" class="text-purple-600 hover:text-purple-900">Edit</a>
                                     @if($contribution->receipt_number)
                                         <a href="{{ route('receipts.show', $contribution->receipt_number) }}" class="text-green-600 hover:text-green-900">Receipt</a>
                                     @endif

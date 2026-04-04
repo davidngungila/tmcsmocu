@@ -7,7 +7,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
 {
@@ -24,6 +26,14 @@ class User extends Authenticatable
         'email',
         'password',
         'role_id',
+        'phone',
+        'bio',
+        'location',
+        'website',
+        'date_of_birth',
+        'gender',
+        'avatar',
+        'last_login_at',
         'two_factor_enabled',
         'two_factor_secret',
         'two_factor_recovery_codes',
@@ -52,6 +62,8 @@ class User extends Authenticatable
             'password' => 'hashed',
             'two_factor_enabled' => 'boolean',
             'two_factor_confirmed_at' => 'datetime',
+            'date_of_birth' => 'date',
+            'last_login_at' => 'datetime',
         ];
     }
 
@@ -80,5 +92,10 @@ class User extends Authenticatable
         }
 
         return $roles->unique('id')->values();
+    }
+
+    public function activityLogs(): HasMany
+    {
+        return $this->hasMany(ActivityLog::class)->latest();
     }
 }

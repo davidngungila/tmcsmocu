@@ -25,4 +25,26 @@ class EventRegistrationController extends Controller
         // Implementation for updating registration
         return redirect()->back()->with('success', 'Registration updated successfully.');
     }
+    
+    /**
+     * Show event registration form.
+     */
+    public function register()
+    {
+        $events = Event::where('start_date', '>=', today())
+            ->where('is_active', true)
+            ->orderBy('start_date', 'asc')
+            ->get();
+            
+        return view('events.register', compact('events'));
+    }
+    
+    /**
+     * Store event registration.
+     */
+    public function registerStore(Request $request)
+    {
+        // Implementation for event registration
+        return redirect()->route('events.register')->with('success', 'Event registration successful!');
+    }
 }

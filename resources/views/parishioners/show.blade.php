@@ -7,14 +7,14 @@
         <div>
             <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">{{ $parishioner->full_name }}</h1>
             <p class="text-gray-600 mt-1 text-sm sm:text-base">
-                {{ $parishioner->type === 'wanafunzi' ? 'Student' : 'Worker' }} Parishioner
+                {{ ucfirst($parishioner->member_type) }} Parishioner
             </p>
         </div>
         <div class="flex items-center space-x-2">
             <a href="{{ route('parishioners.edit', $parishioner->id) }}" class="px-4 py-2 bg-blue-600 text-white rounded-lg font-bold hover:bg-blue-700 transition-colors text-sm sm:text-base">
                 Edit
             </a>
-            <a href="{{ route('parishioners.index', ['type' => $parishioner->type]) }}" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors font-bold text-sm sm:text-base">
+            <a href="{{ route('parishioners.index', ['type' => $parishioner->member_type]) }}" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors font-bold text-sm sm:text-base">
                 Back
             </a>
         </div>
@@ -51,9 +51,12 @@
                         <p class="text-base font-bold text-gray-900">{{ $parishioner->full_name }}</p>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-500 mb-1">Type</label>
-                        <span class="inline-block px-3 py-1 text-sm font-bold rounded-full {{ $parishioner->type === 'wanafunzi' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800' }}">
-                            {{ $parishioner->type === 'wanafunzi' ? 'Student' : 'Worker' }}
+                        <label class="block text-sm font-medium text-gray-500 mb-1">Member Type</label>
+                        <span class="inline-block px-3 py-1 text-sm font-bold rounded-full 
+                            {{ $parishioner->member_type == 'student' ? 'bg-blue-100 text-blue-800' : 
+                               ($parishioner->member_type == 'employee' ? 'bg-purple-100 text-purple-800' : 
+                               ($parishioner->member_type == 'child' ? 'bg-yellow-100 text-yellow-800' : 'bg-gray-100 text-gray-800')) }}">
+                            {{ ucfirst($parishioner->member_type) }}
                         </span>
                     </div>
                     <div>
@@ -85,6 +88,79 @@
                     </div>
                     @endif
                 </div>
+                
+                <!-- Type-Specific Information -->
+                @if($parishioner->member_type == 'student')
+                    <div class="mt-6 pt-6 border-t border-gray-200">
+                        <h3 class="text-md font-bold text-gray-800 mb-4">Student Information</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            @if($parishioner->registration_number)
+                            <div>
+                                <label class="block text-sm font-medium text-gray-500 mb-1">Registration Number</label>
+                                <p class="text-base font-bold text-gray-900">{{ $parishioner->registration_number }}</p>
+                            </div>
+                            @endif
+                            @if($parishioner->academic_programme)
+                            <div>
+                                <label class="block text-sm font-medium text-gray-500 mb-1">Academic Programme</label>
+                                <p class="text-base font-bold text-gray-900">{{ $parishioner->academic_programme }}</p>
+                            </div>
+                            @endif
+                            @if($parishioner->year_of_study)
+                            <div>
+                                <label class="block text-sm font-medium text-gray-500 mb-1">Year of Study</label>
+                                <p class="text-base font-bold text-gray-900">{{ $parishioner->year_of_study }}</p>
+                            </div>
+                            @endif
+                        </div>
+                    </div>
+                @endif
+                
+                @if($parishioner->member_type == 'employee')
+                    <div class="mt-6 pt-6 border-t border-gray-200">
+                        <h3 class="text-md font-bold text-gray-800 mb-4">Employee Information</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            @if($parishioner->employee_id)
+                            <div>
+                                <label class="block text-sm font-medium text-gray-500 mb-1">Employee ID</label>
+                                <p class="text-base font-bold text-gray-900">{{ $parishioner->employee_id }}</p>
+                            </div>
+                            @endif
+                            @if($parishioner->department)
+                            <div>
+                                <label class="block text-sm font-medium text-gray-500 mb-1">Department</label>
+                                <p class="text-base font-bold text-gray-900">{{ $parishioner->department }}</p>
+                            </div>
+                            @endif
+                        </div>
+                    </div>
+                @endif
+                
+                @if($parishioner->member_type == 'child')
+                    <div class="mt-6 pt-6 border-t border-gray-200">
+                        <h3 class="text-md font-bold text-gray-800 mb-4">Guardian Information</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            @if($parishioner->guardian_name)
+                            <div>
+                                <label class="block text-sm font-medium text-gray-500 mb-1">Guardian Name</label>
+                                <p class="text-base font-bold text-gray-900">{{ $parishioner->guardian_name }}</p>
+                            </div>
+                            @endif
+                            @if($parishioner->guardian_phone)
+                            <div>
+                                <label class="block text-sm font-medium text-gray-500 mb-1">Guardian Phone</label>
+                                <p class="text-base font-bold text-gray-900">{{ $parishioner->guardian_phone }}</p>
+                            </div>
+                            @endif
+                            @if($parishioner->guardian_id)
+                            <div>
+                                <label class="block text-sm font-medium text-gray-500 mb-1">Guardian ID</label>
+                                <p class="text-base font-bold text-gray-900">{{ $parishioner->guardian_id }}</p>
+                            </div>
+                            @endif
+                        </div>
+                    </div>
+                @endif
             </div>
             
             <!-- Contact Information -->
@@ -275,6 +351,56 @@
                 </div>
             </div>
             @endif
+            
+            <!-- Sacraments & Certificates -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h2 class="text-lg font-bold text-gray-800 mb-4">Sacraments & Certificates</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <!-- Sacraments -->
+                    <div>
+                        <h3 class="text-md font-semibold text-gray-700 mb-3">Sacraments</h3>
+                        <div class="space-y-2">
+                            <div class="flex items-center justify-between p-3 bg-purple-50 rounded-lg">
+                                <span class="text-sm font-medium text-purple-900">Baptism</span>
+                                <span class="text-xs px-2 py-1 bg-purple-200 text-purple-800 rounded-full">Not Recorded</span>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-purple-50 rounded-lg">
+                                <span class="text-sm font-medium text-purple-900">First Communion</span>
+                                <span class="text-xs px-2 py-1 bg-purple-200 text-purple-800 rounded-full">Not Recorded</span>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-purple-50 rounded-lg">
+                                <span class="text-sm font-medium text-purple-900">Confirmation</span>
+                                <span class="text-xs px-2 py-1 bg-purple-200 text-purple-800 rounded-full">Not Recorded</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Certificates -->
+                    <div>
+                        <h3 class="text-md font-semibold text-gray-700 mb-3">Certificates</h3>
+                        <div class="space-y-2">
+                            <div class="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
+                                <span class="text-sm font-medium text-blue-900">Finalist Certificates</span>
+                                <a href="{{ route('certificates.finalist.create') }}?parishioner={{ $parishioner->id }}" class="text-xs px-2 py-1 bg-blue-600 text-white rounded-full hover:bg-blue-700">
+                                    Generate
+                                </a>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
+                                <span class="text-sm font-medium text-blue-900">Group Certificates</span>
+                                <a href="{{ route('certificates.group.create') }}?parishioner={{ $parishioner->id }}" class="text-xs px-2 py-1 bg-blue-600 text-white rounded-full hover:bg-blue-700">
+                                    Generate
+                                </a>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
+                                <span class="text-sm font-medium text-blue-900">View All Certificates</span>
+                                <a href="{{ route('certificates.log') }}?search={{ $parishioner->full_name }}" class="text-xs px-2 py-1 bg-gray-600 text-white rounded-full hover:bg-gray-700">
+                                    View
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         
         <!-- Sidebar -->

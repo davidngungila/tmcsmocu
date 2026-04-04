@@ -5,7 +5,7 @@
     <!-- Header -->
     <div class="flex items-center justify-between">
         <div>
-            <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">TmcsSmart – Parishioner Registration Form</h1>
+            <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">Parishioner Registration Form</h1>
             <p class="text-gray-600 mt-1 text-sm sm:text-base">Complete registration form for Students, Employees, and Children</p>
         </div>
         <a href="{{ route('parishioners.index', ['type' => request('type', 'wanafunzi')]) }}" class="text-gray-600 hover:text-gray-800">
@@ -349,13 +349,64 @@
                     </div>
                     
                     <div class="sm:col-span-2">
-                        <label class="block text-sm font-bold text-gray-700 mb-2">Physical Address</label>
-                        <textarea name="address" rows="2"
-                                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                                  placeholder="e.g., street, village, city">{{ old('address') }}</textarea>
-                        @error('address')
-                            <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                        @enderror
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Physical Location <span class="text-red-500">*</span></label>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                            <!-- Region Selection -->
+                            <div>
+                                <label class="block text-xs font-medium text-gray-600 mb-1">Region</label>
+                                <select name="region_code" id="regionSelect" required 
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                        onchange="loadDistricts(this.value)">
+                                    <option value="">Select Region</option>
+                                    @foreach(\App\Models\Location::getRegions() as $code => $name)
+                                        <option value="{{ $code }}" {{ old('region_code') == $code ? 'selected' : '' }}>{{ $name }}</option>
+                                    @endforeach
+                                </select>
+                                @error('region_code')
+                                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            
+                            <!-- District Selection -->
+                            <div>
+                                <label class="block text-xs font-medium text-gray-600 mb-1">District</label>
+                                <select name="district_code" id="districtSelect" required
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                        onchange="loadWards(this.value)" disabled>
+                                    <option value="">Select District</option>
+                                </select>
+                                @error('district_code')
+                                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            
+                            <!-- Ward Selection -->
+                            <div>
+                                <label class="block text-xs font-medium text-gray-600 mb-1">Ward</label>
+                                <select name="ward_code" id="wardSelect" required
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                        onchange="loadStreets(this.value)" disabled>
+                                    <option value="">Select Ward</option>
+                                </select>
+                                @error('ward_code')
+                                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            
+                            <!-- Street Selection -->
+                            <div>
+                                <label class="block text-xs font-medium text-gray-600 mb-1">Street/Area</label>
+                                <select name="street" id="streetSelect"
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                        disabled>
+                                    <option value="">Select Street</option>
+                                </select>
+                                @error('street')
+                                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-2">📍 Select your location from the hierarchical system</p>
                     </div>
                 </div>
             </div>
@@ -579,6 +630,109 @@ function calculateAge(birthDate) {
     
     return age;
 }
+
+// Location loading functions
+function loadDistricts(regionCode) {
+    const districtSelect = document.getElementById('districtSelect');
+    const wardSelect = document.getElementById('wardSelect');
+    const streetSelect = document.getElementById('streetSelect');
+    
+    // Reset dependent selects
+    districtSelect.innerHTML = '<option value="">Select District</option>';
+    wardSelect.innerHTML = '<option value="">Select Ward</option>';
+    streetSelect.innerHTML = '<option value="">Select Street</option>';
+    districtSelect.disabled = true;
+    wardSelect.disabled = true;
+    streetSelect.disabled = true;
+    
+    if (!regionCode) return;
+    
+    fetch(`/api/locations/districts/${regionCode}`)
+        .then(response => response.json())
+        .then(data => {
+            districtSelect.disabled = false;
+            data.forEach(district => {
+                const option = document.createElement('option');
+                option.value = district.district_code;
+                option.textContent = district.district;
+                districtSelect.appendChild(option);
+            });
+        })
+        .catch(error => {
+            console.error('Error loading districts:', error);
+        });
+}
+
+function loadWards(districtCode) {
+    const wardSelect = document.getElementById('wardSelect');
+    const streetSelect = document.getElementById('streetSelect');
+    
+    // Reset dependent selects
+    wardSelect.innerHTML = '<option value="">Select Ward</option>';
+    streetSelect.innerHTML = '<option value="">Select Street</option>';
+    wardSelect.disabled = true;
+    streetSelect.disabled = true;
+    
+    if (!districtCode) return;
+    
+    fetch(`/api/locations/wards/${districtCode}`)
+        .then(response => response.json())
+        .then(data => {
+            wardSelect.disabled = false;
+            data.forEach(ward => {
+                const option = document.createElement('option');
+                option.value = ward.ward_code;
+                option.textContent = ward.ward;
+                wardSelect.appendChild(option);
+            });
+        })
+        .catch(error => {
+            console.error('Error loading wards:', error);
+        });
+}
+
+function loadStreets(wardCode) {
+    const streetSelect = document.getElementById('streetSelect');
+    
+    // Reset dependent select
+    streetSelect.innerHTML = '<option value="">Select Street</option>';
+    streetSelect.disabled = true;
+    
+    if (!wardCode) return;
+    
+    fetch(`/api/locations/streets/${wardCode}`)
+        .then(response => response.json())
+        .then(data => {
+            streetSelect.disabled = false;
+            data.forEach(street => {
+                const option = document.createElement('option');
+                option.value = street.street;
+                option.textContent = street.street;
+                streetSelect.appendChild(option);
+            });
+        })
+        .catch(error => {
+            console.error('Error loading streets:', error);
+        });
+}
+
+// Initialize location fields on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const regionSelect = document.getElementById('regionSelect');
+    if (regionSelect && regionSelect.value) {
+        loadDistricts(regionSelect.value);
+        
+        const districtSelect = document.getElementById('districtSelect');
+        if (districtSelect && districtSelect.value) {
+            loadWards(districtSelect.value);
+            
+            const wardSelect = document.getElementById('wardSelect');
+            if (wardSelect && wardSelect.value) {
+                loadStreets(wardSelect.value);
+            }
+        }
+    }
+});
 </script>
 @endsection
 

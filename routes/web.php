@@ -13,6 +13,9 @@ use App\Http\Controllers\Finance\SadakaController;
 use App\Http\Controllers\Finance\FunguLaKumiController;
 use App\Http\Controllers\Finance\ShukraniController;
 use App\Http\Controllers\Finance\MichangoMingineController;
+use App\Http\Controllers\ContributionController;
+use App\Http\Controllers\ReceiptController;
+use App\Http\Controllers\FinancialReportController;
 use App\Http\Controllers\AssetController;
 use App\Http\Controllers\ParishionerController;
 use App\Http\Controllers\CommunityController;
@@ -40,6 +43,29 @@ use App\Http\Controllers\Settings\SystemSettingsController;
 use App\Http\Controllers\Auth\RoleSwitchController;
 use App\Http\Controllers\Auth\ImpersonationController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\CertificateController;
+use App\Http\Controllers\MassController;
+use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\CommunicationController;
+use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\RecordController;
+use App\Http\Controllers\GroupController;
+use App\Http\Controllers\OfficeReportController;
+use App\Http\Controllers\CommunityReportController;
+use App\Http\Controllers\SpiritualReportController;
+use App\Http\Controllers\GroupReportController;
+use App\Http\Controllers\EventReportController as EventReportControllerAlias;
+use App\Http\Controllers\Finance\BudgetController as FinanceBudgetController;
+use App\Http\Controllers\Finance\AuditController as FinanceAuditController;
+use App\Http\Controllers\ReceiptController as FinanceReceiptController;
+use App\Http\Controllers\GroupMeetingController;
+use App\Http\Controllers\GroupMemberController;
+use App\Http\Controllers\GroupProgramController;
+use App\Http\Controllers\EventTaskController;
+use App\Http\Controllers\EventVolunteerController;
+use App\Http\Controllers\GroupScheduleController;
+use App\Http\Controllers\OutreachController;
+use App\Http\Controllers\VolunteerController;
 
 // Authentication Routes
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -126,12 +152,213 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/reports/annual/pdf', [ReportController::class, 'annualPdf'])->name('reports.annual.pdf');
         
         Route::get('/sacraments', [SacramentController::class, 'index'])->name('sacraments.index');
+        
+        // Financial Management Routes
+        Route::resource('contributions', ContributionController::class);
+        Route::get('/contributions/import', [ContributionController::class, 'import'])->name('contributions.import');
+        Route::post('/contributions/import', [ContributionController::class, 'storeImport'])->name('contributions.import.store');
+        
+        Route::resource('receipts', ReceiptController::class);
+        Route::get('/receipts/{receipt}/pdf', [ReceiptController::class, 'pdf'])->name('receipts.pdf');
+        
+        Route::resource('expenses', ExpenseController::class);
+        Route::get('/expenses/import', [ExpenseController::class, 'import'])->name('expenses.import');
+        Route::post('/expenses/import', [ExpenseController::class, 'storeImport'])->name('expenses.import.store');
+        
+        Route::resource('financial-reports', FinancialReportController::class);
+        Route::get('/financial-reports/export/{format}', [FinancialReportController::class, 'export'])->name('financial-reports.export');
+        
         Route::get('/sacraments/create', [SacramentController::class, 'create'])->name('sacraments.create');
         Route::post('/sacraments', [SacramentController::class, 'store'])->name('sacraments.store');
         Route::get('/sacraments/{id}', [SacramentController::class, 'show'])->name('sacraments.show');
         Route::get('/sacraments/{id}/edit', [SacramentController::class, 'edit'])->name('sacraments.edit');
         Route::put('/sacraments/{id}', [SacramentController::class, 'update'])->name('sacraments.update');
         Route::delete('/sacraments/{id}', [SacramentController::class, 'destroy'])->name('sacraments.destroy');
+    });
+    
+    // Mass Management Routes
+    Route::get('/masses', [MassController::class, 'index'])->name('masses.index');
+    Route::get('/masses/create', [MassController::class, 'create'])->name('masses.create');
+    Route::post('/masses', [MassController::class, 'store'])->name('masses.store');
+    Route::get('/masses/{id}', [MassController::class, 'show'])->name('masses.show');
+    Route::get('/masses/{id}/edit', [MassController::class, 'edit'])->name('masses.edit');
+    Route::put('/masses/{id}', [MassController::class, 'update'])->name('masses.update');
+    Route::delete('/masses/{id}', [MassController::class, 'destroy'])->name('masses.destroy');
+    
+    // Appointment Management Routes
+    Route::get('/appointments', [AppointmentController::class, 'index'])->name('appointments.index');
+    Route::get('/appointments/create', [AppointmentController::class, 'create'])->name('appointments.create');
+    Route::post('/appointments', [AppointmentController::class, 'store'])->name('appointments.store');
+    Route::get('/appointments/{id}', [AppointmentController::class, 'show'])->name('appointments.show');
+    Route::get('/appointments/{id}/edit', [AppointmentController::class, 'edit'])->name('appointments.edit');
+    Route::put('/appointments/{id}', [AppointmentController::class, 'update'])->name('appointments.update');
+    Route::delete('/appointments/{id}', [AppointmentController::class, 'destroy'])->name('appointments.destroy');
+    
+    // Communication Management Routes
+    Route::get('/communications', [CommunicationController::class, 'index'])->name('communications.index');
+    Route::get('/communications/create', [CommunicationController::class, 'create'])->name('communications.create');
+    Route::post('/communications', [CommunicationController::class, 'store'])->name('communications.store');
+    Route::get('/communications/{id}', [CommunicationController::class, 'show'])->name('communications.show');
+    Route::get('/communications/{id}/edit', [CommunicationController::class, 'edit'])->name('communications.edit');
+    Route::put('/communications/{id}', [CommunicationController::class, 'update'])->name('communications.update');
+    Route::delete('/communications/{id}', [CommunicationController::class, 'destroy'])->name('communications.destroy');
+    
+    // Document Management Routes
+    Route::get('/documents', [DocumentController::class, 'index'])->name('documents.index');
+    Route::get('/documents/create', [DocumentController::class, 'create'])->name('documents.create');
+    Route::post('/documents', [DocumentController::class, 'store'])->name('documents.store');
+    Route::get('/documents/{id}', [DocumentController::class, 'show'])->name('documents.show');
+    Route::get('/documents/{id}/edit', [DocumentController::class, 'edit'])->name('documents.edit');
+    Route::put('/documents/{id}', [DocumentController::class, 'update'])->name('documents.update');
+    Route::delete('/documents/{id}', [DocumentController::class, 'destroy'])->name('documents.destroy');
+    
+    // Record Management Routes
+    Route::get('/records', [RecordController::class, 'index'])->name('records.index');
+    Route::get('/records/create', [RecordController::class, 'create'])->name('records.create');
+    Route::post('/records', [RecordController::class, 'store'])->name('records.store');
+    Route::get('/records/{id}', [RecordController::class, 'show'])->name('records.show');
+    Route::get('/records/{id}/edit', [RecordController::class, 'edit'])->name('records.edit');
+    Route::put('/records/{id}', [RecordController::class, 'update'])->name('records.update');
+    Route::delete('/records/{id}', [RecordController::class, 'destroy'])->name('records.destroy');
+    
+    // Group Management Routes
+    Route::get('/groups', [GroupController::class, 'index'])->name('groups.index');
+    Route::get('/groups/create', [GroupController::class, 'create'])->name('groups.create');
+    Route::post('/groups', [GroupController::class, 'store'])->name('groups.store');
+    Route::get('/groups/{id}', [GroupController::class, 'show'])->name('groups.show');
+    Route::get('/groups/{id}/edit', [GroupController::class, 'edit'])->name('groups.edit');
+    Route::put('/groups/{id}', [GroupController::class, 'update'])->name('groups.update');
+    Route::delete('/groups/{id}', [GroupController::class, 'destroy'])->name('groups.destroy');
+    
+    // Office Report Routes
+    Route::get('/reports/office', [OfficeReportController::class, 'index'])->name('reports.office');
+    Route::get('/reports/office/pdf', [OfficeReportController::class, 'pdf'])->name('reports.office.pdf');
+    
+    // Community Report Routes
+    Route::get('/reports/community', [CommunityReportController::class, 'index'])->name('reports.community');
+    Route::get('/reports/community/pdf', [CommunityReportController::class, 'pdf'])->name('reports.community.pdf');
+    
+    // Spiritual Report Routes
+    Route::get('/reports/spiritual', [SpiritualReportController::class, 'index'])->name('reports.spiritual');
+    Route::get('/reports/spiritual/pdf', [SpiritualReportController::class, 'pdf'])->name('reports.spiritual.pdf');
+    
+    // Group Report Routes
+    Route::get('/reports/group', [GroupReportController::class, 'index'])->name('reports.group');
+    Route::get('/reports/group/pdf', [GroupReportController::class, 'pdf'])->name('reports.group.pdf');
+    
+    // Event Report Routes
+    Route::get('/reports/event', [EventReportController::class, 'index'])->name('reports.event');
+    Route::get('/reports/event/pdf', [EventReportController::class, 'pdf'])->name('reports.event.pdf');
+    
+    // Finance Budget Routes
+    Route::get('/finance/budget', [FinanceBudgetController::class, 'index'])->name('finance.budget');
+    Route::get('/finance/budget/create', [FinanceBudgetController::class, 'create'])->name('finance.budget.create');
+    Route::post('/finance/budget', [FinanceBudgetController::class, 'store'])->name('finance.budget.store');
+    Route::get('/finance/budget/{id}/edit', [FinanceBudgetController::class, 'edit'])->name('finance.budget.edit');
+    Route::put('/finance/budget/{id}', [FinanceBudgetController::class, 'update'])->name('finance.budget.update');
+    Route::delete('/finance/budget/{id}', [FinanceBudgetController::class, 'destroy'])->name('finance.budget.destroy');
+    
+    // Finance Audit Routes
+    Route::get('/finance/audit', [FinanceAuditController::class, 'index'])->name('finance.audit');
+    Route::get('/finance/audit/trail', [FinanceAuditController::class, 'trail'])->name('finance.audit.trail');
+    
+    // Finance Receipt Routes
+    Route::get('/finance/receipts', [FinanceReceiptController::class, 'index'])->name('finance.receipts');
+    Route::get('/finance/receipts/create', [FinanceReceiptController::class, 'create'])->name('finance.receipts.create');
+    Route::post('/finance/receipts', [FinanceReceiptController::class, 'store'])->name('finance.receipts.store');
+    Route::get('/finance/receipts/{id}', [FinanceReceiptController::class, 'show'])->name('finance.receipts.show');
+    Route::get('/finance/receipts/{id}/download', [FinanceReceiptController::class, 'download'])->name('finance.receipts.download');
+    
+    // Group Meeting Routes
+    Route::get('/groups/meetings', [GroupMeetingController::class, 'index'])->name('groups.meetings');
+    Route::get('/groups/meetings/create', [GroupMeetingController::class, 'create'])->name('groups.meetings.create');
+    Route::post('/groups/meetings', [GroupMeetingController::class, 'store'])->name('groups.meetings.store');
+    Route::get('/groups/meetings/{id}', [GroupMeetingController::class, 'show'])->name('groups.meetings.show');
+    Route::get('/groups/meetings/{id}/edit', [GroupMeetingController::class, 'edit'])->name('groups.meetings.edit');
+    Route::put('/groups/meetings/{id}', [GroupMeetingController::class, 'update'])->name('groups.meetings.update');
+    Route::delete('/groups/meetings/{id}', [GroupMeetingController::class, 'destroy'])->name('groups.meetings.destroy');
+    
+    // Group Member Routes
+    Route::get('/groups/members', [GroupMemberController::class, 'index'])->name('groups.members');
+    Route::get('/groups/members/add', [GroupMemberController::class, 'add'])->name('groups.members.add');
+    Route::post('/groups/members', [GroupMemberController::class, 'store'])->name('groups.members.store');
+    Route::delete('/groups/members/{id}', [GroupMemberController::class, 'remove'])->name('groups.members.remove');
+    
+    // Group Program Routes
+    Route::get('/groups/programs', [GroupProgramController::class, 'index'])->name('groups.programs');
+    Route::get('/groups/programs/create', [GroupProgramController::class, 'create'])->name('groups.programs.create');
+    Route::post('/groups/programs', [GroupProgramController::class, 'store'])->name('groups.programs.store');
+    Route::get('/groups/programs/{id}', [GroupProgramController::class, 'show'])->name('groups.programs.show');
+    Route::get('/groups/programs/{id}/edit', [GroupProgramController::class, 'edit'])->name('groups.programs.edit');
+    Route::put('/groups/programs/{id}', [GroupProgramController::class, 'update'])->name('groups.programs.update');
+    Route::delete('/groups/programs/{id}', [GroupProgramController::class, 'destroy'])->name('groups.programs.destroy');
+    
+    // Event Task Routes
+    Route::get('/events/tasks', [EventTaskController::class, 'index'])->name('events.tasks');
+    Route::get('/events/tasks/create', [EventTaskController::class, 'create'])->name('events.tasks.create');
+    Route::post('/events/tasks', [EventTaskController::class, 'store'])->name('events.tasks.store');
+    Route::get('/events/tasks/{id}', [EventTaskController::class, 'show'])->name('events.tasks.show');
+    Route::get('/events/tasks/{id}/edit', [EventTaskController::class, 'edit'])->name('events.tasks.edit');
+    Route::put('/events/tasks/{id}', [EventTaskController::class, 'update'])->name('events.tasks.update');
+    Route::delete('/events/tasks/{id}', [EventTaskController::class, 'destroy'])->name('events.tasks.destroy');
+    
+    // Event Volunteer Routes
+    Route::get('/events/volunteers', [EventVolunteerController::class, 'index'])->name('events.volunteers');
+    Route::get('/events/volunteers/add', [EventVolunteerController::class, 'add'])->name('events.volunteers.add');
+    Route::post('/events/volunteers', [EventVolunteerController::class, 'store'])->name('events.volunteers.store');
+    Route::get('/events/volunteers/{id}', [EventVolunteerController::class, 'show'])->name('events.volunteers.show');
+    Route::delete('/events/volunteers/{id}', [EventVolunteerController::class, 'remove'])->name('events.volunteers.remove');
+    
+    // Event Report Routes
+    Route::get('/events/reports', [EventReportControllerAlias::class, 'index'])->name('events.reports');
+    Route::get('/events/reports/{id}', [EventReportControllerAlias::class, 'show'])->name('events.reports.show');
+    Route::get('/events/reports/{id}/pdf', [EventReportControllerAlias::class, 'pdf'])->name('events.reports.pdf');
+    
+    // Group Schedule Routes
+    Route::get('/groups/schedule', [GroupScheduleController::class, 'index'])->name('groups.schedule');
+    Route::get('/groups/schedule/create', [GroupScheduleController::class, 'create'])->name('groups.schedule.create');
+    Route::post('/groups/schedule', [GroupScheduleController::class, 'store'])->name('groups.schedule.store');
+    
+    // Outreach Routes
+    Route::get('/outreach', [OutreachController::class, 'index'])->name('outreach.index');
+    Route::get('/outreach/create', [OutreachController::class, 'create'])->name('outreach.create');
+    Route::post('/outreach', [OutreachController::class, 'store'])->name('outreach.store');
+    Route::get('/outreach/{id}', [OutreachController::class, 'show'])->name('outreach.show');
+    Route::get('/outreach/{id}/edit', [OutreachController::class, 'edit'])->name('outreach.edit');
+    Route::put('/outreach/{id}', [OutreachController::class, 'update'])->name('outreach.update');
+    Route::delete('/outreach/{id}', [OutreachController::class, 'destroy'])->name('outreach.destroy');
+    
+    // Volunteer Management Routes
+    Route::get('/volunteers', [VolunteerController::class, 'index'])->name('volunteers.index');
+    Route::get('/volunteers/create', [VolunteerController::class, 'create'])->name('volunteers.create');
+    Route::post('/volunteers', [VolunteerController::class, 'store'])->name('volunteers.store');
+    Route::get('/volunteers/{id}', [VolunteerController::class, 'show'])->name('volunteers.show');
+    Route::get('/volunteers/{id}/edit', [VolunteerController::class, 'edit'])->name('volunteers.edit');
+    Route::put('/volunteers/{id}', [VolunteerController::class, 'update'])->name('volunteers.update');
+    Route::delete('/volunteers/{id}', [VolunteerController::class, 'destroy'])->name('volunteers.destroy');
+    
+    // Contribution Routes
+    Route::get('/contributions/make', [ContributionController::class, 'make'])->name('contributions.make');
+    Route::post('/contributions/process', [ContributionController::class, 'process'])->name('contributions.process');
+    Route::get('/contributions/history', [ContributionController::class, 'history'])->name('contributions.history');
+    
+    // Profile Routes
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    
+    // Directory Routes
+    Route::get('/parishioners/directory', [ParishionerController::class, 'directory'])->name('parishioners.directory');
+    
+    // Event Registration Routes
+    Route::get('/events/register', [EventRegistrationController::class, 'register'])->name('events.register');
+    Route::post('/events/register', [EventRegistrationController::class, 'registerStore'])->name('events.register.store');
+    
+    // Group Join Routes
+    Route::get('/groups/join', [GroupController::class, 'join'])->name('groups.join');
+    Route::post('/groups/join', [GroupController::class, 'joinStore'])->name('groups.join.store');
+    
+    // Certificate Routes
+    Route::get('/certificates/my', [CertificateController::class, 'myCertificates'])->name('certificates.my');
+    
     });
     
     // Assets Routes
@@ -492,6 +719,28 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/advanced/logo', [\App\Http\Controllers\Settings\AdvancedSettingsController::class, 'uploadLogo'])->name('advanced.upload-logo');
     });
     
+    // Certificate Routes
+    Route::prefix('certificates')->name('certificates.')->group(function () {
+        Route::get('/log', [CertificateController::class, 'index'])->name('log');
+        Route::get('/finalist/create', [CertificateController::class, 'showFinalistForm'])->name('finalist.create');
+        Route::post('/finalist', [CertificateController::class, 'generateFinalist'])->name('finalist.store');
+        Route::get('/group/create', [CertificateController::class, 'showGroupForm'])->name('group.create');
+        Route::post('/group', [CertificateController::class, 'generateGroup'])->name('group.store');
+        Route::get('/templates', [CertificateController::class, 'templates'])->name('templates');
+        Route::get('/verify', [CertificateController::class, 'showVerificationForm'])->name('verify.form');
+        Route::post('/verify', [CertificateController::class, 'verify'])->name('verify');
+        Route::get('/my-certificates', [CertificateController::class, 'myCertificates'])->name('my');
+        Route::get('/pending', [CertificateController::class, 'pendingApproval'])->name('pending');
+        Route::get('/revoked', [CertificateController::class, 'revokedCertificates'])->name('revoked');
+        Route::get('/bulk-download', [CertificateController::class, 'bulkDownload'])->name('bulk-download');
+        Route::get('/settings', [CertificateController::class, 'settings'])->name('settings');
+        Route::post('/settings', [CertificateController::class, 'updateSettings'])->name('settings.update');
+        Route::get('/{certificate}/preview', [CertificateController::class, 'preview'])->name('preview');
+        Route::post('/{certificate}/revoke', [CertificateController::class, 'revoke'])->name('revoke');
+        Route::get('/{certificate}', [CertificateController::class, 'show'])->name('show');
+        Route::get('/{certificate}/download', [CertificateController::class, 'download'])->name('download');
+    });
+    
     // Profile Routes
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -500,4 +749,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/', function () {
         return redirect()->route('dashboard');
     });
-});
+
+// Public certificate verification (no auth required)
+Route::get('/verify-certificate', [CertificateController::class, 'showVerificationForm'])->name('public.verify.form');
+Route::post('/verify-certificate', [CertificateController::class, 'verify'])->name('public.verify');

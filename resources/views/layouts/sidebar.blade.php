@@ -167,7 +167,7 @@
                 <button onclick="toggleSubmenu('finance')" class="w-full flex items-center justify-between px-3 py-2 text-sm font-medium text-gray-300 rounded-md hover:bg-gray-800 hover:text-white transition-colors">
                     <div class="flex items-center">
                         <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2 1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                         Finance
                     </div>
@@ -176,33 +176,54 @@
                     </svg>
                 </button>
                 <div id="finance-submenu" class="hidden mt-1 ml-7 space-y-0.5">
-                    <a href="#" class="flex items-center px-3 py-1.5 text-sm text-gray-400 rounded-md hover:bg-gray-800 hover:text-white">
+                    <a href="{{ route('finance.contributions.index') }}" class="flex items-center px-3 py-1.5 text-sm text-gray-400 rounded-md hover:bg-gray-800 hover:text-white">
                         <svg class="w-4 h-4 mr-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
                         </svg>
                         Record Contribution
                     </a>
-                    <a href="#" class="flex items-center px-3 py-1.5 text-sm text-gray-400 rounded-md hover:bg-gray-800 hover:text-white">
+                    <a href="{{ route('finance.contributions.import') }}" class="flex items-center px-3 py-1.5 text-sm text-gray-400 rounded-md hover:bg-gray-800 hover:text-white">
+                        <svg class="w-4 h-4 mr-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 4L13 4m0 0l-4 4a5 5 0 01-9.9 0A4 4 0 017 16m0 0C0 1.657 3.583 3 4.003 5.417.417.417 0 00-.417-.417m-6 0v4m0 0h6v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 0112 0v1zm0 0V5a2 2 0 012-2H6a2 2 0 00-2 2v14a2 2 0 002 2h2a2 2 0 002-2z"></path>
+                        </svg>
+                        Bulk Import
+                    </a>
+                    <a href="{{ route('finance.receipts') }}" class="flex items-center px-3 py-1.5 text-sm text-gray-400 rounded-md hover:bg-gray-800 hover:text-white">
                         <svg class="w-4 h-4 mr-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                         </svg>
                         Receipts
                     </a>
-                    <a href="#" class="flex items-center px-3 py-1.5 text-sm text-gray-400 rounded-md hover:bg-gray-800 hover:text-white">
+                    <a href="{{ route('finance.receipts.create') }}" class="flex items-center px-3 py-1.5 text-sm text-gray-400 rounded-md hover:bg-gray-800 hover:text-white">
                         <svg class="w-4 h-4 mr-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        Issue Receipt
+                    </a>
+                    <a href="{{ route('finance.expenses.index') }}" class="flex items-center px-3 py-1.5 text-sm text-gray-400 rounded-md hover:bg-gray-800 hover:text-white">
+                        <svg class="w-4 h-4 mr-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 4L13 4m0 0l-4 4a5 5 0 01-9.9 0A4 4 0 017 16m0 0C0 1.657 3.583 3 4.003 5.417.417.417 0 00-.417-.417m-6 0v4m0 0h6v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 0112 0v1zm0 0V5a2 2 0 012-2H6a2 2 0 00-2 2v14a2 2 0 002 2h2a2 2 0 002-2z"></path>
                         </svg>
                         Expenses
                     </a>
-                    <a href="#" class="flex items-center px-3 py-1.5 text-sm text-gray-400 rounded-md hover:bg-gray-800 hover:text-white">
+                    <a href="{{ route('finance.expenses.import') }}" class="flex items-center px-3 py-1.5 text-sm text-gray-400 rounded-md hover:bg-gray-800 hover:text-white">
                         <svg class="w-4 h-4 mr-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 4L13 4m0 0l-4 4a5 5 0 01-9.9 0A4 4 0 017 16m0 0C0 1.657 3.583 3 4.003 5.417.417.417 0 00-.417-.417m-6 0v4m0 0h6v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 0112 0v1zm0 0V5a2 2 0 012-2H6a2 2 0 00-2 2v14a2 2 0 002 2h2a2 2 0 002-2z"></path>
+                        </svg>
+                        Bulk Import
+                    </a>
+                    <a href="{{ route('finance.reports.index') }}" class="flex items-center px-3 py-1.5 text-sm text-gray-400 rounded-md hover:bg-gray-800 hover:text-white">
+                        <svg class="w-4 h-4 mr-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4V-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                         </svg>
                         Financial Reports
                     </a>
                 </div>
             </div>
             @endif
+
+
+            
 
             <!-- Communities -->
             @if($canCommunities)
@@ -305,35 +326,65 @@
                     </svg>
                 </button>
                 <div id="certificates-submenu" class="hidden mt-1 ml-7 space-y-0.5">
-                    <a href="#" class="flex items-center px-3 py-1.5 text-sm text-gray-400 rounded-md hover:bg-gray-800 hover:text-white">
+                    <a href="{{ route('certificates.finalist.create') }}" class="flex items-center px-3 py-1.5 text-sm text-gray-400 rounded-md hover:bg-gray-800 hover:text-white">
                         <svg class="w-4 h-4 mr-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
                         </svg>
                         Generate Finalist Certificates
                     </a>
-                    <a href="#" class="flex items-center px-3 py-1.5 text-sm text-gray-400 rounded-md hover:bg-gray-800 hover:text-white">
+                    <a href="{{ route('certificates.group.create') }}" class="flex items-center px-3 py-1.5 text-sm text-gray-400 rounded-md hover:bg-gray-800 hover:text-white">
                         <svg class="w-4 h-4 mr-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
                         </svg>
                         Generate Group Certificates
                     </a>
-                    <a href="#" class="flex items-center px-3 py-1.5 text-sm text-gray-400 rounded-md hover:bg-gray-800 hover:text-white">
+                    <a href="{{ route('certificates.templates') }}" class="flex items-center px-3 py-1.5 text-sm text-gray-400 rounded-md hover:bg-gray-800 hover:text-white">
                         <svg class="w-4 h-4 mr-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                         </svg>
                         Certificate Templates
                     </a>
-                    <a href="#" class="flex items-center px-3 py-1.5 text-sm text-gray-400 rounded-md hover:bg-gray-800 hover:text-white">
+                    <a href="{{ route('public.verify.form') }}" class="flex items-center px-3 py-1.5 text-sm text-gray-400 rounded-md hover:bg-gray-800 hover:text-white">
                         <svg class="w-4 h-4 mr-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path>
                         </svg>
                         Verify Certificate (Public Portal)
                     </a>
-                    <a href="#" class="flex items-center px-3 py-1.5 text-sm text-gray-400 rounded-md hover:bg-gray-800 hover:text-white">
+                    <a href="{{ route('certificates.log') }}" class="flex items-center px-3 py-1.5 text-sm text-gray-400 rounded-md hover:bg-gray-800 hover:text-white">
                         <svg class="w-4 h-4 mr-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                         </svg>
                         Certificate Log
+                    </a>
+                    <a href="{{ route('certificates.my') }}" class="flex items-center px-3 py-1.5 text-sm text-gray-400 rounded-md hover:bg-gray-800 hover:text-white">
+                        <svg class="w-4 h-4 mr-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                        </svg>
+                        My Certificates
+                    </a>
+                    <a href="{{ route('certificates.pending') }}" class="flex items-center px-3 py-1.5 text-sm text-gray-400 rounded-md hover:bg-gray-800 hover:text-white">
+                        <svg class="w-4 h-4 mr-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        Pending Approval
+                    </a>
+                    <a href="{{ route('certificates.revoked') }}" class="flex items-center px-3 py-1.5 text-sm text-gray-400 rounded-md hover:bg-gray-800 hover:text-white">
+                        <svg class="w-4 h-4 mr-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                        Revoked Certificates
+                    </a>
+                    <a href="{{ route('certificates.bulk-download') }}" class="flex items-center px-3 py-1.5 text-sm text-gray-400 rounded-md hover:bg-gray-800 hover:text-white">
+                        <svg class="w-4 h-4 mr-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 4L13 4m0 0l-4 4a5 5 0 01-9.9 0A4 4 0 017 16m0 0C0 1.657 3.583 3 4.003 5.417.417.417 0 00-.417-.417m-6 0v4m0 0h6v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 0112 0v1zm0 0V5a2 2 0 012-2H6a2 2 0 00-2 2v14a2 2 0 002 2h2a2 2 0 002-2z"></path>
+                        </svg>
+                        Bulk Download
+                    </a>
+                    <a href="{{ route('certificates.settings') }}" class="flex items-center px-3 py-1.5 text-sm text-gray-400 rounded-md hover:bg-gray-800 hover:text-white">
+                        <svg class="w-4 h-4 mr-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.14c1.906-.94 2.1-3.547.194-4.454a2.5 2.5 0 00-3.388 0c-.906.907-1.712 3.514-.194 4.454a1.724 1.724 0 002.573 1.14zm-3.388 1.854a2.5 2.5 0 11-3.388 3.388 2.5 2.5 0 013.388-3.388z"></path>
+                        </svg>
+                        Certificate Settings
                     </a>
                 </div>
             </div>
@@ -693,6 +744,40 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
                         </svg>
                         Locations Management
+                    </a>
+                    <a href="{{ route('finance.contributions.index') }}" class="flex items-center px-3 py-1.5 text-sm text-gray-400 rounded-md hover:bg-gray-800 hover:text-white">
+                        <svg class="w-4 h-4 mr-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .434-3 3s.434 3 3 3 3-.434 3-3 3-.434 3-3 3zm0 0l6 6m-6-6L6 6m6-6v6a2 2 0 002 2h2a2 2 0 002-2v-6m-6 0v6a2 2 0 002 2h2a2 2 0 002-2v-6"></path>
+                        </svg>
+                        Contributions
+                    </a>
+                    <a href="{{ route('finance.contributions.import') }}" class="flex items-center px-3 py-1.5 text-sm text-gray-400 rounded-md hover:bg-gray-800 hover:text-white">
+                        <svg class="w-4 h-4 mr-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 4L13 4m0 0l-4 4a5 5 0 01-9.9 0A4 4 0 017 16m0 0C0 1.657 3.583 3 4.003 5.417.417.417 0 00-.417-.417m-6 0v4m0 0h6v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 0112 0v1zm0 0V5a2 2 0 012-2H6a2 2 0 00-2 2v14a2 2 0 002 2h2a2 2 0 002-2z"></path>
+                        </svg>
+                        Bulk Import
+                    </a>
+                    <a href="{{ route('finance.receipts') }}" class="flex items-center px-3 py-1.5 text-sm text-gray-400 rounded-md hover:bg-gray-800 hover:text-white">
+                        <svg class="w-4 h-4 mr-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        Manage Receipts
+                    </a>
+                    <a href="{{ route('finance.receipts.create') }}" class="flex items-center px-3 py-1.5 text-sm text-gray-400 rounded-md hover:bg-gray-800 hover:text-white">
+                        </svg>
+                        Manage Expenses
+                    </a>
+                    <a href="{{ route('finance.expenses.import') }}" class="flex items-center px-3 py-1.5 text-sm text-gray-400 rounded-md hover:bg-gray-800 hover:text-white">
+                        <svg class="w-4 h-4 mr-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 4L13 4m0 0l-4 4a5 5 0 01-9.9 0A4 4 0 017 16m0 0C0 1.657 3.583 3 4.003 5.417.417.417 0 00-.417-.417m-6 0v4m0 0h6v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 0112 0v1zm0 0V5a2 2 0 012-2H6a2 2 0 00-2 2v14a2 2 0 002 2h2a2 2 0 002-2z"></path>
+                        </svg>
+                        Bulk Import
+                    </a>
+                    <a href="{{ route('finance.reports.index') }}" class="flex items-center px-3 py-1.5 text-sm text-gray-400 rounded-md hover:bg-gray-800 hover:text-white">
+                        <svg class="w-4 h-4 mr-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h6a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2v-6m-6 0v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V5a2 2 0 012-2H6a2 2 0 00-2 2v14a2 2 0 002 2h2a2 2 0 002-2z"></path>
+                        </svg>
+                        Financial Reports
                     </a>
                     <a href="{{ route('settings.system.health') }}" class="flex items-center px-3 py-1.5 text-sm text-gray-400 rounded-md hover:bg-gray-800 hover:text-white">
                         <svg class="w-4 h-4 mr-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

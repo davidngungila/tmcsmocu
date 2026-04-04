@@ -372,4 +372,16 @@ class ParishionerController extends Controller
         return redirect()->route('parishioners.index', ['type' => $parishioner->type])
             ->with('success', 'Parishioner deleted successfully.');
     }
+    
+    /**
+     * Display parishioner directory.
+     */
+    public function directory()
+    {
+        $parishioners = Parishioner::orderBy('first_name', 'asc')
+            ->orderBy('last_name', 'asc')
+            ->orderBy('middle_name', 'asc')
+            ->paginate(20);
+        return view('parishioners.directory', compact('parishioners'));
+    }
 }

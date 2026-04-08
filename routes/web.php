@@ -198,7 +198,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/communications', [CommunicationController::class, 'index'])->name('communications.index');
     Route::get('/communications/create', [CommunicationController::class, 'create'])->name('communications.create');
     Route::post('/communications', [CommunicationController::class, 'store'])->name('communications.store');
-    Route::get('/communications/{id}', [CommunicationController::class, 'show'])->name('communications.show');
+    // Route::get('/communications/{id}', [CommunicationController::class, 'show'])->name('communications.show');
     Route::get('/communications/{id}/edit', [CommunicationController::class, 'edit'])->name('communications.edit');
     Route::put('/communications/{id}', [CommunicationController::class, 'update'])->name('communications.update');
     Route::delete('/communications/{id}', [CommunicationController::class, 'destroy'])->name('communications.destroy');
@@ -806,6 +806,41 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/templates/{template}', [SmsController::class, 'deleteTemplate'])->name('templates.delete');
         Route::get('/balance', [SmsController::class, 'balance'])->name('balance');
         Route::post('/sync-status', [SmsController::class, 'syncStatus'])->name('sync-status');
+    });
+    
+    // Member Services Routes
+    Route::prefix('member-services')->name('member-services.')->group(function () {
+        Route::get('/contributions', [MemberServicesController::class, 'contributions'])->name('contributions');
+        Route::get('/events', [MemberServicesController::class, 'events'])->name('events');
+        Route::get('/directory', [MemberServicesController::class, 'directory'])->name('directory');
+        Route::get('/directory/{id}', [MemberServicesController::class, 'profileDetails'])->name('profile-details');
+    });
+    
+    // Community & Groups Routes
+    Route::prefix('community-groups')->name('community-groups.')->group(function () {
+        Route::get('/my-community', [CommunityGroupsController::class, 'myCommunity'])->name('my-community');
+        Route::get('/my-spiritual-group', [CommunityGroupsController::class, 'mySpiritualGroup'])->name('my-spiritual-group');
+        Route::get('/all-communities', [CommunityGroupsController::class, 'allCommunities'])->name('all-communities');
+        Route::get('/all-spiritual-groups', [CommunityGroupsController::class, 'allSpiritualGroups'])->name('all-spiritual-groups');
+        Route::post('/join-community/{id}', [CommunityGroupsController::class, 'joinCommunity'])->name('join-community');
+        Route::post('/join-spiritual-group/{id}', [CommunityGroupsController::class, 'joinSpiritualGroup'])->name('join-spiritual-group');
+        Route::post('/leave-community', [CommunityGroupsController::class, 'leaveCommunity'])->name('leave-community');
+        Route::post('/leave-spiritual-group', [CommunityGroupsController::class, 'leaveSpiritualGroup'])->name('leave-spiritual-group');
+    });
+    
+    // Communications Routes
+    Route::prefix('communications')->name('communications.')->group(function () {
+        Route::get('/announcements', [CommunicationsController::class, 'announcements'])->name('announcements');
+        Route::get('/announcements/{id}', [CommunicationsController::class, 'showAnnouncement'])->name('show-announcement');
+        Route::get('/calendar', [CommunicationsController::class, 'calendar'])->name('calendar');
+        Route::get('/events/{id}', [CommunicationsController::class, 'showEvent'])->name('show-event');
+        Route::post('/events/{id}/register', [CommunicationsController::class, 'registerForEvent'])->name('register-event');
+        Route::post('/events/{id}/unregister', [CommunicationsController::class, 'unregisterFromEvent'])->name('unregister-event');
+        Route::get('/newsletters', [CommunicationsController::class, 'newsletters'])->name('newsletters');
+        Route::get('/newsletters/{id}', [CommunicationsController::class, 'showNewsletter'])->name('show-newsletter');
+        Route::get('/sms/compose', [CommunicationsController::class, 'composeSms'])->name('sms.compose');
+        Route::post('/sms/send', [CommunicationsController::class, 'sendSms'])->name('sms.send');
+        Route::get('/sms/history', [CommunicationsController::class, 'smsHistory'])->name('sms.history');
     });
     
     // Redirect root to dashboard

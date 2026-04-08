@@ -19,12 +19,12 @@
         @include('layouts.sidebar')
         
         <!-- Main Content -->
-        <div class="flex-1 flex flex-col lg:ml-64">
+        <div class="flex-1 flex flex-col lg:ml-64 relative z-10">
             <!-- Top Header - Sticky -->
             @include('layouts.header')
             
             <!-- Page Content -->
-            <main class="flex-1 p-4 sm:p-6 w-full">
+            <main class="flex-1 p-4 sm:p-6 w-full relative z-10">
                 @if(session('success'))
                     <div class="mb-4 bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg">
                         {{ session('success') }}

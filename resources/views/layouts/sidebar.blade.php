@@ -1,4 +1,4 @@
-<aside id="sidebar" class="fixed top-0 left-0 z-50 w-64 h-screen bg-gray-900 border-r border-gray-700 translate-x-0 transition-transform duration-300 ease-in-out">
+<aside id="sidebar" class="fixed top-0 left-0 z-50 w-64 h-screen bg-gray-900 border-r border-gray-700 translate-x-0 transition-transform duration-300 ease-in-out lg:translate-x-0 -translate-x-full lg:block">
     <div class="flex flex-col h-full">
         <!-- Logo -->
         <div class="flex items-center justify-between h-16 px-4 border-b border-gray-700">
@@ -17,28 +17,44 @@
         <nav class="flex-1 overflow-y-auto py-3">
             @php
                 $user = Auth::user();
-                $roles = $user->relationLoaded('roles') ? $user->roles : $user->roles()->get();
-                $roleSlugs = $roles->pluck('slug')->toArray();
+                $userRole = $user->role;
+                $roleName = $userRole ? $userRole->name : null;
+                $roleSlug = $userRole ? $userRole->slug : null;
                 
-                // Debug: Log user and roles
-                \Log::info('User: ' . $user->email . ' Roles: ' . json_encode($roleSlugs));
+                // Debug: Log user and role
+                \Log::info('User: ' . $user->email . ' Role: ' . $roleName . ' Slug: ' . $roleSlug);
                 
-                $isFullAccess = in_array('system_admin', $roleSlugs) || in_array('priest', $roleSlugs);
-                $canFinance = $isFullAccess || in_array('treasurer', $roleSlugs);
-                $canParishioners = $isFullAccess || in_array('secretary', $roleSlugs) || in_array('leader', $roleSlugs);
-                $canEvents = $isFullAccess || in_array('secretary', $roleSlugs) || in_array('leader', $roleSlugs);
-                $canAssets = $isFullAccess;
-                $canLeaders = $isFullAccess || in_array('leader', $roleSlugs);
-                $canSms = $isFullAccess || in_array('secretary', $roleSlugs) || in_array('leader', $roleSlugs) || in_array('treasurer', $roleSlugs);
-                $canSmsApproval = $isFullAccess || in_array('treasurer', $roleSlugs);
-                $canReports = $isFullAccess || in_array('leader', $roleSlugs) || in_array('treasurer', $roleSlugs);
-                $canSettings = $isFullAccess;
-                $canCommunities = $isFullAccess || in_array('secretary', $roleSlugs) || in_array('leader', $roleSlugs);
-                $canGroups = $isFullAccess || in_array('secretary', $roleSlugs) || in_array('leader', $roleSlugs);
-                $currentRole = request('role') ? $roles->where('slug', request('role'))->first() : ($roles->first() ?? null);
+                // Permission checks based on new role hierarchy
+                $isSuperAdmin = $roleName === 'super_admin';
+                $isChaplain = $roleName === 'chaplain';
+                $isChairpersonEmployee = $roleName === 'chairperson_employee';
+                $isChairpersonStudent = $roleName === 'chairperson_student';
+                $isSecretary = $roleName === 'secretary';
+                $isTreasurer = $roleName === 'treasurer';
+                $isSpiritualCoordinator = $roleName === 'spiritual_coordinator';
+                $isCommunityLeader = $roleName === 'community_leader';
+                $isGroupLeader = $roleName === 'group_leader';
+                $isKamatiHead = $roleName === 'kamati_head';
+                $isMember = $roleName === 'member';
+                $isEventChairperson = $roleName === 'event_chairperson';
                 
-                // Debug: Log permissions
-                \Log::info('isFullAccess: ' . $isFullAccess . ' canFinance: ' . $canFinance . ' canParishioners: ' . $canParishioners);
+                // High-level access roles
+                $isFullAccess = $isSuperAdmin || $isChaplain;
+                $isLeadership = $isChairpersonEmployee || $isChairpersonStudent;
+                $isAdministrative = $isSecretary || $isTreasurer;
+                $isCoordinator = $isSpiritualCoordinator || $isCommunityLeader || $isGroupLeader;
+                
+                // Module-specific permissions
+                $canFinance = $isFullAccess || $isLeadership || $isTreasurer;
+                $canParishioners = $isFullAccess || $isLeadership || $isSecretary || $isCoordinator;
+                $canEvents = $isFullAccess || $isLeadership || $isSecretary || $isCoordinator || $isKamatiHead || $isEventChairperson;
+                $canAssets = $isFullAccess || $isLeadership || $isKamatiHead;
+                $canSms = $isFullAccess || $isLeadership || $isSecretary || $isTreasurer;
+                $canReports = $isFullAccess || $isLeadership || $isTreasurer || $isSecretary;
+                $canSettings = $isSuperAdmin;
+                $canCommunities = $isFullAccess || $isLeadership || $isSecretary || $isCommunityLeader;
+                $canGroups = $isFullAccess || $isLeadership || $isSecretary || $isGroupLeader || $isSpiritualCoordinator;
+                $canCertificates = $isFullAccess || $isSecretary;
             @endphp
             
            
@@ -439,6 +455,145 @@
             </div>
             @endif
 
+            <!-- Member Services (for Members and all users) -->
+            @if($isMember || $isEventChairperson)
+            <div>
+                <button onclick="toggleSubmenu('member-services')" class="w-full flex items-center justify-between px-3 py-2 text-sm font-medium text-gray-300 rounded-md hover:bg-gray-800 hover:text-white transition-colors">
+                    <div class="flex items-center">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                        </svg>
+                        Member Services
+                    </div>
+                    <svg id="member-services-arrow" class="w-4 h-4 transition-transform text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+                <div id="member-services-submenu" class="hidden mt-1 ml-7 space-y-0.5">
+                    <a href="{{ route('profile.show') }}" class="flex items-center px-3 py-1.5 text-sm text-gray-400 rounded-md hover:bg-gray-800 hover:text-white">
+                        <svg class="w-4 h-4 mr-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                        </svg>
+                        My Profile
+                    </a>
+                    <a href="{{ route('certificates.my') }}" class="flex items-center px-3 py-1.5 text-sm text-gray-400 rounded-md hover:bg-gray-800 hover:text-white">
+                        <svg class="w-4 h-4 mr-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                        </svg>
+                        My Certificates
+                    </a>
+                    <a href="#" class="flex items-center px-3 py-1.5 text-sm text-gray-400 rounded-md hover:bg-gray-800 hover:text-white">
+                        <svg class="w-4 h-4 mr-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2 1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        My Contributions
+                    </a>
+                    <a href="{{ route('member-services.events') }}" class="flex items-center px-3 py-1.5 text-sm text-gray-400 rounded-md hover:bg-gray-800 hover:text-white">
+                        <svg class="w-4 h-4 mr-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                        My Events
+                    </a>
+                    <a href="{{ route('member-services.directory') }}" class="flex items-center px-3 py-1.5 text-sm text-gray-400 rounded-md hover:bg-gray-800 hover:text-white">
+                        <svg class="w-4 h-4 mr-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                        Member Directory
+                    </a>
+                </div>
+            </div>
+            @endif
+
+            <!-- Community & Groups (for Coordinators and Members) -->
+            @if($canCommunities || $canGroups || $isMember || $isEventChairperson)
+            <div>
+                <button onclick="toggleSubmenu('community-groups')" class="w-full flex items-center justify-between px-3 py-2 text-sm font-medium text-gray-300 rounded-md hover:bg-gray-800 hover:text-white transition-colors">
+                    <div class="flex items-center">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                        Community & Groups
+                    </div>
+                    <svg id="community-groups-arrow" class="w-4 h-4 transition-transform text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+                <div id="community-groups-submenu" class="hidden mt-1 ml-7 space-y-0.5">
+                    @if($canCommunities)
+                    <a href="{{ route('communities.index') }}" class="flex items-center px-3 py-1.5 text-sm text-gray-400 rounded-md hover:bg-gray-800 hover:text-white">
+                        <svg class="w-4 h-4 mr-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                        All Communities
+                    </a>
+                    @endif
+                    @if($canGroups)
+                    <a href="{{ route('apostolic-groups.index') }}" class="flex items-center px-3 py-1.5 text-sm text-gray-400 rounded-md hover:bg-gray-800 hover:text-white">
+                        <svg class="w-4 h-4 mr-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                        </svg>
+                        All Spiritual Groups
+                    </a>
+                    @endif
+                    <a href="{{ route('community-groups.my-community') }}" class="flex items-center px-3 py-1.5 text-sm text-gray-400 rounded-md hover:bg-gray-800 hover:text-white">
+                        <svg class="w-4 h-4 mr-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                        My Community
+                    </a>
+                    <a href="{{ route('community-groups.my-spiritual-group') }}" class="flex items-center px-3 py-1.5 text-sm text-gray-400 rounded-md hover:bg-gray-800 hover:text-white">
+                        <svg class="w-4 h-4 mr-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                        </svg>
+                        My Spiritual Group
+                    </a>
+                </div>
+            </div>
+            @endif
+
+            <!-- Communications (for all users to view) -->
+            <div>
+                <button onclick="toggleSubmenu('communications')" class="w-full flex items-center justify-between px-3 py-2 text-sm font-medium text-gray-300 rounded-md hover:bg-gray-800 hover:text-white transition-colors">
+                    <div class="flex items-center">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                        </svg>
+                        Communications
+                    </div>
+                    <svg id="communications-arrow" class="w-4 h-4 transition-transform text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+                <div id="communications-submenu" class="hidden mt-1 ml-7 space-y-0.5">
+                    <a href="{{ route('communications.announcements') }}" class="flex items-center px-3 py-1.5 text-sm text-gray-400 rounded-md hover:bg-gray-800 hover:text-white">
+                        <svg class="w-4 h-4 mr-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path>
+                        </svg>
+                        Announcements
+                    </a>
+                    <a href="{{ route('communications.calendar') }}" class="flex items-center px-3 py-1.5 text-sm text-gray-400 rounded-md hover:bg-gray-800 hover:text-white">
+                        <svg class="w-4 h-4 mr-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                        Calendar
+                    </a>
+                    <a href="{{ route('communications.newsletters') }}" class="flex items-center px-3 py-1.5 text-sm text-gray-400 rounded-md hover:bg-gray-800 hover:text-white">
+                        <svg class="w-4 h-4 mr-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                        </svg>
+                        Newsletters
+                    </a>
+                    @if($canSms)
+                    <a href="{{ route('communications.sms.compose') }}" class="flex items-center px-3 py-1.5 text-sm text-gray-400 rounded-md hover:bg-gray-800 hover:text-white">
+                        <svg class="w-4 h-4 mr-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                        </svg>
+                        Send SMS
+                    </a>
+                    @endif
+                </div>
+            </div>
+
             <!-- Elections -->
             @if($isFullAccess)
             <div>
@@ -805,17 +960,23 @@
                         </svg>
                     </button>
                     <div id="profile-submenu" class="hidden mt-1 ml-7 space-y-0.5">
-                        <a href="#" class="flex items-center px-3 py-1.5 text-sm text-gray-400 rounded-md hover:bg-gray-800 hover:text-white">
+                        <a href="{{ route('profile.show') }}" class="flex items-center px-3 py-1.5 text-sm text-gray-400 rounded-md hover:bg-gray-800 hover:text-white">
                             <svg class="w-4 h-4 mr-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                             </svg>
                             My Profile
                         </a>
-                        <a href="#" class="flex items-center px-3 py-1.5 text-sm text-gray-400 rounded-md hover:bg-gray-800 hover:text-white">
+                        <a href="{{ route('settings.account') }}" class="flex items-center px-3 py-1.5 text-sm text-gray-400 rounded-md hover:bg-gray-800 hover:text-white">
+                            <svg class="w-4 h-4 mr-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                            </svg>
+                            Account Settings
+                        </a>
+                        <a href="{{ route('settings.security') }}" class="flex items-center px-3 py-1.5 text-sm text-gray-400 rounded-md hover:bg-gray-800 hover:text-white">
                             <svg class="w-4 h-4 mr-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path>
                             </svg>
-                            Change Password
+                            Security Settings
                         </a>
                         <a href="{{ route('logout') }}" class="flex items-center px-3 py-1.5 text-sm text-gray-400 rounded-md hover:bg-gray-800 hover:text-white">
                             <svg class="w-4 h-4 mr-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
